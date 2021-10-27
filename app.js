@@ -17,7 +17,8 @@ app.set('view engine', 'ejs');
 app.use(express.urlencoded({extended: false}));
 app.use(express.static("public"));
 
-const clientID = '388421995873-ujjqhd6nmqvvhf6vec2spa3k8lrqpr2o.apps.googleusercontent.com';
+const CLIENT_ID = '388421995873-ujjqhd6nmqvvhf6vec2spa3k8lrqpr2o.apps.googleusercontent.com';
+const CLIENT_SECRET = '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';
 
 // use the session package and set it up with some initial configuration
 app.use(session({
@@ -169,8 +170,8 @@ passport.serializeUser(function(user, done) {
 
 ///////////////// Google ////////////
 passport.use(new GoogleStrategy({
-    clientID: process.env.CLIENT_ID,
-    clientSecret: process.env.CLIENT_SECRET,
+    clientID: CLIENT_ID,
+    clientSecret: CLIENT_SECRET,
     callbackURL: "http://localhost:3000/auth/google/callback",
     userProfileURL: 'https://www.googleapis.com/oauth2/v3/userinfo'
   },
