@@ -1,0 +1,54 @@
+<%- include('partials/header'); -%>
+<%- include('partials/nav'); -%>
+
+<div class="recipe_container container-fluid-mobile">
+    <div class="overall_recipe_margin">
+        <div class="banner">
+            <img src="\imgs\<%= image %>" alt="<%= image %>">
+            <div class="photo_description">
+                <h2><%= title %></h2>
+                <p class="info_of_recipe">
+                    <span><%= category %></span>
+                    <span><%= time %> min</span>
+                </p>
+            </div>
+        </div>
+        <div id="notes">
+            <p class="enter"><%= describe %></p>
+        </div>
+    </div>
+
+    <div id="recipe_container_description">
+        <div class="when_added">
+            <span>
+                <p>Dodany przez: <b><%= publisher %></b> - dnia: <b><%= created.getDate() %> / <%= created.getMonth()+1 %> / <%= created.getFullYear() %></b></p>
+            </span>
+            <%if (locals.session.loggedin) { %>
+            <form action="/favorite/<%=id%>" method="post">
+                <button type="submit" class="btn btn_favorite" name="checkbox" value="<%=id%>"><i class="fas fa-heart"></i> Dodaj do ulubionych</button>
+            </form>
+            <% } %>
+            
+        </div>
+    
+        <div class="container">
+            <div id="ingredients">
+                <h1>Składniki:</h1>
+                <div>
+                    <% ingredients.forEach(element => {%>
+                        <p class="ingredient_style"><input type="checkbox"><span><%= element %></span></p>
+                    <% }); %> 
+                </div>
+            </div>
+        
+            <div id="preparation">
+                <h1>Przygotowanie:</h1>
+                    <p class="enter"><%= preparation %></p>
+            </div>
+        </div>
+    </div>
+    
+     
+</div>
+
+<%- include('partials/footer'); -%>

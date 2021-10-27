@@ -1,0 +1,65 @@
+<%- include('partials/header'); -%>
+<%- include('partials/nav'); -%>
+
+<div class="wrapper">
+    <section class="sidebar">
+        <img src="/imgs/woman.png" alt="logo użytkownika">
+        <h3>Witaj <%= user.username %></h3>
+        <span class="user_icons">
+            <a href="/user"><i class="fas fa-address-book"></i></a>
+            <a href="/add"><i class="fas fa-plus-circle"></i></a>
+        </span>
+        
+        <p>
+            W swojej książce kucharskiej masz już: <%= user.recipes.length %>
+            <% if(user.recipes.length === 1) { %>
+                przepis.
+            <% } else if(user.recipes.length > 1 && user.recipes.length < 5) { %>
+                przepisy.
+            <% } else { %>
+                przepisów.
+            <% } %>
+        </p>
+        <% if(user.recipes.length === 0) { %>
+            <p>
+                Nie martw się! :) Tutaj możesz dodać nowy przepis <a class="add_button" href="/add">Dodaj</a>
+            </p>
+        <% } %>
+        <% if(user.favorite.length === 0) { %>
+            <p>
+                Niestety jeszcze nie masz ulubionych przepisów.
+            </p>
+        <% } %>
+        <a href="/logout">Wyloguj</a>
+    </section>
+
+    <section class="recipes_container cookbook">
+
+        <div id="favorite" class="recipes">
+            <% favorite.forEach(recipe => { %>
+                <form action="/delete_favorite" method="post">
+                <div class="card">
+                    <a href="/recipes/<%= recipe.category %>/<%= recipe._id %>">
+                        <img src="\imgs\<%= recipe.image %>" class="card-img-top" alt="<%= recipe.image %>">
+                        <div class="card-body">
+                                <h4><%= recipe.title %></h4>
+                                <p class="card-text">
+                                    <span><%= recipe.category %></span>
+                                    <span><%= recipe.time %> min</span>
+                                </p>
+                                <%= recipe.created.getDate() %> / <%= recipe.created.getMonth()+1 %> / <%= recipe.created.getFullYear() %>
+                        </div>
+                    </a>
+                    <div class="overall_buttons">
+                        <button type="submit" class="delete_button" name="checkbox" value="<%= recipe._id %>"><i class="fas fa-trash-alt"></i> Usuń</button>
+                    </div>
+                </div>
+                </form>
+                <% }); %>
+            </div>
+        
+    </section>
+
+</div>
+
+<%- include('partials/footer'); -%>

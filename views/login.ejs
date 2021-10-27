@@ -1,0 +1,116 @@
+<%- include('partials/header'); -%>
+<%- include('partials/nav'); -%>
+
+<div class="recipes_container background">
+    <div class="container login-margin-top">
+        <div class="row">
+
+            <div class="col-md-5">
+
+                <form role="form" class="login_form" method="post" action="/login">
+                <fieldset>							
+                    <h3> Zaloguj się na swoje konto: </h3>
+                    <% if (userName.length > 0) { %>
+                        <div class="alert alert-danger" role="alert">
+                            <p><%= userName %> </p>
+                        </div>
+                        <% } %>
+                    <br>
+                    
+                        <div class="social-block">
+                            <a href="/auth/google" class="btn" role="button">
+                                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="25" viewBox="0 0 24 25">
+                                    <defs>
+                                        <path id="a" d="M23.72 10.227H12.28v4.83h6.585c-.614 3.068-3.181 4.83-6.586 4.83-4.019 0-7.256-3.296-7.256-7.387 0-4.09 3.237-7.386 7.256-7.386 1.73 0 3.293.625 4.521 1.647l3.572-3.636C18.195 1.193 15.405 0 12.28 0 5.47 0 0 5.568 0 12.5S5.47 25 12.28 25C18.418 25 24 20.455 24 12.5c0-.739-.112-1.534-.28-2.273z"></path>
+                                        <path id="c" d="M23.72 10.227H12.28v4.83h6.585c-.614 3.068-3.181 4.83-6.586 4.83-4.019 0-7.256-3.296-7.256-7.387 0-4.09 3.237-7.386 7.256-7.386 1.73 0 3.293.625 4.521 1.647l3.572-3.636C18.195 1.193 15.405 0 12.28 0 5.47 0 0 5.568 0 12.5S5.47 25 12.28 25C18.418 25 24 20.455 24 12.5c0-.739-.112-1.534-.28-2.273z"></path>
+                                        <path id="e" d="M23.72 10.227H12.28v4.83h6.585c-.614 3.068-3.181 4.83-6.586 4.83-4.019 0-7.256-3.296-7.256-7.387 0-4.09 3.237-7.386 7.256-7.386 1.73 0 3.293.625 4.521 1.647l3.572-3.636C18.195 1.193 15.405 0 12.28 0 5.47 0 0 5.568 0 12.5S5.47 25 12.28 25C18.418 25 24 20.455 24 12.5c0-.739-.112-1.534-.28-2.273z"></path>
+                                        <path id="g" d="M23.72 10.227H12.28v4.83h6.585c-.614 3.068-3.181 4.83-6.586 4.83-4.019 0-7.256-3.296-7.256-7.387 0-4.09 3.237-7.386 7.256-7.386 1.73 0 3.293.625 4.521 1.647l3.572-3.636C18.195 1.193 15.405 0 12.28 0 5.47 0 0 5.568 0 12.5S5.47 25 12.28 25C18.418 25 24 20.455 24 12.5c0-.739-.112-1.534-.28-2.273z"></path>
+                                    </defs>
+                                    <g fill="none" fill-rule="evenodd">
+                                        <g>
+                                            <mask id="b" fill="#fff">
+                                                <use xlink:href="#a"></use>
+                                            </mask>
+                                            <path fill="#FBBC05" fill-rule="nonzero" d="M-1.116 19.886V5.114L8.372 12.5z" mask="url(#b)"></path>
+                                        </g>
+                                        <g>
+                                            <mask id="d" fill="#fff">
+                                                <use xlink:href="#c"></use>
+                                            </mask>
+                                            <path fill="#EA4335" fill-rule="nonzero" d="M-1.116 5.114L8.372 12.5l3.907-3.466 13.395-2.216v-7.954h-26.79z" mask="url(#d)"></path>
+                                        </g>
+                                        <g>
+                                            <mask id="f" fill="#fff">
+                                                <use xlink:href="#e"></use>
+                                            </mask>
+                                            <path fill="#34A853" fill-rule="nonzero" d="M-1.116 19.886L15.628 6.818l4.41.568 5.636-8.522v27.272h-26.79z" mask="url(#f)"></path>
+                                        </g>
+                                        <g>
+                                            <mask id="h" fill="#fff">
+                                                <use xlink:href="#g"></use>
+                                            </mask>
+                                            <path fill="#4285F4" fill-rule="nonzero" d="M25.674 26.136L8.372 12.5 6.14 10.795l19.534-5.681z" mask="url(#h)"></path>
+                                        </g>
+                                    </g>
+                                </svg>
+                                Zaloguj się przez Google
+                            </a>
+                        </div>
+
+                        <div class="login_divider">
+                            <span class="login_divider_text">
+                                LUB
+                            </span>
+                        </div>
+
+                    <div class="mb-3">
+                        <input type="text" name="username" id="username" class="form-control" placeholder="Nazwa użytkownika">
+                    </div>
+                    <div class="mb-3">
+                        <input type="password" name="password" id="password" class="form-control" placeholder="Hasło">
+                    </div>
+                    <div>
+                        <input type="submit" class="btn btn-md btn-light" value="Zaloguj">
+                    </div>
+                        
+                </fieldset>
+                </form>	
+            </div>
+            
+            <div class="col-md-2">
+                <!-------null------>
+            </div>
+            
+            <div class="col-md-5">
+                <form role="form" class="login_form" method="post" action="/register">
+                   <fieldset>							
+                       <h3> Załóż nowe konto:</h3>
+                       <% if (registrations.length > 0) { %>
+                        <div class="alert alert-danger" role="alert">
+                            <p><%= registrations %> </p>
+                        </div>
+                        <% } %>
+                       <br>
+
+                        <div class="mb-3">
+                           <input type="text" name="username" id="username" class="form-control" autocomplete="off" placeholder="Nazwa użytkownika">
+                       </div>
+
+                       <div class="mb-3">
+                           <input type="email" name="email" id="email" class="form-control" placeholder="Email">
+                       </div>
+                       <div class="mb-3">
+                           <input type="password" name="password" id="password" class="form-control" autocomplete="off" placeholder="Hasło">
+                       </div>
+                       <!-- google  -->
+                        <div>
+                           <input type="submit" class="btn btn-light" value="Zarejestruj">
+                        </div>
+                   </fieldset>
+               </form>
+           </div>
+           
+        </div>
+    </div>
+</div>
+<%- include('partials/footer'); -%>

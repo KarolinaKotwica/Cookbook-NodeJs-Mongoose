@@ -1,0 +1,52 @@
+<nav class="navbar navbar-expand-md navbar-light fixed-top">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/"><img src="/imgs/logo.png" alt="logo"></a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarCollapse">
+        <ul class="navbar-nav me-auto mb-2 mb-md-0">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">Kategorie</a>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="/all/1">Wszystkie</a></li>
+                <li><a class="dropdown-item" href="/lunch">Obiad</a></li>
+                <li><a class="dropdown-item" href="/desserts">Desery</a></li>
+                <li><a class="dropdown-item" href="/for_kids">Dzieci</a></li>
+                <li><a class="dropdown-item" href="/drinks">Napoje</a></li>
+                <li><a class="dropdown-item" href="/salads">Sałatki</a></li>
+                <li><a class="dropdown-item" href="/soups">Zupy</a></li>
+                <li><a class="dropdown-item" href="/snacks">Przekąski</a></li>
+                <li><a class="dropdown-item" href="/breakfast">Śniadanie</a></li>
+              </ul>
+        </li>
+        <%if (locals.session.loggedin) { %>
+          <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="/shopList">Lista zakupów</a>
+          </li>
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="/user">Moje konto</a>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="/user">Moje przepisy</a></li>
+                <li><a class="dropdown-item" href="/favoriteUser">Ulubione przepisy</a></li>
+                <br>
+                <li><a class="dropdown-item" href="/add">Dodaj nowy przepis</a></li>
+                <br>
+                <li><a class="dropdown-item" href="/logout">Wyloguj</a></li>
+            </ul>
+        </li>
+          <% } %>
+          <%if (!locals.session.loggedin) { %>
+        <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="/login">Zaloguj</a>
+          </li>
+          <% } %>
+        </ul>
+        <form class="d-flex" method="POST" action="/search">
+          <input class="form-control me-2" autocomplete="off" name="search" type="search" placeholder="Nazwa przepisu.." aria-label="Search">
+          <button id="button_search" class="btn" type="submit">Szukaj</button>
+        </form>
+      </div>
+    </div>
+  </nav>

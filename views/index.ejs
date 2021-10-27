@@ -1,0 +1,69 @@
+<%- include('partials/header'); -%>
+<%- include('partials/nav'); -%>
+
+    <div id="main_background">
+        <div id="main_banner">
+            <h3 id="name">Witaj na stronie, gdzię każdy może mieć swoją własną <span class="color">książkę kucharską!</span> <i class="far fa-smile"></i></h3>
+            <p>Koniec z setkami kartek od znajomych i zeszytem. Od teraz Twoje przepisy będą w jednym miejscu!</p>
+            <p>Możesz wyszukać dany przepis lub rozejrzeć się po stronie.</p>
+            <p>Zaloguj się aby dodać nowy przepis oraz dodawać produkty na listę zakupów! &#9786;</p>
+        </div>
+        <img class="main_img" src="/imgs/kitchen.jpg" alt="obrazek kuchnia">
+    </div>
+
+    <!---------------------- Category ----------------------------------------->
+<div class="container-fluid-mobile">
+    <div class="overall">
+        <div id="category">
+            <h1>Kategorie przepisów</h1>
+            <p>Możesz wybrać z wielu kategorii:</p>
+            <%- include('partials/category'); -%>
+        </div>
+
+    <!----------------------- Random recipe  ------------------------------->
+        <div id="recipe_of_the_day">
+            <h1>Losowy przepis</h1>
+            <br>
+            <div class="card card_random">
+                <a href="/recipes/<%= random.category %>/<%= random._id %>">
+                    <img src="\imgs\<%= random.image %>" class="card-img-top" alt="<%= random.image %>">
+                    <div class="card-body">
+                            <h4><%= random.title %></h4>
+                            <p class="card-text">
+                                <span><%= random.category %></span>
+                                <span><%= random.time %> min</span>
+                                <span><i class="fas fa-user"></i> <%= random.publisher %></span>
+                            </p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+    <!----------------------- Latest  ------------------------------->
+    <div class="recipes_container">
+        <h1>Ostatnio dodane:</h1>
+        <div class="recipes">
+
+            <% recipes.forEach(recipe => { %>
+            <div class="card">
+                <a href="/recipes/<%= recipe.category %>/<%= recipe._id %>">
+                    <img src="\imgs\<%= recipe.image %>" class="card-img-top" alt="<%= recipe.image %>">
+                    <div class="card-body">
+                            <h4><%= recipe.title %></h4>
+                            <p class="card-text">
+                                <span><%= recipe.category %></span>
+                                <span><%= recipe.time %> min</span>
+                                <span><%= recipe.created.getDate() %> / <%= recipe.created.getMonth()+1 %> / <%= recipe.created.getFullYear() %></span>
+                            </p>
+                    </div>
+                </a>
+            </div>
+            <% }); %> 
+        </div>
+        
+    </div>
+</div>
+        
+<%- include('partials/footer'); -%>

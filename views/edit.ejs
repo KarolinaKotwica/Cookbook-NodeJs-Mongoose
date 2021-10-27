@@ -1,0 +1,51 @@
+<%- include('partials/header'); -%>
+<%- include('partials/nav'); -%>
+
+<div class="container-fluid-mobile">
+<form id="add_new_recipe" action="/edit/<%= edit._id %>" method="post" enctype="multipart/form-data">
+    <h1>Edytuj przepis:</h1>
+
+    <div class="container-fluid">
+        <div class="form_detail">
+            <h3>Podstawowe informacje:</h3>
+            <div class="mb-3">
+                <input type="text" name="publisher" class="form-control" value="<%= edit.publisher %>" placeholder="Autor przepisu (nazwa wyświetlana pod przepisem)" required>
+            </div>
+            <div class="mb-3">
+                <input type="text" name="title" class="form-control" value="<%= edit.title %>" placeholder="Nazwa przepisu" required>
+            </div>
+            <div class="mb-3">
+                <input type="number" name="time" class="form-control" value="<%= edit.time %>" placeholder="Czas w min" required>
+            </div>
+            <h3>Składniki:</h3>
+            <div class="mb-3">
+
+                <div class="ingredientList">
+                    <div class="ingredientDiv mb-3">
+                        <input type="text" class="form-control" value="<%= edit.ingredients %>" name="ingredients" autocomplete="off" required>
+                    </div>
+                </div>
+
+                <div type="button" class="btn" id="addIngredientsBtn">+ Składnik</div>
+                
+            </div>
+
+            <h3>Opis przepisu:</h3>
+            <div class="form-floating">
+                <textarea class="form-control textarea" name="describe" required><%= edit.describe %></textarea>
+                <label for="textarea">Napisz kilka słów o przepisie, wskazówki itp..</label>
+            </div>
+            <h3>Przygotowanie:</h3>
+            <div class="form-floating">
+                <textarea class="form-control textarea" name="preparation" required><%= edit.preparation %></textarea>
+                <label for="textarea">Opisz w punktach jak wykonać przepis..</label>
+            </div>
+        </div>
+        
+    </div>
+      
+    <button type="submit" class="btn" name="publish" id="add_submit">Zapisz przepis</button>
+</form>
+</div>
+
+<%- include('partials/footer'); -%>

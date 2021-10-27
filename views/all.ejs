@@ -1,0 +1,62 @@
+<%- include('partials/header'); -%>
+<%- include('partials/nav'); -%>
+
+<div class="recipes_container container-fluid-mobile">
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/">Główna</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Wszystkie</li>
+        </ol>
+    </nav>
+
+    <div class="recipes">
+        <% recipes.forEach(recipe => { %>
+        <div class="card">
+            <a href="/recipes/<%= recipe.category %>/<%= recipe._id %>">
+                <img src="\imgs\<%= recipe.image %>" class="card-img-top" alt="<%= recipe.image %>">
+                <div class="card-body">
+                        <h4><%= recipe.title %></h4>
+                        <p class="card-text">
+                            <span><%= recipe.category %></span>
+                            <span><%= recipe.time %> min</span>
+                            <span><%= recipe.created.getDate() %> / <%= recipe.created.getMonth()+1 %> / <%= recipe.created.getFullYear() %></span>
+                        </p>
+                </div>
+            </a>
+        </div>
+        <% }) %> 
+    </div>
+
+    
+    <% if (pages > 0) { %>
+        <ul class="pagination text-center">
+            <% if (current == 1) { %>
+                <li class="none"><a>First</a></li>
+            <% } else { %>
+                <li><a href="/lunch/1">First</a></li>
+            <% } %>
+            <% var i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
+            <% if (i !== 1) { %>
+                <li class="disabled"><a>...</a></li>
+            <% } %>
+            <% for (; i <= (Number(current) + 1) && i <= pages; i++) { %>
+                <% if (i == current) { %>
+                    <li class="active"><a><%= i %></a></li>
+                <% } else { %>
+                    <li><a href="/lunch/<%= i %>"><%= i %></a></li>
+                <% } %>
+                <% if (i == Number(current) + 1 && i < pages) { %>
+                    <li class="disabled"><a>...</a></li>
+                <% } %>
+            <% } %>
+            <% if (current == pages) { %>
+                <li class="none"><a>Last</a></li>
+            <% } else { %>
+                <li><a href="/lunch/<%= pages %>">Last</a></li>
+            <% } %>
+        </ul>
+    <% } %>
+</div>
+
+<%- include('partials/footer'); -%>
