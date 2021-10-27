@@ -17,6 +17,8 @@ app.set('view engine', 'ejs');
 app.use(express.urlencoded({extended: false}));
 app.use(express.static("public"));
 
+const clientID = '388421995873-ujjqhd6nmqvvhf6vec2spa3k8lrqpr2o.apps.googleusercontent.com';
+
 // use the session package and set it up with some initial configuration
 app.use(session({
     secret: 'keyboard cat',
