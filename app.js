@@ -38,7 +38,7 @@ app.use(function (req, res, next) {
 });
 
 /////////////connect and create DB ///////////////
-mongoose.connect(process.env.DB_MONGOOSE);
+mongoose.connect('mongodb+srv://admin-karolina:tzd0qzGh7yG40ztz@cluster0.sxz0v.mongodb.net/CookBookDB');
 
 
 app.use(flash());
