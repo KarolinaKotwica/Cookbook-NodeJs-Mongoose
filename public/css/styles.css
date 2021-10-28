@@ -73,6 +73,9 @@ h1,
 .navbar .nav-link:hover {
   color: #c82145 !important;
 }
+.navbar .navbar-brand {
+  padding: 0;
+}
 img[alt="logo"] {
   width: 100px;
   height: auto;
@@ -179,6 +182,7 @@ img[alt="logo"] {
 #main_background {
   display: flex;
   flex-direction: column-reverse;
+  padding-top: 10%;
 }
 #main_banner {
   width: 100%;
@@ -261,8 +265,8 @@ img[alt="logo"] {
   margin: 0 auto;
 }
 .recipe_container .banner img {
-  width: 100%;
-  height: auto;
+  max-width: 100%;
+  max-height: 21em;
   vertical-align: middle;
 }
 .recipe_container .banner .photo_description {
@@ -467,6 +471,17 @@ textarea {
 }
 .box .checkbox > input:active {
   border: 2px solid #34495E;
+}
+@media (max-width: 400px) {
+  .recipes_container {
+    padding-top: 38%;
+  }
+  #main_background {
+    padding-top: 25%;
+  }
+  .login_form {
+    padding: 0;
+  }
 }
 @media (min-width: 961px) {
   #main_background {
