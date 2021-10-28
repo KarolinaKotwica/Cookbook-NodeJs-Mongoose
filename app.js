@@ -18,7 +18,6 @@ app.use(express.urlencoded({extended: false}));
 app.use(express.static("public"));
 
 
-
 // use the session package and set it up with some initial configuration
 app.use(session({
     secret: 'keyboard cat',
@@ -37,7 +36,7 @@ app.use(function (req, res, next) {
 });
 
 /////////////connect and create DB ///////////////
-mongoose.connect(process.env.DB.MONGOOSE);
+mongoose.connect(process.env.DB_MONGOOSE);
 
 
 app.use(flash());
