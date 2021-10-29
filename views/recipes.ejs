@@ -23,6 +23,16 @@
             <span>
                 <p>Dodany przez: <b><%= publisher %></b> - dnia: <b><%= created.getDate() %> / <%= created.getMonth()+1 %> / <%= created.getFullYear() %></b></p>
             </span>
+            <% if (favoriteFlash.length > 0) { %>
+                <div class="alert alert-success" role="alert">
+                    <p><%= favoriteFlash %> </p>
+                </div>
+            <% } %>
+            <% if (favoriteFlashError.length > 0) { %>
+                <div class="alert alert-danger" role="alert">
+                    <p><%= favoriteFlashError %> </p>
+                </div>
+            <% } %>
             <%if (locals.session.loggedin) { %>
             <form action="/favorite/<%=id%>" method="post">
                 <button type="submit" class="btn btn_favorite" name="checkbox" value="<%=id%>"><i class="fas fa-heart"></i> Dodaj do ulubionych</button>

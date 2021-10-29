@@ -3,7 +3,7 @@
 
 <div class="wrapper">
     <section class="sidebar">
-        <img src="/imgs/woman.png" alt="logo użytkownika">
+        <img src="/imgs/chef.png" alt="logo użytkownika">
         <h3>Witaj <%= user.username %></h3>
         <span class="user_icons">
             </a><a href="/favoriteUser"><i class="fas fa-heart"></i></a>
@@ -40,7 +40,7 @@
         <% userRecipe.forEach(recipe => { %> 
             <form action="/delete" method="post">
             <div class="card">
-                <a href="/recipes/<%= recipe.category %>/<%= recipe._id %>">
+                <a href="/recipes/<%= recipe._id %>">
                     <img src="\imgs\<%= recipe.image %>" class="card-img-top" alt="<%= recipe.image %>">
                     <div class="card-body">
                             <h4><%= recipe.title %></h4>

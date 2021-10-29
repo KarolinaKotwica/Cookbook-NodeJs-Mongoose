@@ -10,6 +10,7 @@ addIngredientsBtn.addEventListener('click', function(){
   ingredientList.appendChild(newIngredients);
 });
 
+
 //////   pages //////
 var list = new Array();
 var pageList = new Array();

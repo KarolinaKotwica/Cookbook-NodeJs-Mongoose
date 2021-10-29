@@ -238,7 +238,6 @@ passport.use(new GoogleStrategy({
 
 app.get('/', (req,res) => {
     Recipe.find({},async (err, foundRecipe) => {
-        req.flash('test', 'it worked');
         let count = await Recipe.find().countDocuments();
         let random = Math.floor(Math.random()*count);
         let randomRecipe = await Recipe.findOne().skip(random);
@@ -356,13 +355,15 @@ app.get('/images/:key', (req, res) => {
     readStream.pipe(res)
 })
 
-app.get('/recipes/:category/:postId', (req, res) => {
+app.get('/recipes/:postId', (req, res) => {
 
     const paramId = (req.params.postId);
-    const paramCategory = (req.params.category);
+
+    const favoriteFlash = req.flash('favorite');
+    const favoriteFlashError = req.flash('favorite-error');
     
 
-    Recipe.findOne({_id: paramId, category: paramCategory}, (err, found) => {
+    Recipe.findOne({_id: paramId}, (err, found) => {
       res.render('recipes', {
         id: found._id,
         publisher: found.publisher,
@@ -373,7 +374,9 @@ app.get('/recipes/:category/:postId', (req, res) => {
         ingredients: found.ingredients,
         describe: found.describe,
         preparation: found.preparation,
-        created: found.created
+        created: found.created,
+        favoriteFlash,
+        favoriteFlashError
       });
     })
 })
@@ -388,12 +391,19 @@ app.post('/favorite/:id', (req,res)=> {
                     User.countDocuments({_id: req.user.id,'favorite._id':req.params.id}, function (err, count){
                         console.log(count); 
                         if(count===0){
-                            //document exists
+                            //document  ! exists
                             foundUser.favorite.push(found);
                             foundUser.save();
+                            req.flash('favorite', "Dodano do ulubionych!");
+                            res.redirect("/recipes/"+req.params.id);
+                        }
+                        else {
+                            req.flash('favorite-error', "Masz już dodany ten przepis :)");
+                            res.redirect("/recipes/"+req.params.id);
                         }
                     });
-                    res.redirect("/favoriteUser");
+                    
+                    
                 }
             })
         }

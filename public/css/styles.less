@@ -331,7 +331,7 @@ img[alt="logo"] {
 //////////// recipes ///////////////////////////
 .recipe_container {
 
-    padding-top: 8em;
+    padding-top: 6em;
 
     p {
         font-size: 1.3em;
@@ -375,6 +375,10 @@ img[alt="logo"] {
         .when_added {
             font-size: 11px;
             padding: 1em;
+
+            .alert {
+                text-align: center;
+            }
         }
 
         #ingredients {
@@ -561,6 +565,11 @@ textarea {
     padding: .8em;
     font-size: 1.3em;
 
+    .shopping_list {
+        text-align: left;
+        padding-left: 20%;
+    }
+
     h2 {
         color: @main_color;
         padding-top: 2em;
@@ -625,7 +634,7 @@ textarea {
 
 //////////////////////// Media Q small phone ///////////////////////////////////////////////////////////
 
-@media (max-width:400px) {
+@media (max-width:425px) {
     .recipes_container {
         padding-top: 38%;
     }
@@ -636,6 +645,18 @@ textarea {
 
     .login_form {
         padding: 0;
+    }
+
+    .item .addToShoppingList {
+        margin-top: 1em;
+    }
+}
+/////////////////////// Media Q Tablet ///////////////////////////////////////////////////////////
+
+@media (min-width:750px) and (max-width: 960px) {
+
+    .box .shopping_list {
+        padding-left: 30%;
     }
 }
 
@@ -722,7 +743,6 @@ textarea {
         width: 90%;
         margin: 0 auto;
         margin-top: 5%;
-        padding-bottom: 5%;
         padding-top: 0;
 
         h1 {
@@ -734,9 +754,10 @@ textarea {
         .recipes {
 
             background: rgba(255,255,255,0.9);
+            padding-bottom: 3em;
 
             .card {
-                width: 18rem;
+                width: 16rem;
                 -webkit-box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.5); 
                 box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.5);
             }
@@ -822,6 +843,14 @@ textarea {
         background-color: @white_color;
     }
 
+    .when_added .alert {
+        width: 25%;
+    }
+
+    .box .shopping_list {
+        padding-left: 40%;
+    }
+
     //////// user Acc. ///////
 .wrapper {
     display: flex;
@@ -854,6 +883,28 @@ textarea {
     .cookbook {
         margin-left: 18em;
         margin-top: 0;
+
+        .card {
+            width: 14rem;
+
+            h4 {
+                font-size: 1.2em;
+                color: #3769a3;
+            }
+        }
+
+        .card-text span {
+            font-size: .8em;
+        }
+
+        img {
+            height: 10em;
+        }
+
+        .overall_buttons button {
+            width: 100%;
+            font-size: .8em;
+        }
     }
 }
     
