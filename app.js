@@ -480,9 +480,9 @@ app.post('/register', (req,res) => {
         favorite: []
     })
 
-    User.find({}, (err, foundEmail)=> {
-        if(email === newUser.email) {
-            req.flash('registrations', "Email jest już w bazie.");
+    User.find({}, (err)=> {
+        if(err) {
+            req.flash('registrations', "Wystąpił błąd.");
             res.redirect('/login');
         } else {
             User.register(newUser, req.body.password, (err, user) => {
