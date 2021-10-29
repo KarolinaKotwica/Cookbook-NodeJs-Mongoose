@@ -266,7 +266,7 @@ img[alt="logo"] {
 }
 .recipe_container .banner img {
   max-width: 100%;
-  max-height: 21em;
+  height: auto;
   vertical-align: middle;
 }
 .recipe_container .banner .photo_description {

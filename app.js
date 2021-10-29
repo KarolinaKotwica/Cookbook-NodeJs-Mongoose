@@ -12,6 +12,11 @@ const passport = require('passport');
 const passportLocalMongoose = require('passport-local-mongoose');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const findOrCreate = require('mongoose-find-or-create');
+var S3 = require('aws-sdk/clients/s3');
+const AWS = require('aws-sdk');
+const fs = require('fs');
+
+
 
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({extended: false}));
@@ -24,6 +29,51 @@ app.use(session({
     resave: true,
     saveUninitialized: true
 }))
+
+
+/// s3 /////
+const accessKey = process.env.S3_BUCKET_ACCESS_KEY;
+const secretKey = process.env.S3_SECRET_ACCESS_KEY;
+const region = process.env.S3_BUCKET_LOCATION;
+const S3_BUCKET_NAME = process.env.S3_BUCKET_NAME;
+
+AWS.config.update({
+    region: region,
+    accessKeyId: accessKey,
+    secretAccessKey: secretKey
+});
+
+const s3 = new S3({
+    region,
+    secretKey,
+    accessKey
+})
+
+//upload to s3
+function uploadFile(file) {
+    const fileStream = fs.createReadStream(file.path)
+  
+    const uploadParams = {
+      Bucket: S3_BUCKET_NAME,
+      Body: fileStream,
+      Key: file.filename
+    }
+  
+    return s3.upload(uploadParams).promise()
+}
+
+//download from s3
+function getFileStream(fileKey) {
+    const downloadParams = {
+      Key: file.filename,
+      Bucket: S3_BUCKET_NAME
+    }
+  
+    return s3.getObject(downloadParams).createReadStream()
+  }
+
+////////
+
 
 app.use(cookieParser('secret'));
 app.use(flash());
@@ -295,12 +345,22 @@ app.get('/logout', (req, res) => {
     req.logout();
     req.session.loggedin = false;
     res.redirect('/');
-  });
+});
+
+
+app.get('/images/:key', (req, res) => {
+    console.log(req.params)
+    const key = req.params.key
+    const readStream = getFileStream(key)
+  
+    readStream.pipe(res)
+})
 
 app.get('/recipes/:category/:postId', (req, res) => {
 
     const paramId = (req.params.postId);
     const paramCategory = (req.params.category);
+    
 
     Recipe.findOne({_id: paramId, category: paramCategory}, (err, found) => {
       res.render('recipes', {
@@ -381,6 +441,12 @@ app.post('/', upload.single('image'), (req,res) => {
             preparation: req.body.preparation
         });
 
+        const img = req.file;
+        console.log(img);
+
+        const result = uploadFile(img);
+        console.log(result);
+
         recipe.save((err) => {
             if (err) {
                 console.log(err);
@@ -399,6 +465,7 @@ app.post('/', upload.single('image'), (req,res) => {
         });
 
     } catch(err) {
+        console.log(err);
         req.flash('newRecipe', 'Sprawdź czy dobrze wypełniłeś/aś pola oraz nie zapomnij dodać obrazka.');
         res.redirect("/add");
     }
