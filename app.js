@@ -220,7 +220,7 @@ passport.serializeUser(function(user, done) {
 passport.use(new GoogleStrategy({
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
-    callbackURL: "http://book-to-cook.herokuapp/auth/google/callback",
+    callbackURL: "http://localhost:3000/auth/google/callback",
     userProfileURL: 'https://www.googleapis.com/oauth2/v3/userinfo'
   },
   function(accessToken, refreshToken, profile, cb) {
@@ -480,8 +480,8 @@ app.post('/register', (req,res) => {
         favorite: []
     })
 
-    User.find({email: newUser.email}, (err, foundEmail)=> {
-        if(foundEmail) {
+    User.find({}, (err, foundEmail)=> {
+        if(email === newUser.email) {
             req.flash('registrations', "Email jest już w bazie.");
             res.redirect('/login');
         } else {
