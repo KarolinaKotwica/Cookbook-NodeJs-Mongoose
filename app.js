@@ -37,11 +37,6 @@ const secretKey = process.env.S3_SECRET_ACCESS_KEY;
 const region = process.env.S3_BUCKET_LOCATION;
 const S3_BUCKET_NAME = process.env.S3_BUCKET_NAME;
 
-AWS.config.update({
-    region: region,
-    accessKeyId: accessKey,
-    secretAccessKey: secretKey
-});
 
 const s3 = new S3({
     region,
@@ -49,28 +44,57 @@ const s3 = new S3({
     accessKey
 })
 
-//upload to s3
-function uploadFile(file) {
-    const fileStream = fs.createReadStream(file.path)
-  
-    const uploadParams = {
-      Bucket: S3_BUCKET_NAME,
-      Body: fileStream,
-      Key: file.filename
-    }
-  
-    return s3.upload(uploadParams).promise()
-}
+AWS.config.update({
+    region: region,
+    accessKeyId: accessKey,
+    secretAccessKey: secretKey
+});
 
-//download from s3
-function getFileStream(fileKey) {
-    const downloadParams = {
-      Key: file.filename,
-      Bucket: S3_BUCKET_NAME
+
+//upload to s3
+const fileFilter = (req, file, cb) => {
+    if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
+      cb(null, true);
+    } else {
+      cb(new Error("Invalid file type, only JPEG and PNG is allowed!"), false);
     }
+  };
+
+  const upload = multer({
+    fileFilter,
+    storage: multerS3({
+      acl: "public-read",
+      s3,
+      bucket: S3_BUCKET_NAME,
+      metadata: function (req, file, cb) {
+        cb(null, { fieldName: "TESTING_METADATA" });
+      },
+      key: function (req, file, cb) {
+        cb(null, Date.now().toString());
+      },
+    }),
+});
+// function uploadFile(file) {
+//     const fileStream = fs.createReadStream(file.path)
   
-    return s3.getObject(downloadParams).createReadStream()
-  }
+//     const uploadParams = {
+//       Bucket: S3_BUCKET_NAME,
+//       Body: fileStream,
+//       Key: file.filename
+//     }
+  
+//     return s3.upload(uploadParams).promise()
+// }
+
+// //download from s3
+// function getFileStream(fileKey) {
+//     const downloadParams = {
+//       Key: file.filename,
+//       Bucket: S3_BUCKET_NAME
+//     }
+  
+//     return s3.getObject(downloadParams).createReadStream()
+//   }
 
 ////////
 
@@ -89,21 +113,19 @@ app.use(function (req, res, next) {
 mongoose.connect(process.env.DB_MONGOOSE);
 
 
-app.use(flash());
-
 //Configuration for Multer //
-const multerStorage = multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, "public/imgs");
-    },
-    filename: function (req, file, cb) {
-        cb(null, file.originalname);
-    }
-});
+// const multerStorage = multer.diskStorage({
+//     destination: (req, file, cb) => {
+//       cb(null, "public/imgs");
+//     },
+//     filename: function (req, file, cb) {
+//         cb(null, file.originalname);
+//     }
+// });
 
-const upload = multer({
-    storage: multerStorage
-  });
+// const upload = multer({
+//     storage: multerStorage
+//   });
 
 
 
