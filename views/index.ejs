@@ -44,25 +44,11 @@
     <!----------------------- Latest  ------------------------------->
     <div class="recipes_container">
         <h1>Ostatnio dodane:</h1>
-        <div class="recipes">
-
-            <% recipes.forEach(recipe => { %>
-            <div class="card">
-                <a href="/recipes/<%= recipe._id %>">
-                    <img src="https://img-store223.s3.amazonaws.com/<%= recipe.image %>" class="card-img-top" alt="<%= recipe.image %>">
-                    <div class="card-body">
-                            <h4><%= recipe.title %></h4>
-                            <p class="card-text">
-                                <span><%= recipe.category %></span>
-                                <span><%= recipe.created.getDate() %> / <%= recipe.created.getMonth()+1 %> / <%= recipe.created.getFullYear() %></span>
-                            </p>
-                    </div>
-                </a>
-            </div>
-            <% }); %> 
-        </div>
+        <%- include('partials/recipe.ejs'); -%>
         
     </div>
 </div>
+
+<footer>Created by Karolina Kotwica <i class="far fa-heart"></i> <a class="icon" href="mailto:karolinakotwica93@gmail.com"><i class="far fa-envelope"></i></a></footer>
         
 <%- include('partials/footer'); -%>

@@ -1,0 +1,16 @@
+<div class="recipes">
+    <% recipes.forEach(recipe => { %>
+    <div class="card">
+        <a href="/recipes/<%= recipe._id %>">
+            <img src="https://img-store223.s3.amazonaws.com/<%= recipe.image %>" class="card-img-top" alt="<%= recipe.image %>">
+            <div class="card-body">
+                    <h4><%= recipe.title %></h4>
+                    <p class="card-text">
+                        <span><%= recipe.category %></span>
+                        <span><%= recipe.created.getDate() %> / <%= recipe.created.getMonth()+1 %> / <%= recipe.created.getFullYear() %></span>
+                    </p>
+            </div>
+        </a>
+    </div>
+    <% }) %> 
+</div>

@@ -1,3 +1,11 @@
+@keyframes shine {
+  0% {
+    background-position-x: -500%;
+  }
+  100% {
+    background-position-x: 500%;
+  }
+}
 @font-face {
   font-family: 'Sorts Mill Goudy';
   font-style: normal;
@@ -17,9 +25,6 @@ body {
 h1,
 .color {
   color: #c82145;
-}
-.background {
-  background: none;
 }
 .breadcrumb {
   font-size: 1.5em;
@@ -479,6 +484,19 @@ textarea {
 .box .checkbox > input:active {
   border: 2px solid #34495E;
 }
+footer {
+  font-size: 0.8rem;
+  padding: 1.2em;
+  background: linear-gradient(90deg, #000, #fff, #c82145, #fff, #000);
+  letter-spacing: 1px;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-repeat: no-repeat;
+  background-size: 80%;
+  animation: shine 25s linear infinite;
+  position: relative;
+}
 @media (max-width: 425px) {
   .recipes_container {
     padding-top: 38%;
@@ -515,10 +533,6 @@ textarea {
     -webkit-clip-path: polygon(100% 0%, 90% 52%, 100% 100%, 25% 100%, 0% 50%, 25% 0%);
     clip-path: polygon(100% 0%, 90% 52%, 100% 100%, 25% 100%, 0% 50%, 25% 0%);
     margin-top: 1em;
-  }
-  .background {
-    background: rgba(255, 255, 255, 0.9);
-    height: 100vh;
   }
   .alert-info {
     margin-bottom: 4em;
@@ -636,9 +650,6 @@ textarea {
   }
   .login_form {
     padding: 1em;
-  }
-  .login_divider_text {
-    background-color: #fff;
   }
   .when_added .alert {
     width: 25%;

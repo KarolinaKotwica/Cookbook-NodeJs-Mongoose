@@ -3,6 +3,15 @@
 @white_color: #fff;
 @background_color: #f0f0ef;
 
+@keyframes shine {
+    0% {
+      background-position-x: -500%;
+    }
+    100% {
+      background-position-x: 500%;
+    }
+}
+
 @import url('https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy&display=swap');
 
 * {
@@ -20,10 +29,6 @@ body {
 h1,
 .color {
     color: @main_color;
-}
-
-.background {
-    background: none;
 }
 
 .breadcrumb {
@@ -631,6 +636,19 @@ textarea {
     }
 }
 
+footer {
+    font-size: .8rem;
+    padding: 1.2em;
+    background: linear-gradient(90deg, #000, #fff, @main_color, #fff, #000);
+    letter-spacing: 1px;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-repeat: no-repeat;
+    background-size: 80%;
+    animation: shine 25s linear infinite;
+    position: relative;
+}
 
 //////////////////////// Media Q small phone ///////////////////////////////////////////////////////////
 
@@ -682,11 +700,6 @@ textarea {
         -webkit-clip-path: polygon(100% 0%, 90% 52%, 100% 100%, 25% 100%, 0% 50%, 25% 0%);
         clip-path: polygon(100% 0%, 90% 52%, 100% 100%, 25% 100%, 0% 50%, 25% 0%);
         margin-top: 1em;
-    }
-
-    .background {
-        background: rgba(255,255,255,0.9);
-        height: 100vh;
     }
 
     .alert-info {
@@ -837,10 +850,6 @@ textarea {
 
     .login_form {
         padding: 1em;
-    }
-
-    .login_divider_text {
-        background-color: @white_color;
     }
 
     .when_added .alert {
