@@ -407,23 +407,6 @@ app.post('/favorite/:id', (req,res)=> {
             })
         }
     })
-
-    //++++++++++++++++++++++++++++++++++++++++++++++++++
-    // Recipe.findById(req.params.id, (err, found) => {
-    //     if(err) {console.log(err);}
-    //     else {
-    //         User.findById(req.user.id, (err, foundUser) => {
-    //             if(err) {console.log(err);}
-    //             else {
-
-    //                 foundUser.favorite.push(found);
-
-    //                 foundUser.save();
-    //                 res.redirect("/favoriteUser");
-    //             }
-    //         })
-    //     }
-    // })
 })
 
 app.get('/add', (req,res) => {
