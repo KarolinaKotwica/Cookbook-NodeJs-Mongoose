@@ -515,6 +515,11 @@ footer {
   .box .shopping_list {
     padding-left: 30%;
   }
+  .login {
+    flex-direction: column;
+    width: 100vh;
+    margin: 0 auto;
+  }
 }
 @media (min-width: 961px) {
   #main_background {
@@ -656,6 +661,9 @@ footer {
   }
   .box .shopping_list {
     padding-left: 40%;
+  }
+  .register input {
+    width: 18.9em;
   }
   .wrapper {
     display: flex;
