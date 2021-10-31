@@ -682,9 +682,12 @@ footer {
   }
   .wrapper .sidebar .add_button {
     display: block;
+    margin-top: 1em;
   }
   .wrapper .sidebar p {
     padding: 1em;
+    margin-left: 0.5em;
+    margin-right: 0.5em;
   }
   .wrapper .recipes {
     background: none;
