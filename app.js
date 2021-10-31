@@ -91,18 +91,21 @@ mongoose.connect(process.env.DB_MONGOOSE);
 
 
 //Configuration for Multer //
-// const multerStorage = multer.diskStorage({
-//     destination: (req, file, cb) => {
-//       cb(null, "public/imgs");
-//     },
-//     filename: function (req, file, cb) {
-//         cb(null, file.originalname);
-//     }
-// });
+const multerStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+      cb(null, "public/imgs");
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname);
+    }
+});
 
-// const upload = multer({
-//     storage: multerStorage
-//   });
+const upload = multer({
+    storage: multerStorage
+  });
+
+
+
 
 
 
@@ -404,6 +407,23 @@ app.post('/favorite/:id', (req,res)=> {
             })
         }
     })
+
+    //++++++++++++++++++++++++++++++++++++++++++++++++++
+    // Recipe.findById(req.params.id, (err, found) => {
+    //     if(err) {console.log(err);}
+    //     else {
+    //         User.findById(req.user.id, (err, foundUser) => {
+    //             if(err) {console.log(err);}
+    //             else {
+
+    //                 foundUser.favorite.push(found);
+
+    //                 foundUser.save();
+    //                 res.redirect("/favoriteUser");
+    //             }
+    //         })
+    //     }
+    // })
 })
 
 app.get('/add', (req,res) => {
