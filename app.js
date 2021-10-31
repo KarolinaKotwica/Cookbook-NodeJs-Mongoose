@@ -219,8 +219,9 @@ passport.serializeUser(function(user, done) {
 passport.use(new GoogleStrategy({
     clientID: process.env.CLIENT_ID,
     clientSecret: process.env.CLIENT_SECRET,
-    callbackURL: "https://book-to-cook.herokuapp.com/auth/google/callback",
-    userProfileURL: 'https://www.googleapis.com/oauth2/v3/userinfo'
+    callbackURL: "/auth/google/callback",
+    userProfileURL: 'https://www.googleapis.com/oauth2/v3/userinfo',
+    proxy: true
   },
   function(accessToken, refreshToken, profile, cb) {
       console.log(profile);
@@ -248,7 +249,7 @@ app.get('/', (req,res) => {
 app.get('/auth/google',
   passport.authenticate('google', { scope: ["profile"] }));
 
-  app.get('https://book-to-cook.herokuapp.com/auth/google/callback',
+  app.get('/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/login' }),
   function(req, res) {
     res.redirect('/user');
