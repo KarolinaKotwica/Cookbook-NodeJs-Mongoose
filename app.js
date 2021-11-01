@@ -200,9 +200,6 @@ const User = mongoose.model("User", userSchema);
 
 
 
-
-
-
 passport.use(User.createStrategy());
 
 passport.serializeUser(function(user, done) {
@@ -216,19 +213,19 @@ passport.serializeUser(function(user, done) {
   });
 
 ///////////////// Google ////////////
-passport.use(new GoogleStrategy({
-    clientID: process.env.CLIENT_ID,
-    clientSecret: process.env.CLIENT_SECRET,
-    callbackURL: "https://book-to-cook.herokuapp.com/auth/google/callback",
-    userProfileURL: 'https://www.googleapis.com/oauth2/v3/userinfo'
-  },
-  function(accessToken, refreshToken, profile, cb) {
-      console.log(profile);
-    User.findOrCreate({ googleId: profile.id }, function (err, user) {
-      return cb(err, user);
-    });
-  }
-));
+// passport.use(new GoogleStrategy({
+//     clientID: process.env.CLIENT_ID,
+//     clientSecret: process.env.CLIENT_SECRET,
+//     callbackURL: "https://book-to-cook.herokuapp.com/auth/google/callback",
+//     userProfileURL: 'https://www.googleapis.com/oauth2/v3/userinfo'
+//   },
+//   function(accessToken, refreshToken, profile, cb) {
+//       console.log(profile);
+//     User.findOrCreate({ googleId: profile.id }, function (err, user) {
+//       return cb(err, user);
+//     });
+//   }
+// ));
 
 
 
@@ -245,14 +242,14 @@ app.get('/', (req,res) => {
     }).sort({_id: -1}).limit(20);
 })
 
-app.get('/auth/google',
-  passport.authenticate('google', { scope: ["profile"] }));
+// app.get('/auth/google',
+//   passport.authenticate('google', { scope: ["profile"] }));
 
-  app.get('/auth/google/callback',
-  passport.authenticate('google', { failureRedirect: '/login' }),
-  function(req, res) {
-    res.redirect('/user');
-});
+//   app.get('/auth/google/callback',
+//   passport.authenticate('google', { failureRedirect: '/login' }),
+//   function(req, res) {
+//     res.redirect('/user');
+// });
 
 
 app.get('/all/:page', (req,res) => {
