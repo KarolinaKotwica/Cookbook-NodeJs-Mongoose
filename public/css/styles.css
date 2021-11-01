@@ -555,9 +555,6 @@ footer {
     padding: 2em 4em;
     background: rgba(255, 255, 255, 0.9);
   }
-  #recipe_of_the_day .card_random {
-    width: 100%;
-  }
   .recipes_container {
     width: 90%;
     margin: 0 auto;
