@@ -344,26 +344,14 @@ textarea {
   box-shadow: none;
   border-color: #ccc;
 }
-.login_divider {
-  border-bottom: 1px solid #e8e9eb;
-  height: 35px;
-  width: 100%;
-  text-align: center;
-  position: relative;
-  margin-bottom: 30px;
-}
-.login_divider_text {
-  display: block;
-  top: 20px;
-  padding: 0 15px;
-  position: absolute;
-  background: #f0f0ef;
-  left: 50%;
-  color: #aab1be;
-  transform: translateX(-50%);
-}
 .login_form {
   padding: 4em;
+}
+.button_login {
+  transition: all 0.3s linear;
+}
+.button_login:hover {
+  color: #c82145;
 }
 .wrapper {
   padding-top: 5em;
@@ -419,14 +407,6 @@ textarea {
 .add_button:hover {
   background-color: #d34b68;
   color: #fff;
-}
-.social-block {
-  background-color: #e8e9eb;
-  transition: all 0.15s linear;
-  border: none;
-}
-.social-block:hover {
-  background-color: #eff0f3;
 }
 .box {
   padding: 0.8em;
@@ -619,6 +599,7 @@ footer {
   }
   .container #preparation {
     margin-left: 9em;
+    font-size: large;
   }
   .form_detail {
     width: 100%;

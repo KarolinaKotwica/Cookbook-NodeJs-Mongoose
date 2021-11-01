@@ -459,28 +459,36 @@ textarea {
     }
 }
 
-.login_divider {
-    border-bottom: 1px solid #e8e9eb;
-    height: 35px;
-    width: 100%;
-    text-align: center;
-    position: relative;
-    margin-bottom: 30px;
-}
+// .login_divider {
+//     border-bottom: 1px solid #e8e9eb;
+//     height: 35px;
+//     width: 100%;
+//     text-align: center;
+//     position: relative;
+//     margin-bottom: 30px;
+// }
 
-.login_divider_text {
-    display: block;
-    top: 20px;
-    padding: 0 15px;
-    position: absolute;
-    background: @background_color;
-    left: 50%;
-    color: #aab1be;
-    transform: translateX(-50%);
-}
+// .login_divider_text {
+//     display: block;
+//     top: 20px;
+//     padding: 0 15px;
+//     position: absolute;
+//     background: @background_color;
+//     left: 50%;
+//     color: #aab1be;
+//     transform: translateX(-50%);
+// }
 
 .login_form {
     padding: 4em;
+}
+
+.button_login {
+    transition: all .3s linear;
+
+    &:hover {
+        color: @main_color;
+    }
 }
 
 // USER ////
@@ -555,15 +563,15 @@ textarea {
     }
 }
 
-.social-block {
-    background-color: #e8e9eb;
-    transition: all .15s linear;
-    border: none;
+// .social-block {
+//     background-color: #e8e9eb;
+//     transition: all .15s linear;
+//     border: none;
 
-    &:hover {
-        background-color: #eff0f3;
-    }
-}
+//     &:hover {
+//         background-color: #eff0f3;
+//     }
+// }
 
 //// shopping list ///
 .box {
@@ -810,6 +818,7 @@ footer {
 
         #preparation {
             margin-left: 9em;
+            font-size: large;
         }
     }
 
