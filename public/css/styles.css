@@ -531,8 +531,7 @@ footer {
   }
   .overall_recipe_margin {
     display: flex;
-    width: 95%;
-    margin: 0 auto;
+    width: 75%;
   }
   .overall {
     display: flex;
@@ -584,8 +583,10 @@ footer {
     width: 50%;
   }
   .recipe_container #notes {
-    width: 50%;
-    font-size: 20px;
+    width: 43%;
+    font-size: 19px;
+    display: flex;
+    align-items: center;
   }
   .recipe_container p {
     font-size: 1.2em;
