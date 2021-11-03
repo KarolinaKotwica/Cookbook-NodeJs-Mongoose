@@ -262,7 +262,7 @@ img[alt="logo"] {
   font-size: 1.3em;
 }
 .recipe_container #notes {
-  margin: 2em 2em 1em 3em;
+  margin: 1em 1em 2em 2em;
 }
 .recipe_container .banner {
   position: relative;
@@ -286,7 +286,7 @@ img[alt="logo"] {
   margin-top: 2%;
 }
 .recipe_container #recipe_container_description {
-  margin: 2em;
+  margin: 1em;
 }
 .recipe_container #recipe_container_description .when_added {
   font-size: 11px;
@@ -360,6 +360,9 @@ textarea {
 .wrapper .sidebar {
   width: 100%;
   padding-top: 3em;
+}
+.wrapper .sidebar p {
+  padding: 1em;
 }
 .wrapper .cookbook {
   margin-top: 4em;
