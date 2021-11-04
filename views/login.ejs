@@ -90,6 +90,11 @@
                             <p><%= registrations %> </p>
                         </div>
                         <% } %>
+                        <% if (registrations_error_username.length > 0) { %>
+                            <div class="alert alert-danger" role="alert">
+                                <p><%= registrations_error_username %> </p>
+                            </div>
+                            <% } %>
                        <br>
 
                         <div class="mb-3">

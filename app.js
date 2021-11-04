@@ -469,17 +469,23 @@ app.post('/register', (req,res) => {
         favorite: []
     })
 
-    User.find({}, (err)=> {
+    User.find({}, (err, users)=> {
         if(err) {
             req.flash('registrations', "Wystąpił błąd.");
             res.redirect('/login');
         } else {
-            User.register(newUser, req.body.password, (err, user) => {
+            if (newUser.username === users.username) {
+                req.flash('registrations_error_username', "Istnieje już taka nazwa użytkownika w bazie");
+                res.redirect('/login');
+            } else {
+                User.register(newUser, req.body.password, (err, user) => {
 
-                passport.authenticate("local", { failureRedirect: '/login' })(req,res,function(){
-                    res.redirect("/user");
+                    passport.authenticate("local", { failureRedirect: '/login' })(req,res,function(){
+                        res.redirect("/user");
+                    })
                 })
-            })
+            }
+            
         }
     })
 
@@ -489,7 +495,8 @@ app.post('/register', (req,res) => {
 app.get('/login', (req,res) => {
     const userName = req.flash('user');
     const registrations = req.flash('registrations');
-    res.render('login', {userName, registrations});
+    const registrations_error_username = req.flash('registrations_error_username');
+    res.render('login', {userName, registrations, registrations_error_username});
 })
 
 app.post('/login', (req,res) => {
