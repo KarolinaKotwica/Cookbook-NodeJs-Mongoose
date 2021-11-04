@@ -475,16 +475,16 @@ app.post('/register', (req,res) => {
             res.redirect('/login');
         } else {
             User.find({username: req.body.username}, (err, foundUser) => {
-                if(foundUser) {
-                    req.flash('registrations_error_username', "Istnieje już taka nazwa użytkownika w bazie!");
-                    res.redirect('/login');
-                } else {
+                if(!foundUser) {
                     User.register(newUser, req.body.password, (err, user) => {
 
                         passport.authenticate("local", { failureRedirect: '/login' })(req,res,function(){
                             res.redirect("/user");
                         })
                     })
+                } else {
+                    req.flash('registrations_error_username', "Istnieje już taka nazwa użytkownika w bazie!");
+                    res.redirect('/login');
                 }
             })
             
