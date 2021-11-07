@@ -484,6 +484,15 @@ footer {
   .recipes_container {
     padding-top: 38%;
   }
+  .style-shop-list {
+    padding: 0;
+  }
+  .style-shop-list h2 {
+    padding: 0;
+  }
+  .box .shopping_list {
+    padding-left: 11%;
+  }
   #main_background {
     padding-top: 25%;
   }
