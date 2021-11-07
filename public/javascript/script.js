@@ -10,6 +10,17 @@ addIngredientsBtn.addEventListener('click', function(){
   ingredientList.appendChild(newIngredients);
 });
 
+//sessionStorage
+if(window.sessionStorage) {
+  let publisher = document.getElementById('publisher');
+
+  publisher.value = sessionStorage.getItem('publisher');
+
+  publisher.addEventListener('input', ()=> {
+    sessionStorage.setItem('publisher', publisher.value);
+  })
+}
+
 
 //////   pages //////
 var list = new Array();

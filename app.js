@@ -232,7 +232,7 @@ passport.serializeUser(function(user, done) {
 /////////////////// Routes ///////////////////////////////////
 
 
-app.get('/', (req,res) => {
+app.get('/', async (req,res) => {
     Recipe.find({},async (err, foundRecipe) => {
         let count = await Recipe.find().countDocuments();
         let random = Math.floor(Math.random()*count);
@@ -252,11 +252,11 @@ app.get('/', (req,res) => {
 // });
 
 
-app.get('/all/:page', (req,res) => {
+app.get('/all/:page', async (req,res) => {
     var perPage = 20;
     const page = req.params.page;
 
-    Recipe.find({})
+    await Recipe.find({})
         .skip((perPage * page) - perPage)
         .limit(perPage)
         .sort({_id: -1})
@@ -529,7 +529,7 @@ app.post('/search', async (req, res) => {
         if (err) console.log(err);
         console.log(docs);
     });
-    Recipe.find({ title: { $regex: req.body.search, $options: "i" } }, (err, docs) => {
+    await Recipe.find({ title: { $regex: req.body.search, $options: "i" } }, (err, docs) => {
         if (!err) {
             res.render('search', { found: docs } );
         }

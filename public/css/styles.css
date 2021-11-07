@@ -587,6 +587,7 @@ footer {
     background: rgba(255, 255, 255, 0.9) !important;
   }
   .recipe_container .banner {
+    margin: 0;
     width: 50%;
   }
   .recipe_container #notes {
