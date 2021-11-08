@@ -2,6 +2,7 @@
 require('dotenv').config()
 const express = require("express");
 const ejs = require("ejs");
+var _ = require('lodash');
 const app = express();
 const mongoose = require('mongoose');
 const multer  = require('multer');
@@ -463,8 +464,8 @@ app.post('/', upload.single('image'), (req,res) => {
 app.post('/register', (req,res) => {
 
     const newUser = new User({
-        username: req.body.username,
-        email: req.body.email,
+        username: _.trim(req.body.username),
+        email: _.trim(req.body.email),
         recipes: [],
         favorite: []
     })
@@ -506,8 +507,8 @@ app.post('/login', (req,res) => {
     req.flash('user', "Niepoprawny login lub hasło");
 
     const user = new User({
-        username: req.body.username,
-        password: req.body.password
+        username: _.trim(req.body.username),
+        password: _.trim(req.body.password)
     })
 
     req.login(user, (err) => {
