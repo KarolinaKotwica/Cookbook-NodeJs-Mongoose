@@ -17,13 +17,13 @@
                 <input type="text" id="publisher" name="publisher" class="form-control" placeholder="Autor przepisu" required>
             </div>
             <div class="mb-3">
-                <input type="text" name="title" class="form-control" placeholder="Nazwa przepisu" required>
+                <input type="text" id="title" name="title" class="form-control" placeholder="Nazwa przepisu" required>
             </div>
             <div class="mb-3">
-                <input type="number" name="time" class="form-control" placeholder="Czas w min" required>
+                <input type="number" id="time" name="time" class="form-control" placeholder="Czas w min" required>
             </div>
             <div class="mb-3">
-                <select name="category" class="form-select" required>
+                <select name="category" id="choose_category" class="form-select" required>
                     <option value="Śniadanie">Śniadanie</option>
                     <option value="Desery">Desery</option>
                     <option selected="Obiad">Obiad</option>
@@ -52,12 +52,12 @@
 
             <h3>Opis przepisu:</h3>
             <div class="form-floating">
-                <textarea class="form-control textarea" name="describe" required></textarea>
+                <textarea class="form-control textarea" id="describe" name="describe" required></textarea>
                 <label for="textarea">Napisz kilka słów o przepisie, wskazówki itp..</label>
             </div>
             <h3>Przygotowanie:</h3>
             <div class="form-floating">
-                <textarea class="form-control textarea" name="preparation" required></textarea>
+                <textarea class="form-control textarea" id="preparation" name="preparation" required></textarea>
                 <label for="textarea">Opisz w punktach jak wykonać przepis..</label>
             </div>
         </div>
