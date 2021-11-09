@@ -13,31 +13,11 @@ addIngredientsBtn.addEventListener('click', function(){
 //sessionStorage
 if(window.sessionStorage) {
   let publisher = document.getElementById('publisher');
-  let title = document.getElementById('title');
-  let time = document.getElementById('time');
-  let describe = document.getElementById('describe');
-  let preparation = document.getElementById('preparation');
 
   publisher.value = sessionStorage.getItem('publisher');
-  title.value = sessionStorage.getItem('title');
-  time.value = sessionStorage.getItem('time');
-  describe.value = sessionStorage.getItem('describe');
-  preparation.value = sessionStorage.getItem('preparation');
 
   publisher.addEventListener('input', ()=> {
     sessionStorage.setItem('publisher', publisher.value);
-  })
-  title.addEventListener('input', ()=> {
-    sessionStorage.setItem('title', title.value);
-  })
-  time.addEventListener('input', ()=> {
-    sessionStorage.setItem('time', time.value);
-  })
-  describe.addEventListener('input', ()=> {
-    sessionStorage.setItem('describe', describe.value);
-  })
-  preparation.addEventListener('input', ()=> {
-    sessionStorage.setItem('preparation', preparation.value);
   })
 }
 

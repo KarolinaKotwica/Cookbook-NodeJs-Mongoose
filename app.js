@@ -462,6 +462,7 @@ app.post('/', upload.single('image'), (req,res) => {
 })
 
 app.post('/register', (req,res) => {
+    req.flash('registrations_error_username', "Istnieje już taka nazwa użytkownika w bazie!");
 
     const newUser = new User({
         username: _.trim(req.body.username),
@@ -477,7 +478,7 @@ app.post('/register', (req,res) => {
         } else {
             User.find({username: req.body.username}, (err, foundUser) => {
                 if(foundUser.username === req.body.username) {
-                    req.flash('registrations_error_username', "Istnieje już taka nazwa użytkownika w bazie!");
+                    
                     res.redirect('/login');
                 } else {
                     User.register(newUser, req.body.password, (err, user) => {
@@ -507,8 +508,8 @@ app.post('/login', (req,res) => {
     req.flash('user', "Niepoprawny login lub hasło");
 
     const user = new User({
-        username: _.trim(req.body.username),
-        password: _.trim(req.body.password)
+        username: (req.body.username).trim(),
+        password: (req.body.password).trim()
     })
 
     req.login(user, (err) => {
