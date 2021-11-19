@@ -262,6 +262,14 @@ img[alt="logo"] {
   display: flex;
   justify-content: space-evenly;
 }
+.all {
+  font-size: 1.2em;
+  padding: 1em;
+}
+.all a {
+  text-decoration: none;
+  color: #c82145;
+}
 .recipe_container {
   padding-top: 6em;
 }
