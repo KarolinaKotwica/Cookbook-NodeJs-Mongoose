@@ -270,7 +270,7 @@ app.get('/all/:page', async (req,res) => {
             pages: Math.ceil(count / perPage)});
     });
 })
-})
+}) 
 
 app.get('/shopList', (req,res)=> {
     if(req.isAuthenticated()) {
