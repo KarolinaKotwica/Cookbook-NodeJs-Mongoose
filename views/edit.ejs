@@ -22,7 +22,9 @@
 
                 <div class="ingredientList">
                     <div class="ingredientDiv mb-3">
-                        <input type="text" class="form-control" value="<%= edit.ingredients %>" name="ingredients" autocomplete="off" required>
+                        <% for (let i = 0; i < edit.ingredients.length; i++) { %> 
+                        <input type="text" class="form-control" value="<%= edit.ingredients[i] %>" name="ingredients" autocomplete="off" required><br>
+                        <% } %> 
                     </div>
                 </div>
 

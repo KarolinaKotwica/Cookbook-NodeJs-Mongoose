@@ -7,11 +7,18 @@
   }
 }
 @font-face {
-  font-family: 'Sorts Mill Goudy';
+  font-family: 'Cormorant';
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url(https://fonts.gstatic.com/s/sortsmillgoudy/v10/Qw3GZR9MED_6PSuS_50nEaVrfzgEXH0.ttf) format('truetype');
+  src: url(https://fonts.gstatic.com/s/cormorant/v11/H4clBXOCl9bbnla_nHIa6A.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Radley';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/radley/v15/LYjDdGzinEIjCN19oA.ttf) format('truetype');
 }
 * {
   margin: 0;
@@ -20,7 +27,7 @@
 }
 body {
   background-color: #f0f0ef;
-  font-family: 'Sorts Mill Goudy', serif;
+  font-family: 'Radley', serif;
 }
 h1,
 .color {
@@ -601,7 +608,7 @@ footer {
     padding-bottom: 3em;
   }
   .recipes_container .recipes .card {
-    width: 14rem;
+    width: 15rem;
     -webkit-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.5);
     box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.5);
   }

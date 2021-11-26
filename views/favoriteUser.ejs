@@ -11,13 +11,13 @@
         </span>
         
         <p>
-            W swojej książce kucharskiej masz już: <%= user.recipes.length %>
+            W swojej książce kucharskiej masz już: <span class='color'><%= user.recipes.length %>
             <% if(user.recipes.length === 1) { %>
-                przepis.
+                przepis.</span>
             <% } else if(user.recipes.length > 1 && user.recipes.length < 5) { %>
-                przepisy.
+                przepisy.</span>
             <% } else { %>
-                przepisów.
+                przepisów.</span>
             <% } %>
         </p>
         <% if(user.recipes.length === 0) { %>
