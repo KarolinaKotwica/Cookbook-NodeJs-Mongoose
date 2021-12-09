@@ -117,15 +117,15 @@ const upload = multer({
 const recipeSchema = new mongoose.Schema({
     publisher: {
         type: String,
-        min: [1, 'To pole musi zawierać przynajmniej 1 znak'],
-        max: [20, 'To pole może zawierać maks. 20 znaków'],
+        minLength: [1, 'To pole musi zawierać przynajmniej 1 znak'],
+        maxLength: [20, 'To pole może zawierać maks. 20 znaków'],
         trim: true,
         required: true
     },
     title: {
         type: String,
-        min: [1, 'To pole musi zawierać przynajmniej 1 znak'],
-        max: [30, 'To pole może zawierać maks. 30 znaków'],
+        minLength: [1, 'To pole musi zawierać przynajmniej 1 znak'],
+        maxLength: [30, 'To pole może zawierać maks. 30 znaków'],
         trim: true,
         required: true
     },
@@ -148,15 +148,15 @@ const recipeSchema = new mongoose.Schema({
     },
     describe: {
         type: String,
-        min: [1, 'To pole musi zawierać przynajmniej 1 znak'],
-        max: [350, 'To pole może zawierać maks. 350 znaków'],
+        minLength: [1, 'To pole musi zawierać przynajmniej 1 znak'],
+        maxLength: [350, 'To pole może zawierać maks. 350 znaków'],
         trim: true,
         required: true
     },
     preparation: {
         type: String,
-        min: [1, 'To pole musi zawierać przynajmniej 1 znak'],
-        max: [500, 'To pole może zawierać maks. 500 znaków'],
+        minLength: [1, 'To pole musi zawierać przynajmniej 1 znak'],
+        maxLength: [500, 'To pole może zawierać maks. 500 znaków'],
         trim: true,
         required: true
     },
