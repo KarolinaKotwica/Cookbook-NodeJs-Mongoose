@@ -118,12 +118,14 @@ const recipeSchema = new mongoose.Schema({
     publisher: {
         type: String,
         min: [1, 'To pole musi zawierać przynajmniej 1 znak'],
-        min: [20, 'To pole może zawierać maks. 20 znaków'],
+        max: [20, 'To pole może zawierać maks. 20 znaków'],
         trim: true,
         required: true
     },
     title: {
         type: String,
+        min: [1, 'To pole musi zawierać przynajmniej 1 znak'],
+        max: [30, 'To pole może zawierać maks. 30 znaków'],
         trim: true,
         required: true
     },
@@ -146,11 +148,15 @@ const recipeSchema = new mongoose.Schema({
     },
     describe: {
         type: String,
+        min: [1, 'To pole musi zawierać przynajmniej 1 znak'],
+        max: [350, 'To pole może zawierać maks. 350 znaków'],
         trim: true,
         required: true
     },
     preparation: {
         type: String,
+        min: [1, 'To pole musi zawierać przynajmniej 1 znak'],
+        max: [500, 'To pole może zawierać maks. 500 znaków'],
         trim: true,
         required: true
     },
