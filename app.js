@@ -447,7 +447,8 @@ app.post('/', upload.single('image'), (req,res) => {
 
         recipe.save((err) => {
             if (err) {
-                console.log(err);
+                req.flash('newRecipe', 'Sprawdź czy dobrze wypełniłeś/aś pola oraz nie zapomnij dodać obrazka.');
+                res.redirect("/add");
             }
             else {
                 User.findById(req.user.id, (err, foundUser) => {
