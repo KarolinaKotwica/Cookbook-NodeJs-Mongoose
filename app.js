@@ -117,6 +117,8 @@ const upload = multer({
 const recipeSchema = new mongoose.Schema({
     publisher: {
         type: String,
+        min: [1, 'To pole musi zawierać przynajmniej 1 znak'],
+        min: [20, 'To pole może zawierać maks. 20 znaków'],
         trim: true,
         required: true
     },
