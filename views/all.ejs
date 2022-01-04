@@ -16,9 +16,9 @@
     <% if (pages > 0) { %>
         <ul class="pagination text-center">
             <% if (current == 1) { %>
-                <li class="none"><a>First</a></li>
+                <li class="none"><a>Pierwsza</a></li>
             <% } else { %>
-                <li><a href="/all/1">First</a></li>
+                <li><a href="/all/1">Pierwsza</a></li>
             <% } %>
             <% var i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
             <% if (i !== 1) { %>
@@ -35,9 +35,9 @@
                 <% } %>
             <% } %>
             <% if (current == pages) { %>
-                <li class="none"><a>Last</a></li>
+                <li class="none"><a>Ostatnia</a></li>
             <% } else { %>
-                <li><a href="/all/<%= pages %>">Last</a></li>
+                <li><a href="/all/<%= pages %>">Ostatnia</a></li>
             <% } %>
         </ul>
     <% } %>
