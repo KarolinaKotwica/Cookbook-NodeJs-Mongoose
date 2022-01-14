@@ -11,7 +11,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url(https://fonts.gstatic.com/s/radley/v15/LYjDdGzinEIjCN19oA.ttf) format('truetype');
+  src: url(https://fonts.gstatic.com/s/radley/v18/LYjDdGzinEIjCN19oA.ttf) format('truetype');
 }
 * {
   margin: 0;
@@ -228,8 +228,8 @@ img[alt="logo"] {
   padding-top: 2em;
 }
 .card {
-  width: 17rem;
-  margin: 15px;
+  width: 12rem;
+  margin: 10px;
   text-align: center;
   overflow: hidden;
 }
@@ -529,6 +529,9 @@ footer {
   }
 }
 @media (min-width: 961px) {
+  .card-body h4 {
+    font-size: 1.3rem;
+  }
   #main_background {
     flex-direction: row;
     padding-top: 5em;
