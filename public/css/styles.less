@@ -92,8 +92,6 @@ h1,
     display: none;
 }
 
-
-
 /////// nav.ejs ////////////
 
 .navbar {
@@ -252,6 +250,8 @@ img[alt="logo"] {
     display: flex;
     flex-direction: column-reverse;
     padding-top: 10%;
+    animation: expand .8s ease forwards;
+    transition: all .8s ease;
 }
 
 #main_banner {
@@ -259,6 +259,10 @@ img[alt="logo"] {
     padding: 8%;
 
     text-align: center;
+}
+
+.main_img {
+    animation: slideIn 1.3s ease-in-out forwards;
 }
 
 #button_search {
@@ -356,6 +360,10 @@ img[alt="logo"] {
 .recipe_container {
 
     padding-top: 6em;
+
+    .line_height {
+        line-height: 38px;
+    }
 
     p {
         font-size: 1.3em;
@@ -681,6 +689,24 @@ footer {
     position: relative;
 }
 
+@keyframes slideIn {
+    0% {
+      transform: translateX(500px) scale(.2);
+    }
+    100% {
+      transform: translateX(0px) scale(1);
+    }
+}
+  
+@keyframes expand {
+    0% {
+      transform: translateX(1400px);
+    }
+    100% {
+      transform: translateX(0px);
+    }
+}
+
 //////////////////////// Media Q small phone ///////////////////////////////////////////////////////////
 
 @media (max-width:425px) {
@@ -738,11 +764,14 @@ footer {
         flex-direction: row;
         padding-top: 5em;
         justify-content: center;
+        background-color: #f0f0ef;
+        position: relative;
     }
 
     #main_banner {
         width: 35%;
         padding: 3%;
+        margin-left: 80px;
 
         p {
             font-size: 1.3em;
