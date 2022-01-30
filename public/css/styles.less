@@ -431,7 +431,6 @@ img[alt="logo"] {
 
 ///////////////// add ////////////////////////////////////
 form {
-    margin: 1em;
 
     .form-detail {
         margin-top: 2em;
@@ -480,26 +479,6 @@ textarea {
     }
 }
 
-// .login_divider {
-//     border-bottom: 1px solid #e8e9eb;
-//     height: 35px;
-//     width: 100%;
-//     text-align: center;
-//     position: relative;
-//     margin-bottom: 30px;
-// }
-
-// .login_divider_text {
-//     display: block;
-//     top: 20px;
-//     padding: 0 15px;
-//     position: absolute;
-//     background: @background_color;
-//     left: 50%;
-//     color: #aab1be;
-//     transform: translateX(-50%);
-// }
-
 .login_form {
     padding: 4em;
 }
@@ -529,6 +508,10 @@ textarea {
     .cookbook {
         margin-top: 4em;
         padding: 0;
+
+        h4 {
+            font-size: 1em;
+        }
 
         p {
             font-size: 1.3em;
@@ -587,16 +570,6 @@ textarea {
         color: #fff;
     }
 }
-
-// .social-block {
-//     background-color: #e8e9eb;
-//     transition: all .15s linear;
-//     border: none;
-
-//     &:hover {
-//         background-color: #eff0f3;
-//     }
-// }
 
 //// shopping list ///
 .box {
@@ -742,6 +715,10 @@ footer {
 //////////////////////// Media Q Desktop ///////////////////////////////////////////////////////////
 
 @media (min-width:961px) {
+    form[action='/delete'] {
+        margin: .4em;
+    }
+
     .card-body h4 {
         font-size: 1.3rem;
     }
@@ -767,7 +744,7 @@ footer {
     }
 
     @keyframes slideLeft {
-        form {transform: translateX(-700px);}
+        from {transform: translateX(-700px);}
         to {transform: translateX(0);}
 
     }
