@@ -233,7 +233,7 @@ img[alt="logo"] {
   padding-top: 2em;
 }
 .card {
-  width: 12rem;
+  width: 11rem;
   margin: 10px;
   text-align: center;
   overflow: hidden;
@@ -252,7 +252,7 @@ img[alt="logo"] {
   transform: scale(0.95);
 }
 .card img {
-  height: 195px;
+  height: 160px;
   position: relative;
 }
 .card a {
@@ -634,6 +634,9 @@ footer {
     width: 15rem;
     -webkit-box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.5);
     box-shadow: 0px 0px 2px 0px rgba(0, 0, 0, 0.5);
+  }
+  .recipes_container .recipes .card img {
+    height: 195px;
   }
   .recipe_container {
     width: 90%;
