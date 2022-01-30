@@ -136,6 +136,10 @@ img[alt="logo"] {
     text-align: center;
 }
 
+form[action='/search'] {
+    margin: 1em;
+}
+
 ////// category.ejs ////////
 #category {
 
@@ -603,6 +607,7 @@ textarea {
         display: inline-flex;
         cursor: pointer;
         position: relative;
+        padding: 6px 0 15px 0;
     }
     
     .checkbox > input {
@@ -665,12 +670,20 @@ footer {
     }
 }
 
+.addToShoppingList {
+    margin-bottom: 6px;
+}
+
 
 //////////////////////// Media Q small phone ///////////////////////////////////////////////////////////
 
 @media (max-width:425px) {
     .recipes_container {
         padding-top: 38%;
+    }
+
+    .latest_container {
+        padding-top: 20%;
     }
 
     .style-shop-list {
@@ -682,6 +695,10 @@ footer {
 
     .box .shopping_list {
         padding-left: 11%;
+
+        .checkbox {
+            padding: 6px 0 15px 0;
+        }
     }
 
     #main_background {
@@ -689,11 +706,13 @@ footer {
     }
 
     .login_form {
-        padding: 0;
+        padding: 15px;
+        margin-top: 3em;
     }
 
     .item .addToShoppingList {
         margin-top: 1em;
+        margin-bottom: 5em;
     }
 }
 /////////////////////// Media Q Tablet ///////////////////////////////////////////////////////////
