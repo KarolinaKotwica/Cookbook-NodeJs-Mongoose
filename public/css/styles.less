@@ -250,8 +250,6 @@ img[alt="logo"] {
     display: flex;
     flex-direction: column-reverse;
     padding-top: 10%;
-    animation: expand .8s ease forwards;
-    transition: all .8s ease;
 }
 
 #main_banner {
@@ -259,10 +257,6 @@ img[alt="logo"] {
     padding: 8%;
 
     text-align: center;
-}
-
-.main_img {
-    animation: slideIn 1.3s ease-in-out forwards;
 }
 
 #button_search {
@@ -303,7 +297,7 @@ img[alt="logo"] {
 }
 
 .card {
-    width: 11rem;
+    width: 10rem;
     margin: 10px;
 
     text-align: center;
@@ -697,15 +691,7 @@ footer {
       transform: translateX(0px) scale(1);
     }
 }
-  
-@keyframes expand {
-    0% {
-      transform: translateX(1400px);
-    }
-    100% {
-      transform: translateX(0px);
-    }
-}
+
 
 //////////////////////// Media Q small phone ///////////////////////////////////////////////////////////
 
@@ -772,16 +758,25 @@ footer {
         width: 35%;
         padding: 3%;
         margin-left: 80px;
+        transform: translateX(-700px);
+        animation: slideLeft .8s linear forwards;
 
         p {
             font-size: 1.3em;
         }
     }
 
+    @keyframes slideLeft {
+        form {transform: translateX(-700px);}
+        to {transform: translateX(0);}
+
+    }
+
     .main_img {
         -webkit-clip-path: polygon(100% 0%, 90% 52%, 100% 100%, 25% 100%, 0% 50%, 25% 0%);
         clip-path: polygon(100% 0%, 90% 52%, 100% 100%, 25% 100%, 0% 50%, 25% 0%);
         margin-top: 1em;
+        animation: slideIn 1.3s ease-in-out forwards;
     }
 
     .alert-info {

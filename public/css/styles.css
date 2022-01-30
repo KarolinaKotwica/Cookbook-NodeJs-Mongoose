@@ -195,16 +195,11 @@ img[alt="logo"] {
   display: flex;
   flex-direction: column-reverse;
   padding-top: 10%;
-  animation: expand 0.8s ease forwards;
-  transition: all 0.8s ease;
 }
 #main_banner {
   width: 100%;
   padding: 8%;
   text-align: center;
-}
-.main_img {
-  animation: slideIn 1.3s ease-in-out forwards;
 }
 #button_search {
   background-color: #fff;
@@ -233,7 +228,7 @@ img[alt="logo"] {
   padding-top: 2em;
 }
 .card {
-  width: 11rem;
+  width: 10rem;
   margin: 10px;
   text-align: center;
   overflow: hidden;
@@ -511,14 +506,6 @@ footer {
     transform: translateX(0px) scale(1);
   }
 }
-@keyframes expand {
-  0% {
-    transform: translateX(1400px);
-  }
-  100% {
-    transform: translateX(0px);
-  }
-}
 @media (max-width: 425px) {
   .recipes_container {
     padding-top: 38%;
@@ -567,14 +554,25 @@ footer {
     width: 35%;
     padding: 3%;
     margin-left: 80px;
+    transform: translateX(-700px);
+    animation: slideLeft 0.8s linear forwards;
   }
   #main_banner p {
     font-size: 1.3em;
+  }
+  @keyframes slideLeft {
+    form {
+      transform: translateX(-700px);
+    }
+    to {
+      transform: translateX(0);
+    }
   }
   .main_img {
     -webkit-clip-path: polygon(100% 0%, 90% 52%, 100% 100%, 25% 100%, 0% 50%, 25% 0%);
     clip-path: polygon(100% 0%, 90% 52%, 100% 100%, 25% 100%, 0% 50%, 25% 0%);
     margin-top: 1em;
+    animation: slideIn 1.3s ease-in-out forwards;
   }
   .alert-info {
     margin-bottom: 4em;
