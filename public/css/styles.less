@@ -3,15 +3,6 @@
 @white_color: #fff;
 @background_color: #f0f0ef;
 
-@keyframes shine {
-    0% {
-      background-position-x: -500%;
-    }
-    100% {
-      background-position-x: 500%;
-    }
-}
-
 @import url('https://fonts.googleapis.com/css2?family=Radley&display=swap');
 
 * {
@@ -64,6 +55,10 @@ h1,
 
 .toast:not(.showing):not(.show) {
     opacity: 1;
+}
+
+.favourite {
+    margin: 1em;
 }
 
 .pagination {
@@ -253,7 +248,7 @@ form[action='/search'] {
 #main_background {
     display: flex;
     flex-direction: column-reverse;
-    padding-top: 10%;
+    padding-top: 10vh;
 }
 
 #main_banner {
@@ -261,6 +256,15 @@ form[action='/search'] {
     padding: 8%;
 
     text-align: center;
+
+    h3 {
+        font-size: 1.4em;
+        padding-bottom: 10px;
+    }
+
+    p {
+        font-size: 1.1em;
+    }
 }
 
 #button_search {
@@ -336,6 +340,16 @@ form[action='/search'] {
     .card-body {
         background-color: @white_color;
         color: #000;
+
+        padding: .5rem 10px;
+
+        h5 {
+            font-size: 1.1em;
+        }
+
+        p {
+            font-size: .8em;
+        }
     }
 }
 
@@ -528,19 +542,16 @@ textarea {
     }
 
     .overall_buttons {
-        display: flex;
-        justify-content: space-between;
-        flex-direction: row;
+        position: inherit;
+        text-align: justify;
 
         .delete_button {
             border: none;
-            padding: 5px;
             color: rgb(143, 3, 3);
             transition: all .3s linear;
             background-color: #f9fafb;
-
-            width: 30%;
             border-radius: 5%;
+            width: 50%;
     
             &:hover {
                 color: rgb(247, 3, 3);
@@ -592,6 +603,8 @@ textarea {
 
     .item {
 
+        margin-top: 5px;
+
         .item_list {
             margin: 0;
             padding: 0em .8em;
@@ -601,6 +614,7 @@ textarea {
     input[name='newItem'] {
         outline: none;
         padding: 1px;
+        margin-bottom: 10px;
     }
 
     .checkbox {
@@ -647,77 +661,17 @@ textarea {
     }
 }
 
-footer {
-    font-size: .8rem;
-    padding: 1.2em;
-    background: linear-gradient(90deg, #000, #fff, @main_color, #fff, #000);
-    letter-spacing: 1px;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-repeat: no-repeat;
-    background-size: 80%;
-    animation: shine 25s linear infinite;
-    position: relative;
-}
-
-@keyframes slideIn {
-    0% {
-      transform: translateX(500px) scale(.2);
-    }
-    100% {
-      transform: translateX(0px) scale(1);
-    }
-}
-
 .addToShoppingList {
     margin-bottom: 6px;
 }
 
-
-//////////////////////// Media Q small phone ///////////////////////////////////////////////////////////
-
-@media (max-width:425px) {
-    .recipes_container {
-        padding-top: 38%;
-    }
-
-    .latest_container {
-        padding-top: 20%;
-    }
-
-    .style-shop-list {
-        padding: 0;
-        h2 {
-            padding: 0;
-        }
-    }
-
-    .box .shopping_list {
-        padding-left: 11%;
-
-        .checkbox {
-            padding: 6px 0 15px 0;
-        }
-    }
-
-    #main_background {
-        padding-top: 25%;
-    }
-
-    .login_form {
-        padding: 15px;
-        margin-top: 3em;
-    }
-
-    .item .addToShoppingList {
-        margin-top: 1em;
-        margin-bottom: 5em;
-    }
-}
 /////////////////////// Media Q Tablet ///////////////////////////////////////////////////////////
 
 @media (min-width:750px) and (max-width: 960px) {
+
+    #recipe_of_the_day {
+        margin-top: 3%;
+    }
 
     .box .shopping_list {
         padding-left: 30%;
@@ -725,8 +679,47 @@ footer {
 
     .login {
         flex-direction: column;
-        width: 100vh;
         margin: 0 auto;
+    }
+
+    #main_background {
+        background-image: url('../imgs/main.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
+        height: 85vh;
+        padding: 0;
+    }
+
+    #main_banner {
+        font-size: 1.4rem;
+        position: absolute;
+        top: 4%;
+        background: rgba(255,255,255,0.8);
+        border-radius: 3%;
+        margin-bottom: 3%;
+
+        h3 {
+            font-size: 2rem;
+            padding: .8em;
+        }
+    }
+
+    .recipes_container {
+        padding-top: 8%;
+    }
+
+    .card {
+        width: 13rem;
+    }
+
+    #recipe_container_description {
+        .container {
+            max-width: 100%;
+        }
+    }
+
+    .main_img {
+        display: none;
     }
 
 }
@@ -738,24 +731,36 @@ footer {
         margin: .4em;
     }
 
-    .card-body h4 {
-        font-size: 1.3rem;
+    .delete_button {
+        padding: 5px;
+    }
+
+    .card-body {
+
+        h4 {
+            font-size: 1.3rem;
+            width: 100%;
+            margin: auto;
+            padding: 10px;
+        }
     }
 
     #main_background {
-        flex-direction: row;
-        padding-top: 5em;
-        justify-content: center;
-        background-color: #f0f0ef;
-        position: relative;
+        padding-top: 8%;
+        background-image: url('../imgs/main.jpg');
+        background-repeat: no-repeat;
+        background-size: cover;
     }
 
     #main_banner {
-        width: 35%;
+        width: 40%;
         padding: 3%;
         margin-left: 80px;
         transform: translateX(-700px);
-        animation: slideLeft .8s linear forwards;
+        animation: slideLeft 1s ease-in-out forwards;
+        background: rgba(255,255,255,0.8);
+        border-radius: 3%;
+        margin-bottom: 3%;
 
         p {
             font-size: 1.3em;
@@ -763,16 +768,10 @@ footer {
     }
 
     @keyframes slideLeft {
-        from {transform: translateX(-700px);}
-        to {transform: translateX(0);}
+        0% {transform: translateX(-700px);}
+        50% {transform: translateX(100px);}
+        100% {transform: translateX(0);}
 
-    }
-
-    .main_img {
-        -webkit-clip-path: polygon(100% 0%, 90% 52%, 100% 100%, 25% 100%, 0% 50%, 25% 0%);
-        clip-path: polygon(100% 0%, 90% 52%, 100% 100%, 25% 100%, 0% 50%, 25% 0%);
-        margin-top: 1em;
-        animation: slideIn 1.3s ease-in-out forwards;
     }
 
     .alert-info {
@@ -805,7 +804,7 @@ footer {
 
         #category,
         #recipe_of_the_day {
-            margin-top: 10%;
+            margin-top: 5%;
         }
     }
 
@@ -945,6 +944,10 @@ footer {
         width: 18.9em;
     }
 
+    .main_img {
+        display: none;
+    }
+
     //////// user Acc. ///////
 .wrapper {
     display: flex;
@@ -984,6 +987,10 @@ footer {
         .card {
             width: 14rem;
 
+            .card-body {
+                height: 5.5rem;
+            }
+
             h4 {
                 font-size: 1.2em;
                 color: #3769a3;
@@ -998,9 +1005,14 @@ footer {
             height: 10em;
         }
 
-        .overall_buttons button {
-            width: 100%;
-            font-size: .8em;
+        .overall_buttons {
+
+            position: absolute;
+
+            button {
+                width: 100%;
+                font-size: .8em;
+            }
         }
     }
 } 

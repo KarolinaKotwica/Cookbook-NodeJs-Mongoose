@@ -21,7 +21,7 @@
     <div id="recipe_container_description">
         <div class="when_added">
             <span>
-                <p>Dodany przez: <b><%= publisher %></b> - dnia: <b><%= created.getDate() %> / <%= created.getMonth()+1 %> / <%= created.getFullYear() %></b></p>
+                <p>Dodany przez: <a href="../users-recipe/"><b><%= publisher %></b></a> - dnia: <b><%= created.getDate() %> / <%= created.getMonth()+1 %> / <%= created.getFullYear() %></b></p>
             </span>
             <% if (favoriteFlash.length > 0) { %>
                 <div class="alert alert-success" role="alert">
@@ -34,7 +34,7 @@
                 </div>
             <% } %>
             <%if (locals.session.loggedin) { %>
-            <form action="/favorite/<%=id%>" method="post">
+            <form class="favourite" action="/favorite/<%=id%>" method="post">
                 <button type="submit" class="btn btn_favorite" name="checkbox" value="<%=id%>"><i class="fas fa-heart"></i> Dodaj do ulubionych</button>
             </form>
             <% } %>

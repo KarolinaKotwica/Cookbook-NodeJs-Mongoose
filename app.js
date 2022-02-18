@@ -278,7 +278,20 @@ app.get('/all/:page', async (req,res) => {
             pages: Math.ceil(count / perPage)});
     });
 })
-}) 
+})
+
+app.get('/users-recipe/:id', (req,res)=> {
+    const idUser = req.params.id;
+
+    User.findById(idUser, (err, user)=> {
+        if (user) {
+            res.render('users-recipe', {
+                recipes: user.recipes, 
+                username: user.username
+            })
+        }
+    })
+})
 
 app.get('/shopList', (req,res)=> {
     if(req.isAuthenticated()) {
@@ -366,7 +379,6 @@ app.get('/recipes/:postId', (req, res) => {
 
     const favoriteFlash = req.flash('favorite');
     const favoriteFlashError = req.flash('favorite-error');
-    
 
     Recipe.findOne({_id: paramId}, (err, found) => {
       res.render('recipes', {
@@ -549,10 +561,7 @@ app.post('/search', async (req, res) => {
 
 
 
-app.get("/lunch", (req,res, next) => {
-
-    var perPage = 20;
-    const page = req.params.page;
+app.get("/lunch", (req,res) => {
 
     Recipe.find({category: "Obiad"}, (err, foundRecipe) => {
         res.render('lunch', {
