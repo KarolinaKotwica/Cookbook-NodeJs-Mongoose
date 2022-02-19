@@ -325,6 +325,9 @@ form[action='/search'] {
 .recipe_container #recipe_container_description .when_added .alert {
   text-align: center;
 }
+.recipe_container #recipe_container_description .when_added a {
+  color: #c82145;
+}
 .recipe_container #recipe_container_description #ingredients input:checked + span {
   text-decoration: line-through;
   text-decoration-color: #c82145;
@@ -502,6 +505,9 @@ textarea {
 }
 .addToShoppingList {
   margin-bottom: 6px;
+}
+.recipe-user {
+  margin-top: 3em;
 }
 @media (min-width: 750px) and (max-width: 960px) {
   #recipe_of_the_day {
@@ -779,5 +785,8 @@ textarea {
   .wrapper .cookbook .overall_buttons button {
     width: 100%;
     font-size: 0.8em;
+  }
+  .recipe-user {
+    margin-top: 7em;
   }
 }

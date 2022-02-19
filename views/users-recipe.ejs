@@ -2,6 +2,10 @@
 <%- include('partials/nav'); -%>
 
 <div class="recipes_container latest_container">
+    <div class="recipe-user">
+        <h3>Wszystkie przepisy użytkownika:</h3>
+        <p>Ilość przepisów: <%= recipes.length %></p>
+    </div>
 <%- include('partials/recipe'); -%>
 </div>
 <%- include('partials/footer'); -%>

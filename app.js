@@ -290,8 +290,7 @@ app.get('/users-recipe/:id', (req,res)=> {
     User.findById(idUser, (err, user)=> {
         if (user) {
             res.render('users-recipe', {
-                recipes: user.recipes, 
-                username: user.username
+                recipes: user.recipes
             })
         }
     })
@@ -397,7 +396,8 @@ app.get('/recipes/:postId', async (req, res) => {
         preparation: found.preparation,
         created: found.created,
         favoriteFlash,
-        favoriteFlashError
+        favoriteFlashError,
+        idUser: found.idUser
       });
     })
 })
@@ -694,7 +694,8 @@ app.post("/edit/:id", upload.single('image'), (req, res) => {
         time: req.body.time,
         ingredients: req.body.ingredients,
         describe: req.body.describe,
-        preparation: req.body.preparation
+        preparation: req.body.preparation,
+        idUser: req.user.id
     },
     {new: true},
     (err, update) => {
