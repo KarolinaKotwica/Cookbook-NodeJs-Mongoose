@@ -163,6 +163,10 @@ const recipeSchema = new mongoose.Schema({
     created: {
         type: Date,
         default: Date.now
+    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     }
 });
 
@@ -373,7 +377,7 @@ app.get('/images/:key', (req, res) => {
     readStream.pipe(res)
 })
 
-app.get('/recipes/:postId', (req, res) => {
+app.get('/recipes/:postId', async (req, res) => {
 
     const paramId = (req.params.postId);
 
@@ -396,6 +400,12 @@ app.get('/recipes/:postId', (req, res) => {
         favoriteFlashError
       });
     })
+
+    await User.findById({_id: req.user.id}, (err, found2) => {
+        res.render('recipes', {
+          idUser: found2._id
+        });
+      })
 })
 
 app.post('/favorite/:id', (req,res)=> {
