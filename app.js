@@ -164,7 +164,7 @@ const recipeSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    user: {
+    idUser: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     }
@@ -400,12 +400,6 @@ app.get('/recipes/:postId', async (req, res) => {
         favoriteFlashError
       });
     })
-
-    await User.findById({_id: req.user.id}, (err, found2) => {
-        res.render('recipes', {
-          idUser: found2._id
-        });
-      })
 })
 
 app.post('/favorite/:id', (req,res)=> {
@@ -458,11 +452,11 @@ app.post('/', upload.single('image'), (req,res) => {
             category: req.body.category,
             ingredients: req.body.ingredients,
             describe: req.body.describe,
-            preparation: req.body.preparation
+            preparation: req.body.preparation,
+            idUser: req.user.id
         });
 
         const img = req.file;
-        console.log(img);
 
         const result = uploadFile(img);
         console.log(result);
