@@ -154,31 +154,36 @@ form[action='/search'] {
   background-size: cover;
 }
 #category ul a:nth-child(4) li {
-  background-image: url("/imgs/icons/kids.jpg");
+  background-image: url("/imgs/icons/tort.jpg");
   background-repeat: no-repeat;
   background-size: cover;
 }
 #category ul a:nth-child(5) li {
-  background-image: url("/imgs/icons/side.jpg");
+  background-image: url("/imgs/icons/kids.jpg");
   background-repeat: no-repeat;
   background-size: cover;
 }
 #category ul a:nth-child(6) li {
-  background-image: url("/imgs/icons/salad.jpg");
+  background-image: url("/imgs/icons/side.jpg");
   background-repeat: no-repeat;
   background-size: cover;
 }
 #category ul a:nth-child(7) li {
-  background-image: url("/imgs/icons/soup2.jpg");
+  background-image: url("/imgs/icons/salad.jpg");
   background-repeat: no-repeat;
   background-size: cover;
 }
 #category ul a:nth-child(8) li {
-  background-image: url("/imgs/icons/canape.jpg");
+  background-image: url("/imgs/icons/soup2.jpg");
   background-repeat: no-repeat;
   background-size: cover;
 }
 #category ul a:nth-child(9) li {
+  background-image: url("/imgs/icons/canape.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+#category ul a:nth-child(10) li {
   background-image: url("/imgs/icons/yogurt.jpg");
   background-repeat: no-repeat;
   background-size: cover;
@@ -197,6 +202,9 @@ form[action='/search'] {
   width: 100%;
   padding: 8%;
   text-align: center;
+}
+#main_banner a {
+  text-decoration: none;
 }
 #main_banner h1 {
   font-size: 1.4em;
@@ -512,7 +520,9 @@ textarea {
   margin-top: 3em;
 }
 footer {
-  margin-top: 10rem;
+  padding-top: 4rem;
+  margin-top: 8rem;
+  background: rgba(255, 255, 255, 0.6);
 }
 footer form {
   margin: 3em 1.5em;
@@ -546,7 +556,7 @@ footer #footer-down {
   flex-direction: column;
   margin: auto;
   width: 85%;
-  margin-top: 3rem;
+  margin-top: 2rem;
 }
 @media (min-width: 750px) and (max-width: 960px) {
   #recipe_of_the_day {
@@ -828,5 +838,28 @@ footer #footer-down {
   }
   .recipe-user {
     margin-top: 7em;
+  }
+  footer form {
+    margin: 0 auto;
+    text-align: center;
+    width: 50%;
+  }
+  footer form .newsletter {
+    display: flex;
+    width: 50%;
+    margin: 0 auto;
+  }
+  footer form .newsletter button {
+    height: 37.6px;
+    margin-left: 1em;
+  }
+  footer #footer-up {
+    justify-content: space-evenly;
+    margin-top: 3rem;
+  }
+  footer #footer-down {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
   }
 }

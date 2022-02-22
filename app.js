@@ -626,6 +626,13 @@ app.get("/for_kids", (req,res) => {
     }).sort({_id: -1});
 })
 
+app.get("/torty", (req,res) => {
+    Recipe.find({category: "Torty"}, (err, foundRecipe) => {
+        res.render('torty', {
+            recipes: foundRecipe});
+    }).sort({_id: -1});
+})
+
 // app.post("/delete", (req,res) => {
 //     const checkItemId = req.body.checkbox;
 
