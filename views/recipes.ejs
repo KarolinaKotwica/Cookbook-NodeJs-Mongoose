@@ -1,10 +1,13 @@
 <%- include('partials/header'); -%>
+<title><%= title %> - BookToCook</title>
+</head>
+<body id="google_translate_element">
 <%- include('partials/nav'); -%>
 
 <div class="recipe_container container-fluid-mobile">
     <div class="overall_recipe_margin">
         <div class="banner">
-            <img src="https://img-store223.s3.amazonaws.com/<%= image %>" alt="<%= image %>">
+            <img src="https://img-store223.s3.amazonaws.com/<%= image %>" alt="<%= title %>">
             <div class="photo_description">
                 <h2><%= title %></h2>
                 <p class="info_of_recipe">

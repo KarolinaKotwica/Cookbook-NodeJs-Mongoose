@@ -1,4 +1,7 @@
 <%- include('partials/header'); -%>
+<title>Ulubione przepisy - BookToCook</title>
+</head>
+<body id="google_translate_element">
 <%- include('partials/nav'); -%>
 
 <div class="wrapper">
@@ -40,7 +43,7 @@
                 <form action="/delete_favorite" method="post">
                 <div class="card">
                     <a href="/recipes/<%= recipe._id %>">
-                        <img src="https://img-store223.s3.amazonaws.com/<%= recipe.image %>" class="card-img-top" alt="<%= recipe.image %>">
+                        <img src="https://img-store223.s3.amazonaws.com/<%= recipe.image %>" class="card-img-top" alt="<%= recipe.title %>">
                         <div class="card-body">
                                 <h4><%= recipe.title %></h4>
                         </div>

@@ -198,6 +198,10 @@ const userSchema = new mongoose.Schema({
     name: String,
     email: String,
     password: String,
+    created: {
+        type: Date,
+        default: Date.now
+    },
     recipes: [recipeSchema],
     favorite: [recipeSchema],
     list: [listSchema]
@@ -580,9 +584,9 @@ app.get("/desserts", (req,res) => {
     }).sort({_id: -1});
 })
 
-app.get("/drinks", (req,res) => {
-    Recipe.find({category: "Napoje"}, (err, foundRecipe) => {
-        res.render('drinks', {
+app.get("/dodatki", (req,res) => {
+    Recipe.find({category: "Dodatki"}, (err, foundRecipe) => {
+        res.render('dodatki', {
             recipes: foundRecipe});
     }).sort({_id: -1});
 })

@@ -1,9 +1,12 @@
 <%- include('partials/header'); -%>
+<title>Pyszne, sprawdzone przepisy - BookToCook</title>
+</head>
+<body id="google_translate_element">
 <%- include('partials/nav'); -%>
 
     <div id="main_background">
         <div id="main_banner">
-            <h3 id="name">Witaj na stronie, gdzię każdy może mieć swoją własną <span class="color">książkę kucharską!</span> <i class="far fa-smile"></i></h3>
+            <h1 id="name">Witaj na stronie, gdzię każdy może mieć swoją własną <span class="color">książkę kucharską!</span> <i class="far fa-smile"></i></h1>
             <p>Koniec z setkami kartek od znajomych i zeszytem. Od teraz Twoje przepisy będą w jednym miejscu!</p>
             <p>Możesz wyszukać dany przepis lub rozejrzeć się po stronie.</p>
             <p>Zaloguj się aby dodać nowy przepis oraz dodawać produkty na listę zakupów! &#9786;</p>
@@ -14,18 +17,18 @@
 <div class="container-fluid-mobile">
     <div class="overall">
         <div id="category">
-            <h1>Kategorie przepisów</h1>
+            <h2>Kategorie przepisów</h2>
             <p>Możesz wybrać z wielu kategorii:</p>
             <%- include('partials/category'); -%>
         </div>
 
     <!----------------------- Random recipe  ------------------------------->
         <div id="recipe_of_the_day">
-            <h1>Losowy przepis</h1>
+            <h2>Losowy przepis</h2>
             <br>
             <div class="card card_random">
                 <a href="/recipes/<%= random._id %>">
-                    <img src="https://img-store223.s3.amazonaws.com/<%= random.image %>" class="card-img-top" alt="<%= random.image %>">
+                    <img src="https://img-store223.s3.amazonaws.com/<%= random.image %>" class="card-img-top" alt="<%= random.title %>">
                     <div class="card-body">
                             <h4><%= random.title %></h4>
                             <p class="card-text">
@@ -42,7 +45,12 @@
 
     <!----------------------- Latest  ------------------------------->
     <div class="recipes_container latest_container">
-        <h1>Ostatnio dodane:</h1>
+        <h2>Ostatnio dodane 20 przepisów</h2> 
+        <div class='all'>
+            <p>Nie wiesz co na obiad? Potrzebujesz pomysł na sałatkę? A może chcesz ugotować zupę?<br>
+            Te i inne sprawdzone recepty na pyszne dania znajdziesz poniżej :)<br>
+            Wszystkie przepisy -> kliknij <a href="/all/1">tutaj.</a></p>
+        </div>
         <%- include('partials/recipe'); -%>
         <div class='all'>
             <p>Jeżeli chcesz zobaczyć wszystkie przepisy, kliknij <a href="/all/1">tutaj.</a></p>
