@@ -17,10 +17,10 @@
         <div class="form_detail">
             <h3>Podstawowe informacje:</h3>
             <div class="mb-3">
-                <input type="text" id="publisher" name="publisher" class="form-control" placeholder="Autor przepisu" data-bs-toggle="tooltip" data-bs-placement="top" title="1 do 50 znaków" required>
+                <input type="text" id="publisher" name="publisher" class="form-control" placeholder="Autor przepisu" data-bs-toggle="tooltip" data-bs-placement="top" title="1 do 50 znaków" maxlength="50" required>
             </div>
             <div class="mb-3">
-                <input type="text" id="title" name="title" class="form-control" placeholder="Nazwa przepisu" data-bs-toggle="tooltip" data-bs-placement="top" title="1 do 60 znaków" required>
+                <input type="text" id="title" name="title" class="form-control" placeholder="Nazwa przepisu" data-bs-toggle="tooltip" data-bs-placement="top" title="1 do 60 znaków" maxlength="60" required>
             </div>
             <div class="mb-3">
                 <input type="number" id="time" name="time" class="form-control" placeholder="Czas w min" required>
@@ -67,12 +67,12 @@
 
             <h3>Opis przepisu:</h3>
             <div class="form-floating">
-                <textarea class="form-control textarea" id="describe" name="describe" data-bs-toggle="tooltip" data-bs-placement="top" title="1 do 1000 znaków" required></textarea>
+                <textarea class="form-control textarea" id="describe" name="describe" data-bs-toggle="tooltip" data-bs-placement="top" title="1 do 1000 znaków" maxlength="1000" required></textarea>
                 <label for="textarea">Napisz kilka słów o przepisie, wskazówki itp..</label>
             </div>
             <h3>Przygotowanie:</h3>
             <div class="form-floating">
-                <textarea class="form-control textarea" id="preparation" name="preparation" data-bs-toggle="tooltip" data-bs-placement="top" title="1 do 2000 znaków" required></textarea>
+                <textarea class="form-control textarea" id="preparation" name="preparation" data-bs-toggle="tooltip" data-bs-placement="top" title="1 do 2000 znaków" maxlength="2000" required></textarea>
                 <label for="textarea">Opisz w punktach jak wykonać przepis..</label>
             </div>
         </div>
