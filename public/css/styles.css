@@ -393,6 +393,10 @@ textarea {
 .button_login:hover {
   color: #c82145;
 }
+.button_login[aria-expanded="true"] {
+  background-color: #c82145;
+  color: #fff;
+}
 .wrapper {
   padding-top: 5em;
   text-align: center;

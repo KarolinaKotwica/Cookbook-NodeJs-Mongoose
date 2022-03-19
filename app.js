@@ -348,6 +348,7 @@ app.get('/user', (req,res) => {
     }
 })
 
+
 app.get('/favoriteUser', (req,res) => {
     if(req.isAuthenticated()) {
         req.session.loggedin = true;

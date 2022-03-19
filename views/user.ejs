@@ -32,22 +32,41 @@
                 Niestety jeszcze nie masz ulubionych przepisów.
             </p>
         <% } %>
+            
+
+        <br><br>
         <a href="/logout">Wyloguj</a>
     </section>
 
     <section class="recipes_container cookbook">
-        
+            <button class="btn btn-light button_login" type="button" data-bs-toggle="collapse" data-bs-target="#Obiad" aria-expanded="true" aria-controls="Obiad">Obiad</button>
+
+            <button class="btn btn-light button_login" type="button" data-bs-toggle="collapse" data-bs-target="#Desery" aria-expanded="false" aria-controls="Desery">Desery</button>
+
+            <button class="btn btn-light button_login" type="button" data-bs-toggle="collapse" data-bs-target="#Torty" aria-expanded="false" aria-controls="Torty">Torty</button>
+
+            <button class="btn btn-light button_login" type="button" data-bs-toggle="collapse" data-bs-target="#Dladzieci" aria-expanded="false" aria-controls="Dladzieci">Dla dzieci</button>
+
+            <button class="btn btn-light button_login" type="button" data-bs-toggle="collapse" data-bs-target="#Dodatki" aria-expanded="false" aria-controls="Dodatki">Dodatki</button>
+
+            <button class="btn btn-light button_login" type="button" data-bs-toggle="collapse" data-bs-target="#Sałatki" aria-expanded="false" aria-controls="Sałatki">Sałatki</button>
+
+            <button class="btn btn-light button_login" type="button" data-bs-toggle="collapse" data-bs-target="#Zupy" aria-expanded="false" aria-controls="Zupy">Zupy</button>
+
+            <button class="btn btn-light button_login" type="button" data-bs-toggle="collapse" data-bs-target="#Przekąski" aria-expanded="false" aria-controls="Przekąski">Przekąski</button>
+
+            <button class="btn btn-light button_login" type="button" data-bs-toggle="collapse" data-bs-target="#Śniadanie" aria-expanded="false" aria-controls="Śniadanie">Śniadanie</button>
         <!------- MY RECIPES -------->
-            
         <div id="myRecipes" class="recipes">
         <% userRecipe.forEach(recipe => { %> 
-            <form action="/delete" method="post">
+            <!-- Obiad  -->
+            <% if(recipe.category === 'Obiad') { %>
+            <form action="/delete" method="post" id="Obiad" class="collapse show">
             <div class="card">
                 <a href="/recipes/<%= recipe._id %>">
                     <img src="https://img-store223.s3.amazonaws.com/<%= recipe.image %>" class="card-img-top" alt="<%= recipe.title %>">
                     <div class="card-body">
-                            <h4><%= recipe.title %></h4>
-                            
+                        <h4><%= recipe.title %></h4>
                     </div>
                 </a>
                 <div class="overall_buttons">
@@ -56,11 +75,148 @@
             </div>
             
             </form>
-            <% }); %>
-        </div>
+            <% } %>
+            <!-- Desery -->
+            <% if(recipe.category === 'Desery') { %>
+                <form action="/delete" method="post" id="Desery" class="collapse">
+                <div class="card">
+                    <a href="/recipes/<%= recipe._id %>">
+                        <img src="https://img-store223.s3.amazonaws.com/<%= recipe.image %>" class="card-img-top" alt="<%= recipe.title %>">
+                        <div class="card-body">
+                            <h4><%= recipe.title %></h4>
+                        </div>
+                    </a>
+                    <div class="overall_buttons">
+                        <button type="button" class="btn btn-light" name="checkbox" value="<%= recipe._id %>"><a href="/edit/<%= recipe._id %>"><i class="fas fa-user-edit"></i> Edytuj</a></button>
+                    </div>
+                </div>
+                
+                </form>
+            <% } %>
+            <!-- Torty -->
+            <% if(recipe.category === 'Torty') { %>
+                <form action="/delete" method="post" id="Torty" class="collapse">
+                <div class="card">
+                    <a href="/recipes/<%= recipe._id %>">
+                        <img src="https://img-store223.s3.amazonaws.com/<%= recipe.image %>" class="card-img-top" alt="<%= recipe.title %>">
+                        <div class="card-body">
+                            <h4><%= recipe.title %></h4>
+                        </div>
+                    </a>
+                    <div class="overall_buttons">
+                        <button type="button" class="btn btn-light" name="checkbox" value="<%= recipe._id %>"><a href="/edit/<%= recipe._id %>"><i class="fas fa-user-edit"></i> Edytuj</a></button>
+                        </div>
+                    </div>
+                    
+                </form>
+            <% } %>
+            <!-- Dla dzieci -->
+            <% if(recipe.category === 'Dla dzieci') { %>
+                <form action="/delete" method="post" id="Dladzieci" class="collapse">
+                <div class="card">
+                    <a href="/recipes/<%= recipe._id %>">
+                        <img src="https://img-store223.s3.amazonaws.com/<%= recipe.image %>" class="card-img-top" alt="<%= recipe.title %>">
+                        <div class="card-body">
+                            <h4><%= recipe.title %></h4>
+                        </div>
+                    </a>
+                    <div class="overall_buttons">
+                        <button type="button" class="btn btn-light" name="checkbox" value="<%= recipe._id %>"><a href="/edit/<%= recipe._id %>"><i class="fas fa-user-edit"></i> Edytuj</a></button>
+                            </div>
+                        </div>
+                        
+                </form>
+                <% } %>
+            <!-- Dodatki -->
+            <% if(recipe.category === 'Dodatki') { %>
+                <form action="/delete" method="post" id="Dodatki" class="collapse">
+                    <div class="card">
+                        <a href="/recipes/<%= recipe._id %>">
+                            <img src="https://img-store223.s3.amazonaws.com/<%= recipe.image %>" class="card-img-top" alt="<%= recipe.title %>">
+                            <div class="card-body">
+                                <h4><%= recipe.title %></h4>
+                            </div>
+                        </a>
+                    <div class="overall_buttons">
+                        <button type="button" class="btn btn-light" name="checkbox" value="<%= recipe._id %>"><a href="/edit/<%= recipe._id %>"><i class="fas fa-user-edit"></i> Edytuj</a></button>
+                                </div>
+                        </div>
+                            
+                </form>
+            <% } %>
+            <!-- Sałatki -->
+            <% if(recipe.category === 'Sałatki') { %>
+                <form action="/delete" method="post" id="Sałatki" class="collapse">
+                    <div class="card">
+                        <a href="/recipes/<%= recipe._id %>">
+                            <img src="https://img-store223.s3.amazonaws.com/<%= recipe.image %>" class="card-img-top" alt="<%= recipe.title %>">
+                            <div class="card-body">
+                                <h4><%= recipe.title %></h4>
+                            </div>
+                        </a>
+                    <div class="overall_buttons">
+                        <button type="button" class="btn btn-light" name="checkbox" value="<%= recipe._id %>"><a href="/edit/<%= recipe._id %>"><i class="fas fa-user-edit"></i> Edytuj</a></button>
+                                </div>
+                        </div>
+                            
+                </form>
+            <% } %>
 
-        
-        
+            <!-- Zupy -->
+            <% if(recipe.category === 'Zupy') { %>
+                <form action="/delete" method="post" id="Zupy" class="collapse">
+                    <div class="card">
+                        <a href="/recipes/<%= recipe._id %>">
+                            <img src="https://img-store223.s3.amazonaws.com/<%= recipe.image %>" class="card-img-top" alt="<%= recipe.title %>">
+                            <div class="card-body">
+                                <h4><%= recipe.title %></h4>
+                            </div>
+                        </a>
+                    <div class="overall_buttons">
+                        <button type="button" class="btn btn-light" name="checkbox" value="<%= recipe._id %>"><a href="/edit/<%= recipe._id %>"><i class="fas fa-user-edit"></i> Edytuj</a></button>
+                                </div>
+                        </div>
+                            
+                </form>
+            <% } %>
+
+            <!-- Przekąski -->
+            <% if(recipe.category === 'Przekąski') { %>
+                <form action="/delete" method="post" id="Przekąski" class="collapse">
+                    <div class="card">
+                        <a href="/recipes/<%= recipe._id %>">
+                            <img src="https://img-store223.s3.amazonaws.com/<%= recipe.image %>" class="card-img-top" alt="<%= recipe.title %>">
+                            <div class="card-body">
+                                <h4><%= recipe.title %></h4>
+                            </div>
+                        </a>
+                    <div class="overall_buttons">
+                        <button type="button" class="btn btn-light" name="checkbox" value="<%= recipe._id %>"><a href="/edit/<%= recipe._id %>"><i class="fas fa-user-edit"></i> Edytuj</a></button>
+                                </div>
+                        </div>
+                            
+                </form>
+            <% } %>
+
+            <!-- Śniadanie -->
+            <% if(recipe.category === 'Śniadanie') { %>
+                <form action="/delete" method="post" id="Śniadanie" class="collapse">
+                    <div class="card">
+                        <a href="/recipes/<%= recipe._id %>">
+                            <img src="https://img-store223.s3.amazonaws.com/<%= recipe.image %>" class="card-img-top" alt="<%= recipe.title %>">
+                            <div class="card-body">
+                                <h4><%= recipe.title %></h4>
+                            </div>
+                        </a>
+                    <div class="overall_buttons">
+                        <button type="button" class="btn btn-light" name="checkbox" value="<%= recipe._id %>"><a href="/edit/<%= recipe._id %>"><i class="fas fa-user-edit"></i> Edytuj</a></button>
+                                </div>
+                        </div>
+                            
+                </form>
+            <% } %>
+        <% }); %>
+        </div>
     </section>
 
 </div>
