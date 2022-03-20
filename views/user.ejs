@@ -9,8 +9,10 @@
         <img src="/imgs/chef.png" alt="logo użytkownika">
         <h3>Witaj <%= user.username %></h3>
         <span class="user_icons">
-            </a><a href="/favoriteUser"><i class="fas fa-heart"></i></a>
+            <a href="/favoriteUser"><i class="fas fa-heart"></i></a>
             <a href="/add"><i class="fas fa-plus-circle"></i></a>
+            <a href="/shopList"><i class="fas fa-cart-plus"></i></a>
+            <a href="/planer"><i class="fas fa-calendar-check"></i></a>
         </span>
         <p>
             W swojej książce kucharskiej masz już: <span class='color'><%= user.recipes.length %>

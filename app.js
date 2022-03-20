@@ -190,7 +190,6 @@ const listSchema = new mongoose.Schema({
 const List = mongoose.model("List", listSchema);
 
 
-
 //////////////////////////////////////////////////////////
 /////////////////// Schema for users //////////////////////
 //////////////////////////////////////////////////////////
@@ -204,6 +203,7 @@ const userSchema = new mongoose.Schema({
     },
     recipes: [recipeSchema],
     favorite: [recipeSchema],
+    planer: [recipeSchema],
     list: [listSchema]
 })
 
@@ -356,7 +356,24 @@ app.get('/favoriteUser', (req,res) => {
             if(err) {console.log(err);}
             else {
                 if(foundUsers) {
-                    res.render('favoriteUser', {userRecipe: foundUsers.recipes, user: foundUsers, favorite: foundUsers.favorite});
+                    res.render('favoriteUser', {user: foundUsers, favorite: foundUsers.favorite});
+                }
+            }
+        })
+    } else {
+        req.session.loggedin = false;
+        res.redirect('/login');
+    }
+})
+
+app.get('/planer', (req,res) => {
+    if(req.isAuthenticated()) {
+        req.session.loggedin = true;
+        User.findById(req.user.id, (err, foundUsers) => {
+            if(err) {console.log(err);}
+            else {
+                if(foundUsers) {
+                    res.render('planer', {user: foundUsers, planer: foundUsers.planer});
                 }
             }
         })
@@ -387,6 +404,8 @@ app.get('/recipes/:postId', async (req, res) => {
 
     const favoriteFlash = req.flash('favorite');
     const favoriteFlashError = req.flash('favorite-error');
+    const planerFlash = req.flash('planer');
+    const planerFlashError = req.flash('planer-error');
 
     Recipe.findOne({_id: paramId}, (err, found) => {
       res.render('recipes', {
@@ -402,6 +421,8 @@ app.get('/recipes/:postId', async (req, res) => {
         created: found.created,
         favoriteFlash,
         favoriteFlashError,
+        planerFlash,
+        planerFlashError,
         idUser: found.idUser
       });
     })
@@ -435,6 +456,35 @@ app.post('/favorite/:id', (req,res)=> {
         }
     })
 })
+
+app.post('/planer/:id', (req,res)=> {
+    Recipe.findById(req.params.id, (err, found) => {
+         if(err) {console.log(err);}
+         else {
+             User.findById(req.user.id, (err, foundUser) => {
+                 if(err) {console.log(err);}
+                 else {
+                     User.countDocuments({_id: req.user.id,'planer._id':req.params.id}, function (err, count){
+                         console.log(count); 
+                         if(count===0){
+                             //document  ! exists
+                             foundUser.planer.push(found);
+                             foundUser.save();
+                             req.flash('planer', "Dodano do planera!");
+                             res.redirect("/recipes/"+req.params.id);
+                         }
+                         else {
+                             req.flash('planer-error', "Masz już dodany ten przepis :)");
+                             res.redirect("/recipes/"+req.params.id);
+                         }
+                     });
+                     
+                     
+                 }
+             })
+         }
+     })
+ })
 
 app.get('/add', (req,res) => {
     const add = req.flash('newRecipe');
@@ -498,7 +548,8 @@ app.post('/register', (req,res) => {
         username: _.trim(req.body.username),
         email: _.trim(req.body.email),
         recipes: [],
-        favorite: []
+        favorite: [],
+        planer: []
     })
 
     User.find({}, (err)=> {
@@ -669,6 +720,17 @@ app.post('/delete_favorite', (req,res)=> {
         if(!err) {
             console.log("Successfully removed");
             res.redirect("/favoriteUser");
+        }
+    })
+})
+
+app.post('/delete_planer', (req,res)=> {
+    const checkItemId = req.body.checkbox;
+
+    User.findOneAndUpdate({_id: req.user.id}, { "$pull": { "planer": { "_id": checkItemId } }}, { safe: true, multi:true }, function(err, obj) {
+        if(!err) {
+            console.log("Successfully removed");
+            res.redirect("/planer");
         }
     })
 })

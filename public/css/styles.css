@@ -374,6 +374,13 @@ form h1 {
 .alert-info {
   margin: 3em;
 }
+.alert-danger,
+.alert-success {
+  margin: 0;
+  padding: 0;
+  height: 33px;
+  line-height: 30px;
+}
 .input_ingr {
   margin-top: 1em;
 }
@@ -389,6 +396,7 @@ textarea {
 }
 .button_login {
   transition: all 0.3s linear;
+  margin: 2px;
 }
 .button_login:hover {
   color: #c82145;

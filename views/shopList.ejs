@@ -9,7 +9,7 @@
 
     <div class="box style-shop-list">
         <div class="box" id="heading">
-          <h2> Oto Twoja lista zakupów: <i class="fas fa-shopping-cart"></i> </h2>
+          <h2> Lista zakupów: </h2>
         </div>
         <p>
             <% if (newListItems.length === 0) { %>
@@ -36,7 +36,7 @@
     
           <form class="item" action="shopList" method="post">
             <input type="text" name="newItem" autocomplete="off">
-            <button type="submit" class="btn btn-success addToShoppingList" name="list">Dodaj do listy <i class="fas fa-scroll"></i><i class="fas fa-feather-alt"></i></button>
+            <button type="submit" class="btn btn-success addToShoppingList" name="list">Dodaj</button>
           </form>
       </div>
     </div>

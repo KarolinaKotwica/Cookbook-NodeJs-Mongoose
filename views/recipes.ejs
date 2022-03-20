@@ -40,6 +40,19 @@
             <form class="favourite" action="/favorite/<%=id%>" method="post">
                 <button type="submit" class="btn btn_favorite" name="checkbox" value="<%=id%>"><i class="fas fa-heart"></i> Dodaj do ulubionych</button>
             </form>
+            <% if (planerFlash.length > 0) { %>
+                <div class="alert alert-success" role="alert">
+                    <p><%= planerFlash %> </p>
+                </div>
+            <% } %>
+            <% if (planerFlashError.length > 0) { %>
+                <div class="alert alert-danger" role="alert">
+                    <p><%= planerFlashError %> </p>
+                </div>
+            <% } %>
+            <form class="favourite" action="/planer/<%=id%>" method="post">
+                <button type="submit" class="btn btn_favorite" name="checkbox" value="<%=id%>"><i class="fas fa-calendar-check"></i> Dodaj do planera</button>
+            </form>
             <% } %>
             <div class="sharethis-inline-share-buttons"></div>
             

@@ -10,9 +10,9 @@
         <h3>Witaj <%= user.username %></h3>
         <span class="user_icons">
             <a href="/user"><i class="fas fa-address-book"></i></a>
+            <a href="/favoriteUser"><i class="fas fa-heart"></i></a>
             <a href="/add"><i class="fas fa-plus-circle"></i></a>
             <a href="/shopList"><i class="fas fa-cart-plus"></i></a>
-            <a href="/planer"><i class="fas fa-calendar-check"></i></a>
         </span>
         
         <p>
@@ -39,10 +39,11 @@
     </section>
 
     <section class="recipes_container cookbook">
-
-        <div id="favorite" class="recipes">
-            <% favorite.forEach(recipe => { %>
-                <form action="/delete_favorite" method="post">
+        <h5>Witaj w planerze!</h5>
+        <h6>Znajdują się tutaj przepisy, które masz zamiar przygotować.</h6>
+        <div id="planer" class="recipes">
+            <% planer.forEach(recipe => { %>
+                <form action="/delete_planer" method="post">
                 <div class="card">
                     <a href="/recipes/<%= recipe._id %>">
                         <img src="https://img-store223.s3.amazonaws.com/<%= recipe.image %>" class="card-img-top" alt="<%= recipe.title %>">
