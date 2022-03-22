@@ -408,6 +408,8 @@ app.get('/recipes/:postId', async (req, res) => {
     const planerFlashError = req.flash('planer-error');
 
     Recipe.findOne({_id: paramId}, (err, found) => {
+        Recipe.find({ category: { $regex: found.category, $options: "i" } }, (err, docs) => {
+            
       res.render('recipes', {
         id: found._id,
         publisher: found.publisher,
@@ -423,9 +425,11 @@ app.get('/recipes/:postId', async (req, res) => {
         favoriteFlashError,
         planerFlash,
         planerFlashError,
-        idUser: found.idUser
+        idUser: found.idUser,
+        recipes: docs
       });
-    })
+    }).limit(4)
+});
 })
 
 app.post('/favorite/:id', (req,res)=> {
