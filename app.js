@@ -16,6 +16,7 @@ const findOrCreate = require('mongoose-find-or-create');
 var S3 = require('aws-sdk/clients/s3');
 const AWS = require('aws-sdk');
 const fs = require('fs');
+var random = require('mongoose-simple-random');
 
 
 
@@ -170,6 +171,7 @@ const recipeSchema = new mongoose.Schema({
     }
 });
 
+recipeSchema.plugin(random);
 recipeSchema.index({ "$**": "text" });
 
 
@@ -408,7 +410,11 @@ app.get('/recipes/:postId', async (req, res) => {
     const planerFlashError = req.flash('planer-error');
 
     Recipe.findOne({_id: paramId}, (err, found) => {
-        Recipe.find({ category: { $regex: found.category, $options: "i" } }, (err, docs) => {
+
+        Recipe.findRandom({category: found.category}, {}, {limit: 4}, function(err, results) {
+        if (!err) {
+            console.log(results); 
+        }
             
       res.render('recipes', {
         id: found._id,
@@ -426,9 +432,9 @@ app.get('/recipes/:postId', async (req, res) => {
         planerFlash,
         planerFlashError,
         idUser: found.idUser,
-        recipes: docs
+        recipes: results
       });
-    }).limit(4)
+    })
 });
 })
 
