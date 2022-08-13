@@ -16,19 +16,34 @@ const AWS = require('aws-sdk');
 const fs = require('fs');
 const models = require("./models");
 const { User, Recipe, List } = models;
+const MemoryStore = require('memorystore')(session)
 
 
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({extended: false}));
 app.use(express.static("public"));
 
+app.set('trust proxy', 1);
+
 
 // use the session package and set it up with some initial configuration
 app.use(session({
     secret: 'keyboard cat',
     resave: true,
-    saveUninitialized: true
+    saveUninitialized: true,
+    maxAge: 1000 * 60 * 15,
+    cookie:{
+        secure: true
+    }
 }))
+// app.use(session({
+//     cookie: { maxAge: 86400000 },
+//     store: new MemoryStore({
+//       checkPeriod: 86400000 // prune expired entries every 24h
+//     }),
+//     resave: false,
+//     secret: 'keyboard cat'
+// }))
 
 
 /// s3 /////
@@ -243,11 +258,17 @@ app.get('/planer', (req,res) => {
     }
 })
 
-app.get('/logout', (req, res) => {
-    req.logout();
-    req.session.loggedin = false;
-    res.redirect('/');
-});
+// app.get('/logout', (req, res) => {
+//     req.logout();
+//     req.session.loggedin = false;
+//     res.redirect('/');
+// });
+app.get("/logout", (req, res) => {
+    req.logout(req.user, err => {
+      if(err) return next(err);
+      res.redirect("/");
+    });
+  });
 
 
 app.get('/images/:key', (req, res) => {
