@@ -16,19 +16,44 @@ const AWS = require('aws-sdk');
 const fs = require('fs');
 const models = require("./models");
 const { User, Recipe, List } = models;
+const MemoryStore = require('memorystore')(session)
+// newsletter
+const sgMail = require('@sendgrid/mail');
+const sgClient = require('@sendgrid/client');
+const expressFileUpload = require('express-fileupload');
+
+sgMail.setApiKey(process.env.SENDGRID_API);
+sgClient.setApiKey(process.env.SENDGRID_API);
+app.use(expressFileUpload());
+
+// end newsletter
 
 
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({extended: false}));
 app.use(express.static("public"));
 
+app.set('trust proxy', 1);
+
 
 // use the session package and set it up with some initial configuration
 app.use(session({
     secret: 'keyboard cat',
-    resave: true,
-    saveUninitialized: true
+    resave: false,
+    saveUninitialized: false,
+    maxAge: 1000 * 60 * 15,
+    cookie:{
+        secure: true
+    }
 }))
+// app.use(session({
+//     cookie: { maxAge: 86400000 },
+//     store: new MemoryStore({
+//       checkPeriod: 86400000 // prune expired entries every 24h
+//     }),
+//     resave: false,
+//     secret: 'keyboard cat'
+// }))
 
 
 /// s3 /////
@@ -243,15 +268,21 @@ app.get('/planer', (req,res) => {
     }
 })
 
-app.get('/logout', (req, res) => {
-    req.logout();
-    req.session.loggedin = false;
-    res.redirect('/');
-});
+// app.get('/logout', (req, res) => {
+//     req.logout();
+//     req.session.loggedin = false;
+//     res.redirect('/');
+// });
+app.get("/logout", (req, res) => {
+    req.logout(req.user, err => {
+      if(err) return next(err);
+      res.redirect("/");
+    });
+  });
 
 
 app.get('/images/:key', (req, res) => {
-    console.log(req.params)
+    // console.log(req.params)
     const key = req.params.key
     const readStream = getFileStream(key)
   
@@ -271,7 +302,7 @@ app.get('/recipes/:postId', async (req, res) => {
 
         Recipe.findRandom({category: found.category}, {}, {limit: 4}, function(err, results) {
         if (!err) {
-            console.log(results); 
+            // console.log(results); ??
         }
             
       res.render('recipes', {
@@ -658,6 +689,196 @@ app.get("/edit/:id", (req, res) => {
         }
     })
 });
+
+// newsletter
+app.post('/signup', async (req, res) => {
+    const confNum = randNum();
+    const params = new URLSearchParams({
+      conf_num: confNum,
+      email: req.body.newsletter,
+    });
+    const confirmationURL = req.protocol + '://' + req.headers.host + '/confirm/?' + params;
+    const msg = {
+      to: req.body.newsletter, // Recipient's mail
+      from: 'Karolina@cookbook.com.pl',
+      subject: `Potwierdź zapisanie się do naszego newslettera`,
+      html: `Cześć! 😊<br>Dziękujemy za zapisanie się do naszego newslettera!<br>Możesz potwierdzić subskrypcję <a href="${confirmationURL}"> klikając tutaj.</a><br><br> Od teraz będziemy mogli wysyłać Ci smaczne przepisy na każdy dzień 🥗`
+    }
+      await addContact(req.body.newsletter, confNum);
+      await sgMail.send(msg);
+      res.render('newsletter/message', { message: 'Dziękujemy za zapisanie się do naszego newslettera! Dokończ process klikając na link aktywacyjny wysłany na twojego maila.' });
+  });
+
+app.get('/upload', (req, res) => {
+    res.render('newsletter/form', {uploadPage: uploadPage});
+});
+
+app.post('/upload', async (req, res) => {
+    const listID = await getListID('Newsletter Subscribers');
+    const htmlNewsletter = req.files.newsletter.data.toString();
+    await sendNewsletterToList(req, htmlNewsletter, listID)
+    res.render('newsletter/message', {
+      message: 'Newsletter wysłany do wszystkich subskrybentów! :)'
+    });
+});
+
+app.get('/confirm', async (req, res) => {
+    try {
+      const contact = await getContactByEmail(req.query.email);
+      if(contact == null) throw `Contact not found.`;
+      if (contact.custom_fields.conf_num ==  req.query.conf_num) {
+        const listID = await getListID('Newsletter Subscribers');
+        await addContactToList(req.query.newsletter, listID);
+      } else {
+        throw 'Confirmation number does not match';
+      }
+      res.render('message', { message: 'Gratulacje! 😀 Od teraz subskrybujesz nasz newsletter!' });
+    } catch (error) {
+      console.error(error);
+      res.render('message', { message: 'Wystąpił błąd. Proszę <a href="/">spróbuj ponownie.</a>' });
+    }
+   });
+
+app.get('/delete', async (req, res) => {
+    try {
+      const contact = await getContactByEmail(req.query.newsletter);
+      if(contact == null) throw `Contact not found.`;
+      if (contact.custom_fields.conf_num ==  req.query.conf_num) {
+        const listID = await getListID('Newsletter Subscribers');
+        await deleteContactFromList(listID, contact);
+        res.render('newsletter/message', { message: 'Zostałeś/aś pomyślnie usunięty/ta z naszej bazy danych. Jeżeli to błąd, proszę zasubskrybuj ponownie <a href="/">(Strona główna)</a>.' });
+      }
+    else throw 'Confirmation number does not match or contact is not subscribed'
+    }
+    catch(error) {
+      console.error(error)
+      res.render('newsletter/message', { message: 'Email nie może być usunięty. Proszę spróbuj ponownie.' })
+    }
+});
+
+  const uploadPage = {
+    title: 'Upload Newsletter<br>',
+    subtitle: 'Wczytaj newsletter, który zostanie wysłany do wszystkich subskrybentów',
+    form: `<form action="/upload" id="contact-form" enctype="multipart/form-data" method="post" style="margin: 10%; margin-left:5%; width: 350px;">
+    <div class="form-group">
+        <label for="subject">Email Subject:</label>
+        <input type="text" class="form-control" id="subject" name="subject" placeholder="Subject" required>
+    </div>
+    <div class="form-group">
+        <label for="newsletter">Newsletter: </label>
+        <input type="file" id="newsletter" name="newsletter" accept=".html" required>
+    </div>
+    <button type="submit" style="background:#0263e0 !important;" class="btn btn-primary">Send</button>
+  </form>`
+  }
+  
+  function randNum() {
+    return Math.floor(Math.random() * 90000) + 10000;
+  }
+  
+  async function addContact(email, confNum) {
+    const customFieldID = await getCustomFieldID('conf_num');
+    const data = {
+      "contacts": [{
+        "email": email, 
+        "custom_fields": {}
+      }]
+    };
+    data.contacts[0].custom_fields[customFieldID] = confNum;
+    const request = {
+      url: `/v3/marketing/contacts`,
+      method: 'PUT',
+      body: data
+    }
+    return sgClient.request(request);
+  }
+  
+  
+  async function getCustomFieldID(customFieldName) {
+    const request = {
+      url: `/v3/marketing/field_definitions`,
+      method: 'GET',
+    }
+    const response = await sgClient.request(request);
+    const allCustomFields = response[1].custom_fields;
+    return allCustomFields.find(x => x.name === customFieldName).id;
+  }
+  
+  async function getListID(listName) {
+    const request = {
+      url: `/v3/marketing/lists`,
+      method: 'GET',
+    }
+    const response = await sgClient.request(request);
+    const allLists = response[1].result;
+    return allLists.find(x => x.name === listName).id;
+  }
+
+  async function addContactToList(email, listID) {
+    const data = {
+      "list_ids": [listID],
+      "contacts": [{
+        "email": email
+      }]
+    };
+    const request = {
+      url: `/v3/marketing/contacts`,
+      method: 'PUT',
+      body: data
+    }
+    return sgClient.request(request);
+   }
+  
+  async function sendNewsletterToList(req, htmlNewsletter, listID) {
+    const data = {
+      "query": `CONTAINS(list_ids, '${listID}')`
+    };
+    const request = {
+      url: `/v3/marketing/contacts/search`,
+      method: 'POST',
+      body: data
+    }
+    const response = await sgClient.request(request);
+    for (const subscriber of response[1].result) {
+      const params = new URLSearchParams({
+        conf_num: subscriber.custom_fields.conf_num,
+        email: subscriber.newsletter,
+      });
+      const unsubscribeURL = req.protocol + '://' + req.headers.host + '/delete/?' + params;
+      const msg = {
+        to: subscriber.newsletter, 
+        from: 'Karolina@cookbook.com.pl',
+        subject: req.body.subject,
+        html: htmlNewsletter + `<a href="${unsubscribeURL}"> Wypisz się z newslettera tutaj.</a>`,
+      }
+      sgMail.send(msg);
+    }
+  }
+  
+  async function deleteContactFromList(listID, contact) {
+    const request = {
+      url: `/v3/marketing/lists/${listID}/contacts`,
+      method: 'DELETE',
+      qs: {
+        "contact_ids": contact.id
+      }
+    }
+    await sgClient.request(request);
+  }
+  
+  async function getContactByEmail(email) {
+    const data = {
+      "emails": [email]
+    };
+    const request = {
+      url: `/v3/marketing/contacts/search/emails`,
+      method: 'POST',
+      body: data
+    }
+    const response = await sgClient.request(request);
+    if(response[1].result[email]) return response[1].result[email].contact;
+    else return null;
+  }
 
 let port = process.env.PORT;
 if (port == null || port == "") {

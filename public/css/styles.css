@@ -3,7 +3,7 @@
   font-style: normal;
   font-weight: 400;
   font-display: swap;
-  src: url(https://fonts.gstatic.com/s/radley/v18/LYjDdGzinEIjCN19oA.ttf) format('truetype');
+  src: url(https://fonts.gstatic.com/s/radley/v20/LYjDdGzinEIjCN19oA.ttf) format('truetype');
 }
 * {
   margin: 0;
@@ -112,7 +112,7 @@ form[action='/search'] {
 #category ul {
   display: flex;
   flex-wrap: wrap;
-  width: 90%;
+  width: 100%;
   margin: 0 auto;
 }
 #category ul a {
@@ -129,7 +129,7 @@ form[action='/search'] {
   align-items: center;
   width: 120px;
   height: 120px;
-  margin: 10px;
+  margin: 15px;
   display: flex;
   flex-flow: column-reverse;
 }
@@ -243,7 +243,7 @@ form[action='/search'] {
   padding-top: 2em;
 }
 .card {
-  width: 10rem;
+  width: 20rem;
   margin: 10px;
   text-align: center;
   overflow: hidden;
@@ -257,6 +257,7 @@ form[action='/search'] {
 }
 .card .card-img-top {
   transition: all 0.3s ease;
+  height: auto;
 }
 .card:hover .card-img-top {
   transform: scale(0.95);
@@ -306,7 +307,6 @@ form[action='/search'] {
 }
 .recipe_container .banner {
   position: relative;
-  max-width: 550px;
   margin: 0 auto;
 }
 .recipe_container .banner img {
@@ -531,6 +531,11 @@ textarea {
 .recipe-user {
   margin-top: 3em;
 }
+.newsletter_message {
+  text-align: center;
+  padding: 7em;
+  font-size: 2.5rem;
+}
 footer {
   padding-top: 4rem;
   margin-top: 5rem;
@@ -588,7 +593,7 @@ footer #footer-down {
     margin: 0 auto;
   }
   #main_background {
-    background-image: url('../imgs/main.jpg');
+    background-image: url('../imgs/cookbook.jpg');
     background-repeat: no-repeat;
     background-size: cover;
     height: 85vh;
@@ -634,19 +639,21 @@ footer #footer-down {
   }
   #main_background {
     padding-top: 8%;
-    background-image: url('../imgs/main.jpg');
+    background-image: url('../imgs/cookbook.jpg');
     background-repeat: no-repeat;
     background-size: cover;
+    background-position: right;
+    background-attachment: fixed;
   }
   #main_banner {
     width: 40%;
     padding: 3%;
-    margin-left: 80px;
+    margin-left: 3%;
     transform: translateX(-700px);
     animation: slideLeft 1s ease-in-out forwards;
     background: rgba(255, 255, 255, 0.8);
-    border-radius: 3%;
     margin-bottom: 3%;
+    border-radius: 2%;
   }
   #main_banner p {
     font-size: 1.3em;
@@ -673,8 +680,7 @@ footer #footer-down {
     height: 5em;
   }
   .overall_recipe_margin {
-    display: flex;
-    width: 95%;
+    width: 60%;
     margin: 0 auto;
   }
   .overall {
@@ -729,7 +735,7 @@ footer #footer-down {
   }
   .recipe_container .banner {
     margin: 0;
-    width: 50%;
+    width: 80%;
   }
   .recipe_container #notes {
     width: 43%;

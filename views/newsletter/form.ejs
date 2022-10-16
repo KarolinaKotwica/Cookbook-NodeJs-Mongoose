@@ -1,0 +1,10 @@
+<%- include('../partials/header'); -%>
+<%- include('../partials/nav'); -%>
+
+<% if (locals.session.loggedin) { %>
+    <%- uploadPage.title %>
+    <%- uploadPage.subtitle %> 
+    <%- uploadPage.form %>
+<% } %>
+
+<%- include('../partials/footer'); -%>
