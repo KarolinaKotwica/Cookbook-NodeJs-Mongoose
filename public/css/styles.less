@@ -3,7 +3,7 @@
 @white_color: #fff;
 @background_color: #f0f0ef;
 
-@import url('https://fonts.googleapis.com/css2?family=Radley&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300&display=swap');
 
 * {
     margin: 0;
@@ -14,7 +14,7 @@
 body {
     background-color: @background_color;
 
-    font-family: 'Radley', serif;
+    font-family: 'Raleway', sans-serif;
 }
 
 .color {
@@ -148,7 +148,7 @@ form[action='/search'] {
 
         display: flex;
         flex-wrap: wrap;
-        width: 90%;
+        width: 100%;
         margin: 0 auto;
 
         a {
@@ -169,7 +169,7 @@ form[action='/search'] {
             align-items: center;
             width: 120px;
             height: 120px;
-            margin: 10px;
+            margin: 15px;
             display: flex;
             flex-flow: column-reverse;
     
@@ -318,7 +318,7 @@ form[action='/search'] {
 }
 
 .card {
-    width: 10rem;
+    width: 20rem;
     margin: 10px;
 
     text-align: center;
@@ -335,6 +335,7 @@ form[action='/search'] {
 
     .card-img-top {
         transition: all 0.3s ease;
+        height: auto;
     }
       
     &:hover .card-img-top {
@@ -401,7 +402,7 @@ form[action='/search'] {
     .banner {
 
         position: relative;
-        max-width: 550px;
+        //max-width: 550px;
         margin: 0 auto;
 
         img {
@@ -424,6 +425,11 @@ form[action='/search'] {
                 margin-top: 2%;
             }
         }
+    }
+
+    .container h2 {
+        margin-bottom: 2rem;
+        color: @main_color;
     }
 
     #recipe_container_description {
@@ -701,6 +707,13 @@ textarea {
     margin-top: 3em;
 }
 
+//newsletter
+.newsletter_message {
+    text-align: center;
+    padding: 7em;
+    font-size: 2.5rem;
+}
+
 ///footer
 footer {
     padding-top: 4rem;
@@ -775,7 +788,7 @@ footer {
     }
 
     #main_background {
-        background-image: url('../imgs/main.jpg');
+        background-image: url('../imgs/cookbook.jpg');
         background-repeat: no-repeat;
         background-size: cover;
         height: 85vh;
@@ -839,20 +852,23 @@ footer {
 
     #main_background {
         padding-top: 8%;
-        background-image: url('../imgs/main.jpg');
+        background-image: url('../imgs/cookbook.jpg');
+        // Photo by RODNAE Productions: https://www.pexels.com/photo/an-open-cookbook-on-a-kitchen-counter-8580719/
         background-repeat: no-repeat;
         background-size: cover;
+        background-position: right;
+        background-attachment: fixed;
     }
 
     #main_banner {
         width: 40%;
         padding: 3%;
-        margin-left: 80px;
-        transform: translateX(-700px);
-        animation: slideLeft 1s ease-in-out forwards;
+        margin-left: 3%;
+        animation: slideLeft 1.5s ease-in forwards;
         background: rgba(255,255,255,0.8);
-        border-radius: 3%;
         margin-bottom: 3%;
+        border-radius: 2%;
+        opacity: 1;
 
         p {
             font-size: 1.3em;
@@ -860,9 +876,9 @@ footer {
     }
 
     @keyframes slideLeft {
-        0% {transform: translateX(-700px);}
-        50% {transform: translateX(100px);}
-        100% {transform: translateX(0);}
+        0% {opacity: 0;}
+        50% {opacity: 0.5}
+        100% {opacity: 1}
 
     }
 
@@ -880,9 +896,9 @@ footer {
     }
 
     .overall_recipe_margin {
+        width: 90%;
         display: flex;
-        width: 95%;
-        margin: 0 auto;
+        justify-content: center;
     }
 
     .overall {
@@ -952,10 +968,18 @@ footer {
         .banner {
             margin: 0;
             width: 50%;
+
+            img {
+                width: 683px;
+                height: 512px;
+                object-fit: fill;
+                border-top-left-radius: 2%;
+                border-top-right-radius: 2%;
+            }
         }
 
         #notes {
-            width: 43%;
+            width: 40%;
             font-size: 19px;
             display: flex;
             align-items: center;

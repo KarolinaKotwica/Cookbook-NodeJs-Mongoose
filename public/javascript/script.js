@@ -27,6 +27,13 @@ var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
   return new bootstrap.Tooltip(tooltipTriggerEl)
 })
 
+// clear input
+const newsletter_input = document.getElementById(newsletter);
+const newsletter_button = document.querySelector('.button-newsletter');
+
+newsletter_button.addEventListener('click', () => {
+  newsletter_input = '';
+})
 
 //////   pages //////
 var list = new Array();
