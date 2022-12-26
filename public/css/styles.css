@@ -537,8 +537,36 @@ textarea {
 }
 .newsletter_message {
   text-align: center;
-  padding: 7em;
-  font-size: 2.5rem;
+  padding: 5em;
+  font-size: 2rem;
+}
+.newsletter_form {
+  padding: 2em;
+  margin-top: 7em;
+}
+.newsletter_form .form-group {
+  margin-top: 1em;
+}
+.newsletter_form .btn {
+  padding: 0.5em;
+  margin-top: 2em;
+  border: 1px solid #c82145;
+  transition: all 0.3s ease-in;
+}
+.newsletter_form .btn:hover {
+  color: #fff;
+  background-color: #c82145;
+}
+.redirect {
+  text-align: center;
+}
+.redirect a {
+  color: #000;
+  text-decoration: none;
+  transition: color 0.5s linear;
+}
+.redirect a:hover {
+  color: #c82145;
 }
 footer {
   padding-top: 4rem;
@@ -552,6 +580,11 @@ footer form {
 footer .button-newsletter {
   border-radius: 3.5%;
   border: 1px solid #cfcfcf;
+}
+footer .footer_text_on_the_top {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  font-size: 1.2rem;
 }
 footer #footer-up {
   display: flex;
@@ -875,6 +908,15 @@ footer #footer-down {
   .recipe-user {
     margin-top: 7em;
   }
+  .newsletter_form {
+    padding: 2em;
+    margin: 0 auto;
+    margin-top: 7em;
+    width: 50%;
+  }
+  .newsletter_form .form-group {
+    width: 60%;
+  }
   footer form {
     margin: 0 auto;
     text-align: center;
@@ -894,9 +936,22 @@ footer #footer-down {
     justify-content: space-evenly;
     margin-top: 3rem;
   }
-  footer #footer-down {
+  footer #footer-down ul {
     display: flex;
+  }
+  footer #footer-down ul li {
     flex-direction: row;
     justify-content: space-between;
+    list-style-type: none;
+    margin-bottom: 15px;
+    margin: 0 auto;
+  }
+  footer #footer-down ul li a {
+    color: #000;
+    text-decoration: none;
+    transition: color 0.4s ease-in;
+  }
+  footer #footer-down ul li a:hover {
+    color: #c82145;
   }
 }

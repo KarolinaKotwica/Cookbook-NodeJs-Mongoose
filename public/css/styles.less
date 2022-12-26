@@ -710,8 +710,43 @@ textarea {
 //newsletter
 .newsletter_message {
     text-align: center;
-    padding: 7em;
-    font-size: 2.5rem;
+    padding: 5em;
+    font-size: 2rem;
+}
+
+.newsletter_form {
+    padding: 2em;
+    margin-top: 7em;
+
+    .form-group {
+        margin-top: 1em;
+    }
+
+    .btn {
+        padding: .5em;
+        margin-top: 2em;
+        border: 1px solid @main_color;
+        transition: all .3s ease-in;
+
+        &:hover {
+            color: #fff;
+            background-color: @main_color;
+        }
+    }
+}
+
+.redirect {
+    text-align: center;
+
+    a {
+        color: #000;
+        text-decoration: none;
+        transition: color .5s linear;
+
+        &:hover {
+            color: @main_color;
+        }
+    }
 }
 
 ///footer
@@ -728,6 +763,12 @@ footer {
     .button-newsletter {
         border-radius: 3.5%;
         border: 1px solid #cfcfcf;
+    }
+
+    .footer_text_on_the_top {
+        text-align: center;
+        margin-bottom: 2.5rem;
+        font-size: 1.2rem;
     }
 
     #footer-up {
@@ -1141,6 +1182,17 @@ footer {
         margin-top: 7em;
     }
 
+    .newsletter_form {
+        padding: 2em;
+        margin: 0 auto;
+        margin-top: 7em;
+        width: 50%;
+
+        .form-group {
+            width: 60%;
+        }
+    }
+
     //footer
     footer {
     
@@ -1168,9 +1220,29 @@ footer {
         }
     
         #footer-down {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
+
+            ul {
+                display: flex;
+
+                li {
+
+                    flex-direction: row;
+                    justify-content: space-between;
+                    list-style-type: none;
+                    margin-bottom: 15px;
+                    margin: 0 auto;
+
+                    a {
+                        color: #000;
+                        text-decoration: none;
+                        transition: color .4s ease-in;
+
+                        &:hover {
+                            color: @main_color;
+                        }
+                    }
+                }
+            }
         }
     }
 }

@@ -16,17 +16,51 @@ const AWS = require('aws-sdk');
 const fs = require('fs');
 const models = require("./models");
 const { User, Recipe, List } = models;
-const MemoryStore = require('memorystore')(session)
-// newsletter
-const sgMail = require('@sendgrid/mail');
-const sgClient = require('@sendgrid/client');
-const expressFileUpload = require('express-fileupload');
+const MemoryStore = require('memorystore')(session);
+const expressSitemapXml = require('express-sitemap-xml');
+const path = require("path");
+const mailchimp = require("@mailchimp/mailchimp_marketing");
+var md5 = require('md5');
 
-sgMail.setApiKey(process.env.SENDGRID_API);
-sgClient.setApiKey(process.env.SENDGRID_API);
+const {verify} = require('hcaptcha');
+const secret = process.env.HCAPTCHA_SECRET;
+const token = 'token from widget';
+
+verify(secret, token)
+  .then((data) => {
+    if (data.success === true) {
+      console.log('success!', data);
+    } else {
+      console.log('verification failed');
+    }
+  })
+  .catch(console.error);
+
+// sitemap
+app.use(expressSitemapXml(getUrls, 'https://cookbook.com.pl'));
+async function getUrls () {
+    return await getUrlsFromDatabase()
+}
+//
+
+//mailchimp
+mailchimp.setConfig({
+    apiKey: process.env.MAILCHIMP_API,
+    server: "US21",
+});
 
 
-// end newsletter
+
+// pdf
+const dirPath = path.join(__dirname, "public/pdfs");
+
+const files = fs.readdirSync(dirPath).map(name => {
+    return {
+      name: path.basename(name, ".pdf"),
+      url: `/pdfs/${name}`
+    };
+});
+//
 
 
 app.set('view engine', 'ejs');
@@ -34,7 +68,7 @@ app.use(express.urlencoded({extended: false}));
 app.use(express.json());
 app.use(express.static("public"));
 
-app.use(expressFileUpload());
+// app.use(expressFileUpload());
 
 app.set('trust proxy', 1);
 
@@ -131,7 +165,7 @@ app.get('/', async (req,res) => {
         let random = Math.floor(Math.random()*count);
         let randomRecipe = await Recipe.findOne().skip(random);
         res.render('index', {
-            recipes: foundRecipe,random: randomRecipe});
+            recipes: foundRecipe,random: randomRecipe, files: files });
     }).sort({_id: -1}).limit(20);
 })
 
@@ -143,7 +177,6 @@ app.get('/', async (req,res) => {
 //   function(req, res) {
 //     res.redirect('/user');
 // });
-
 
 app.get('/all/:page', async (req,res) => {
     var perPage = 20;
@@ -159,6 +192,7 @@ app.get('/all/:page', async (req,res) => {
         res.render('all', {
             recipes: foundRecipe,
             current: page,
+            files: files,
             pages: Math.ceil(count / perPage)});
     });
 })
@@ -170,7 +204,8 @@ app.get('/users-recipe/:id', (req,res)=> {
     User.findById(idUser, (err, user)=> {
         if (user) {
             res.render('users-recipe', {
-                recipes: user.recipes
+                recipes: user.recipes,
+                files: files
             })
         }
     })
@@ -179,7 +214,7 @@ app.get('/users-recipe/:id', (req,res)=> {
 app.get('/shopList', (req,res)=> {
     if(req.isAuthenticated()) {
         User.findById(req.user.id, (err, found)=> {
-            res.render('shopList', {newListItems: found.list});
+            res.render('shopList', {newListItems: found.list, files: files});
         })
 
     } else {
@@ -312,7 +347,8 @@ app.get('/recipes/:postId', async (req, res) => {
         planerFlash,
         planerFlashError,
         idUser: found.idUser,
-        recipes: results
+        recipes: results,
+        files: files
       });
     })
 });
@@ -504,7 +540,7 @@ app.post('/search', async (req, res) => {
     });
     await Recipe.find({ title: { $regex: req.body.search, $options: "i" } }, (err, docs) => {
         if (!err) {
-            res.render('search', { found: docs } );
+            res.render('search', { found: docs, files: files } );
         }
         });
 })
@@ -515,63 +551,63 @@ app.get("/lunch", (req,res) => {
 
     Recipe.find({category: "Obiad"}, (err, foundRecipe) => {
         res.render('lunch', {
-            recipes: foundRecipe});
+            recipes: foundRecipe, files: files});
     }).sort({_id: -1});
 })
 
 app.get("/desserts", (req,res) => {
     Recipe.find({category: "Desery"}, (err, foundRecipe) => {
         res.render('desserts', {
-            recipes: foundRecipe});
+            recipes: foundRecipe, files: files});
     }).sort({_id: -1});
 })
 
 app.get("/dodatki", (req,res) => {
     Recipe.find({category: "Dodatki"}, (err, foundRecipe) => {
         res.render('dodatki', {
-            recipes: foundRecipe});
+            recipes: foundRecipe, files: files});
     }).sort({_id: -1});
 })
 
 app.get("/salads", (req,res) => {
     Recipe.find({category: "Sałatki"}, (err, foundRecipe) => {
         res.render('salads', {
-            recipes: foundRecipe});
+            recipes: foundRecipe, files: files});
     }).sort({_id: -1});
 })
 
 app.get("/soups", (req,res) => {
     Recipe.find({category: "Zupy"}, (err, foundRecipe) => {
         res.render('soups', {
-            recipes: foundRecipe});
+            recipes: foundRecipe, files: files});
     }).sort({_id: -1});
 })
 
 app.get("/breakfast", (req,res) => {
     Recipe.find({category: "Śniadanie"}, (err, foundRecipe) => {
         res.render('breakfast', {
-            recipes: foundRecipe});
+            recipes: foundRecipe, files: files});
     }).sort({_id: -1});
 })
 
 app.get("/snacks", (req,res) => {
     Recipe.find({category: "Przekąski"}, (err, foundRecipe) => {
         res.render('snacks', {
-            recipes: foundRecipe});
+            recipes: foundRecipe, files: files});
     }).sort({_id: -1});
 })
 
 app.get("/for_kids", (req,res) => {
     Recipe.find({category: "Dla dzieci"}, (err, foundRecipe) => {
         res.render('for_kids', {
-            recipes: foundRecipe});
+            recipes: foundRecipe, files: files});
     }).sort({_id: -1});
 })
 
 app.get("/torty", (req,res) => {
     Recipe.find({category: "Torty"}, (err, foundRecipe) => {
         res.render('torty', {
-            recipes: foundRecipe});
+            recipes: foundRecipe, files: files});
     }).sort({_id: -1});
 })
 
@@ -671,6 +707,65 @@ app.post("/edit/:id", upload.single('image'), (req, res) => {
 });
 
 
+// NEWSLETTER
+app.get('/signup', (req,res)=> {
+    res.render('newsletter/signup')
+})
+
+app.post('/signup', (req,res) => {
+    const listId = "ba57f81267";
+    const subscribingUser = {
+        firstName: req.body.firstname,
+        email: req.body.email
+    };
+
+    async function run() {
+        const response = await mailchimp.lists.addListMember(listId, {
+          email_address: subscribingUser.email,
+          status: "subscribed",
+          merge_fields: {
+            FNAME: subscribingUser.firstName
+          }
+        })
+        .catch(err => console.error(err))
+
+        console.log(
+        `Successfully added contact as an audience member. The contact's id is ${response.id}.`
+        );
+      }
+
+    
+      
+    run();
+    res.render('newsletter/message');
+
+})
+
+app.get('/unsubscribe', (req,res) => {
+    res.render('newsletter/unsubscribe')
+})
+
+app.post('/unsub', (req,res) => {
+    const listId = process.env.LIST_ID;
+    const email = req.body.unsub;
+    const subscriberHash = md5(_.toLower(email));
+
+    async function run() {
+    const response = await mailchimp.lists.updateListMember(
+            listId,
+            subscriberHash,
+            {
+            status: "unsubscribed"
+            }
+        );
+
+        console.log(`This user is now ${response.status}.`);
+    }
+
+    run();
+    res.redirect('/')
+})
+
 // edit form
 app.get("/edit/:id", (req, res) => {
     Recipe.findById(req.params.id, (err, found) => {
@@ -680,211 +775,6 @@ app.get("/edit/:id", (req, res) => {
         }
     })
 });
-
-
-////////////////////////////
-///// newsletter /////
-///////////////////////////
-app.get('/signup', (req, res) => {
-    res.render('newsletter/signup');
-});
-
-app.post('/signup', async (req, res) => {
-    const confNum = randNum();
-    const params = new URLSearchParams({
-      conf_num: confNum,
-      email: req.body.email,
-    });
-    const confirmationURL = req.protocol + '://' + req.headers.host + '/confirm/?' + params;
-    const msg = {
-      to: req.body.email,
-      from: process.env.SENDGRID_FROM, 
-      subject: `Potwierdź zapisanie się do naszego newslettera`,
-      html: `Cześć ${req.body.firstname},<br>Dziękujemy za zapisanie się do naszego newslettera!<br>Możesz potwierdzić subskrypcję <a href="${confirmationURL}"> klikając tutaj.</a><br><br> Od teraz będziemy mogli wysyłać Ci smaczne przepisy na każdy dzień 🥗</a>.`
-    }
-      await addContact(req.body.firstname, req.body.lastname, req.body.email, confNum);
-      await sgMail.send(msg);
-      res.render('newsletter/message', { message: 'Dziękujemy za zapisanie się do naszego newslettera! Dokończ proces klikając na link aktywacyjny wysłany na twojego maila.' });
-});
-
-app.get('/confirm', async (req, res) => {
-    try {
-        const contact = await getContactByEmail(req.query.email);
-        if(contact == null) throw `Contact not found.`;
-        if (contact.custom_fields.conf_num ==  req.query.conf_num) {
-          const listID = await getListID('Newsletter Subscribers');
-          await addContactToList(req.query.email, listID);
-        } else {
-          throw 'Confirmation number does not match';
-        }
-        res.render('newsletter/message', { message: 'Od teraz subskrybujesz nasz newsletter! :)' });
-      } catch (error) {
-        console.error(error);
-        res.render('newsletter/message', { message: 'Sybskrypcja się nie powiodła. Proszę <a href="/signup">spróbuj ponownie.</a>' });
-      }
-});
-
-app.get('/upload', (req, res) => {
-    res.render('newsletter/form', uploadPage);
-});
-
-app.post('/upload', async (req, res) => {
-    const listID = await getListID('Newsletter Subscribers');
-    const htmlNewsletter = req.files.newsletter.data.toString();
-    await sendNewsletterToList(req, htmlNewsletter, listID)
-    res.render('newsletter/message', {
-      message: 'Newsletter has been sent to all subscribers.'
-    });
-});
-
-app.get('/delete', async (req, res) => {
-    try {
-      const contact = await getContactByEmail(req.query.email);
-      if(contact == null) throw `Contact not found.`;
-      if (contact.custom_fields.conf_num ==  req.query.conf_num) {
-        const listID = await getListID('Newsletter Subscribers');
-        await deleteContactFromList(listID, contact);
-        res.render('newsletter/message', { message: 'Zostałeś pomyślnie wypisany z newslettera. Jesli to był błąd re-subscribe <a href="/signup">tutaj</a>.' });
-      }
-    else throw 'Confirmation number does not match or contact is not subscribed'
-    }
-    catch(error) {
-      console.error(error)
-      res.render('newsletter/message', { message: 'Unsubskrypcja nie powiodła się. Spróbuj ponownie.' })
-    }
-  });
-
-/////////////////////////////////
-// helper function and var for newsletter
-/////////////////////////////////
-const uploadPage = {
-    title: 'Upload Newsletter',
-    subtitle: 'Upload an HTML newsletter to send out to subscribers',
-    form: `<form action="/upload" id="contact-form" enctype="multipart/form-data" method="post" style="margin: 10%; margin-left:5%; width: 350px;">
-    <div class="form-group">
-        <label for="subject">Email Subject:</label>
-        <input type="text" class="form-control" id="subject" name="subject" placeholder="Subject" required>
-    </div>
-    <div class="form-group">
-        <label for="newsletter">Newsletter: </label>
-        <input type="file" id="newsletter" name="newsletter" accept=".html" required>
-    </div>
-    <button type="submit" style="background:#0263e0 !important;" class="btn btn-primary">Send</button>
-  </form>`
-}
-  
-function randNum() {
-    return Math.floor(Math.random() * 90000) + 10000;
-}
-  
-async function addContact(firstName, lastName, email, confNum) {
-    const customFieldID = await getCustomFieldID('conf_num');
-    const data = {
-      "contacts": [{
-        "email": email,
-        "first_name": firstName,
-        "last_name": lastName,
-        "custom_fields": {}
-      }]
-    };
-    data.contacts[0].custom_fields[customFieldID] = confNum;
-    const request = {
-      url: `/v3/marketing/contacts`,
-      method: 'PUT',
-      body: data
-    }
-    return sgClient.request(request);
-}
-  
-async function addContactToList(email, listID) {
-    const data = {
-      "list_ids": [listID],
-      "contacts": [{
-        "email": email
-      }]
-    };
-    const request = {
-      url: `/v3/marketing/contacts`,
-      method: 'PUT',
-      body: data
-    }
-    return sgClient.request(request);
-}
-  
-async function getCustomFieldID(customFieldName) {
-    const request = {
-      url: `/v3/marketing/field_definitions`,
-      method: 'GET',
-    }
-    const response = await sgClient.request(request);
-    const allCustomFields = response[1].custom_fields;
-    return allCustomFields.find(x => x.name === customFieldName).id;
-}
-  
-async function getListID(listName) {
-    const request = {
-      url: `/v3/marketing/lists`,
-      method: 'GET',
-    }
-    const response = await sgClient.request(request);
-    const allLists = response[1].result;
-    return allLists.find(x => x.name === listName).id;
-}
-  
-async function sendNewsletterToList(req, htmlNewsletter, listID) {
-    const data = {
-      "query": `CONTAINS(list_ids, '${listID}')`
-    };
-    const request = {
-      url: `/v3/marketing/contacts/search`,
-      method: 'POST',
-      body: data
-    }
-    const response = await sgClient.request(request);
-    for (const subscriber of response[1].result) {
-      const params = new URLSearchParams({
-        conf_num: subscriber.custom_fields.conf_num,
-        email: subscriber.email,
-      });
-      const unsubscribeURL = req.protocol + '://' + req.headers.host + '/delete/?' + params;
-      const msg = {
-        to: subscriber.email, 
-        from: 'SENDER_EMAIL', // Change to your verified sender
-        subject: req.body.subject,
-        html: htmlNewsletter + `<a href="${unsubscribeURL}"> Unsubscribe here</a>`,
-      }
-      sgMail.send(msg);
-    }
-}
-  
-async function deleteContactFromList(listID, contact) {
-    const request = {
-      url: `/v3/marketing/lists/${listID}/contacts`,
-      method: 'DELETE',
-      qs: {
-        "contact_ids": contact.id
-      }
-    }
-    await sgClient.request(request);
-}
-  
-async function getContactByEmail(email) {
-    const data = {
-      "emails": [email]
-    };
-    const request = {
-      url: `/v3/marketing/contacts/search/emails`,
-      method: 'POST',
-      body: data
-    }
-    const response = await sgClient.request(request);
-    if(response[1].result[email]) return response[1].result[email].contact;
-    else return null;
-}
-
-////////////////////
-/// end functions and var for newsletter
-////////////////////
 
 let port = process.env.PORT;
 if (port == null || port == "") {

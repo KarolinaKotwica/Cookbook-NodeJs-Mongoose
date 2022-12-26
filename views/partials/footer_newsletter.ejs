@@ -8,7 +8,10 @@
             <button type="submit" class="btn btn-light button_login button-newsletter">Zapisz się</button>
         </div>
     </form> -->
-    <hr />
+    <div class="footer_text_on_the_top">
+        Dalej nie możesz nic znaleźć? 🙂<br />
+        Spróbuj nasze pyszne, popularne przepisy lub szybkie przepisy do 30 minut!  
+    </div>
     <div id="footer-up">
         <div class="footer-up-element">
             <h4>Kategorie:</h4>
@@ -42,18 +45,20 @@
     <hr />
 
     <div id="footer-down">
-        <p>
-            Polityka prywatności
-        </p>
-        <p>
-            Polityka cookie
-        </p>
-        <p>
-            Mapa strony
-        </p>
-        <p>
-            Kontakt: <span class="color">karolinakotwica93@gmail.com</span>
-        </p>
+        <ul>
+            <% files.map(file => { %>
+                <li>
+                  <a href="<%= file.url %>"><%= file.name %></a>
+                </li>
+              <% }) %>
+              <li>
+                Kontakt:
+                    <a href="mailto:cookbook@caroline223.usermd.net">
+                        <span class="color" >cookbook@caroline223.usermd.net</span>
+                    </a>
+              </li>
+        </ul>
     </div>
+
 
 </footer>

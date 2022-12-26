@@ -13,8 +13,7 @@
     "node": "14.18.1"
   },
   "dependencies": {
-    "@sendgrid/client": "^7.7.0",
-    "@sendgrid/mail": "^7.7.0",
+    "@mailchimp/mailchimp_marketing": "^3.0.80",
     "aws-sdk": "^2.1017.0",
     "body-parser": "^1.19.0",
     "connect-flash": "^0.1.1",
@@ -26,7 +25,10 @@
     "express": "^4.17.1",
     "express-fileupload": "^1.4.0",
     "express-session": "^1.17.3",
+    "express-sitemap-xml": "^3.0.1",
+    "hcaptcha": "^0.1.1",
     "lodash": "^4.17.21",
+    "md5": "^2.3.0",
     "memorystore": "^1.6.7",
     "mongoose": "^6.0.7",
     "mongoose-find-or-create": "^1.3.1",
@@ -38,6 +40,7 @@
     "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^6.1.0",
+    "path": "^0.12.7",
     "webpack": "^5.60.0"
   }
 }
