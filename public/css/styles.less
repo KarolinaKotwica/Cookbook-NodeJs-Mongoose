@@ -3,7 +3,9 @@
 @white_color: #fff;
 @background_color: #f0f0ef;
 
-@import url('https://fonts.googleapis.com/css2?family=Radley&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Itim&display=swap');
+
 
 * {
     margin: 0;
@@ -13,8 +15,7 @@
 
 body {
     background-color: @background_color;
-
-    font-family: 'Radley', serif;
+    font-family: 'Itim', cursive;
 }
 
 .color {
@@ -60,6 +61,11 @@ body {
     margin: 1em;
 }
 
+.center {
+    display: flex;
+    justify-content: center;
+}
+
 .pagination {
     justify-content: center;
 
@@ -84,6 +90,15 @@ body {
 
 .none {
     display: none;
+}
+
+.discounts_card {
+    margin: 0 auto !important;
+    margin-top: 1em !important;
+
+    p {
+        font-size: 1em !important;
+    }
 }
 
 /////// nav.ejs ////////////
@@ -308,8 +323,11 @@ form[action='/search'] {
         margin-top: 2em;
     }
 
-    .recipes {
+    h2 {
+        margin: 0 15px 0 15px;
+    }
 
+    .recipes {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
@@ -427,6 +445,11 @@ form[action='/search'] {
         }
     }
 
+    .container h2 {
+        margin-bottom: 2rem;
+        color: @main_color;
+    }
+
     #recipe_container_description {
         margin: 1em;
 
@@ -495,6 +518,14 @@ form {
     }
 }
 
+#addIngredientsBtn {
+    color: #41B883;
+}
+
+#removeIngredientsBtn {
+    color: #c82145;
+}
+
 .alert-info {
     margin: 3em;
 }
@@ -524,7 +555,7 @@ textarea {
 }
 
 .login_form {
-    padding: 4em;
+    padding: 2em;
 }
 
 .button_login {
@@ -533,6 +564,15 @@ textarea {
 
     &:hover {
         color: @main_color;
+    }
+
+    a {
+        color: @main_color;
+        transition: all .5s linear;
+
+        &:hover {
+            color: #000;
+        }
     }
 }
 
@@ -705,8 +745,43 @@ textarea {
 //newsletter
 .newsletter_message {
     text-align: center;
-    padding: 7em;
-    font-size: 2.5rem;
+    padding: 5em;
+    font-size: 2rem;
+}
+
+.newsletter_form {
+    padding: 2em;
+    margin-top: 7em;
+
+    .form-group {
+        margin-top: 1em;
+    }
+
+    .btn {
+        padding: .5em;
+        margin-top: 2em;
+        border: 1px solid @main_color;
+        transition: all .3s ease-in;
+
+        &:hover {
+            color: #fff;
+            background-color: @main_color;
+        }
+    }
+}
+
+.redirect {
+    text-align: center;
+
+    a {
+        color: #000;
+        text-decoration: none;
+        transition: color .5s linear;
+
+        &:hover {
+            color: @main_color;
+        }
+    }
 }
 
 ///footer
@@ -723,6 +798,12 @@ footer {
     .button-newsletter {
         border-radius: 3.5%;
         border: 1px solid #cfcfcf;
+    }
+
+    .footer_text_on_the_top {
+        text-align: center;
+        margin-bottom: 2.5rem;
+        font-size: 1.2rem;
     }
 
     #footer-up {
@@ -762,12 +843,30 @@ footer {
         width: 85%;
         text-align: center;
         margin-top: 2rem;
+
+        li {
+            list-style-type: none;
+
+            a {
+                color: #000;
+                text-decoration: none;
+                transition: color .4s ease-in;
+    
+                &:hover {
+                    color: @main_color;
+                }
+            }
+        }
     }
 }
 
 /////////////////////// Media Q Tablet ///////////////////////////////////////////////////////////
 
 @media (min-width:750px) and (max-width: 960px) {
+
+    .center {
+        display: block;
+    }
 
     #recipe_of_the_day {
         margin-top: 3%;
@@ -831,6 +930,21 @@ footer {
         margin: .4em;
     }
 
+    .discounts_card {
+        margin-right: .8em !important;
+
+        img {
+            width: 35%;
+            position: absolute;
+            top: 3em;
+            left: 0;
+        }
+    }
+
+    .center {
+        display: block;
+    }
+
     .delete_button {
         padding: 5px;
     }
@@ -859,11 +973,11 @@ footer {
         width: 40%;
         padding: 3%;
         margin-left: 3%;
-        transform: translateX(-700px);
-        animation: slideLeft 1s ease-in-out forwards;
+        animation: slideLeft 1.5s ease-in forwards;
         background: rgba(255,255,255,0.8);
         margin-bottom: 3%;
         border-radius: 2%;
+        opacity: 1;
 
         p {
             font-size: 1.3em;
@@ -871,9 +985,9 @@ footer {
     }
 
     @keyframes slideLeft {
-        0% {transform: translateX(-700px);}
-        50% {transform: translateX(100px);}
-        100% {transform: translateX(0);}
+        0% {opacity: 0;}
+        50% {opacity: 0.5}
+        100% {opacity: 1}
 
     }
 
@@ -891,8 +1005,9 @@ footer {
     }
 
     .overall_recipe_margin {
-        width: 60%;
-        margin: 0 auto;
+        width: 90%;
+        display: flex;
+        justify-content: center;
     }
 
     .overall {
@@ -961,11 +1076,19 @@ footer {
 
         .banner {
             margin: 0;
-            width: 80%;
+            width: 50%;
+
+            img {
+                width: 683px;
+                height: 512px;
+                object-fit: fill;
+                border-top-left-radius: 2%;
+                border-top-right-radius: 2%;
+            }
         }
 
         #notes {
-            width: 43%;
+            width: 40%;
             font-size: 19px;
             display: flex;
             align-items: center;
@@ -1127,6 +1250,17 @@ footer {
         margin-top: 7em;
     }
 
+    .newsletter_form {
+        padding: 2em;
+        margin: 0 auto;
+        margin-top: 7em;
+        width: 50%;
+
+        .form-group {
+            width: 60%;
+        }
+    }
+
     //footer
     footer {
     
@@ -1154,9 +1288,18 @@ footer {
         }
     
         #footer-down {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
+
+            ul {
+                display: flex;
+
+                li {
+
+                    flex-direction: row;
+                    justify-content: space-between;
+                    margin-bottom: 15px;
+                    margin: 0 auto;
+                }
+            }
         }
     }
 }

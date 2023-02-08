@@ -1,0 +1,14 @@
+<%- include('../partials/header'); -%>
+<%- include('../partials/nav'); -%>
+
+<form class="newsletter_message" action="/unsub" id="contact-form" method="post" >
+    <h3>
+        Potwierdź wypisanie się z newslettera<br>Mamy nadzieję, że nadal będziesz odwiedzac naszą stronę 😊
+        <br><br>
+        Niżej wpisz swój adres email:
+    </h3>
+    <input type="email" class="form-control" id="unsub" name="unsub" placeholder="Enter email" required>
+    <button type="submit" class="btn btn-primary">Wypisz się!</button>
+</form>
+
+<%- include('../partials/footer'); -%>

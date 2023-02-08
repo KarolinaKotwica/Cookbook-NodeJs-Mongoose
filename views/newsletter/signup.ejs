@@ -1,0 +1,21 @@
+<%- include('../partials/header'); -%>
+<%- include('../partials/nav'); -%>
+
+<div class="newsletter_form">
+    <h5>Jeżeli chcesz zapisać sie do naszego newslettera, prosze wypełnij pola poniżej 😊<br>Co jakiś czas będziemy wysyłać maila z nowościami lub kulinarnymi pomysłami, ale bez obaw, nie będziemy wysyłać codziennie 😛</h5>
+    <form action="/signup" id="contact-form" method="post" >
+        <div class="form-group">
+            <input type="text" class="form-control" id="firstname" name="firstname" placeholder="Imię" required>
+        </div>
+        <div class="form-group">
+            <input type="email" class="form-control" id="email" name="email" placeholder="Adres email" required>
+            <br />
+            <div class="h-captcha" data-sitekey="43baed29-4dd8-4240-9543-185a95abee75"></div>
+
+            <small id="emailHelp" class="form-text text-muted"><br>Nigdy nie udostępnimy Twojego adresu email innym osobom.</small>
+        </div>
+        <button type="submit" class="btn">Zapisz się!</button>
+    </form>
+</div>
+
+<%- include('../partials/footer'); -%>

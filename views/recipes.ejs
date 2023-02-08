@@ -1,5 +1,5 @@
 <%- include('partials/header'); -%>
-<title><%= title %> - BookToCook</title>
+<title><%= title %> - Cookbook</title>
 </head>
 <body id="google_translate_element">
 <%- include('partials/nav'); -%>
@@ -16,11 +16,13 @@
                 </p>
             </div>
         </div>
+
+        <div id="notes">
+            <p class="enter line_height"><%= describe %></p>
+        </div>
     </div>
 
-    <div id="notes">
-        <p class="enter line_height"><%= describe %></p>
-    </div>
+    
 
     <div id="recipe_container_description">
         <div class="when_added">
@@ -61,7 +63,7 @@
         <br />
         <div class="container">
             <div id="ingredients">
-                <h1>Składniki:</h1>
+                <h2>Składniki:</h2>
                 <div>
                     <% ingredients.forEach(element => {%>
                         <p class="ingredient_style"><input type="checkbox"><span><%= element %></span></p>
@@ -70,7 +72,7 @@
             </div>
             <br />
             <div id="preparation">
-                <h1>Przygotowanie:</h1>
+                <h2>Przygotowanie:</h2>
                     <p class="enter"><%= preparation %></p>
             </div>
         </div>
