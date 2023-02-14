@@ -3,12 +3,19 @@ let addIngredientsBtn = document.getElementById('addIngredientsBtn');
 let ingredientList = document.querySelector('.ingredientList');
 let ingredientDiv = document.querySelectorAll('.ingredientDiv')[0];
 
+let removeButton = document.getElementById('removeIngredientsBtn');
+
 addIngredientsBtn.addEventListener('click', function(){
   let newIngredients = ingredientDiv.cloneNode(true);
   let input = newIngredients.getElementsByTagName('input')[0];
   input.value = '';
   ingredientList.appendChild(newIngredients);
 });
+
+// remove ingredients
+removeButton.addEventListener('click', () => {
+  ingredientList.lastChild.remove();
+})
 
 //sessionStorage
 if(window.sessionStorage) {
@@ -28,12 +35,12 @@ var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
 })
 
 // clear input
-const newsletter_input = document.getElementById(newsletter);
-const newsletter_button = document.querySelector('.button-newsletter');
+// const newsletter_input = document.getElementById(newsletter);
+// const newsletter_button = document.querySelector('.button-newsletter');
 
-newsletter_button.addEventListener('click', () => {
-  newsletter_input = '';
-})
+// newsletter_button.addEventListener('click', () => {
+//   newsletter_input = '';
+// })
 
 //////   pages //////
 var list = new Array();

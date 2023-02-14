@@ -4,6 +4,8 @@
 @background_color: #f0f0ef;
 
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Itim&display=swap');
+
 
 * {
     margin: 0;
@@ -13,8 +15,7 @@
 
 body {
     background-color: @background_color;
-
-    font-family: 'Raleway', sans-serif;
+    font-family: 'Itim', cursive;
 }
 
 .color {
@@ -58,6 +59,23 @@ body {
 
 .favourite {
     margin: 1em;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+}
+
+.discounts .card-group .card {
+    margin: 0 auto;
+}
+
+.discounts .card-group .card-body {
+    font-size: 1.3em !important;
+}
+
+.badge {
+    font-size: 1em;
 }
 
 .pagination {
@@ -308,8 +326,11 @@ form[action='/search'] {
         margin-top: 2em;
     }
 
-    .recipes {
+    h2 {
+        margin: 0 15px 0 15px;
+    }
 
+    .recipes {
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
@@ -500,6 +521,14 @@ form {
     }
 }
 
+#addIngredientsBtn {
+    color: #41B883;
+}
+
+#removeIngredientsBtn {
+    color: #c82145;
+}
+
 .alert-info {
     margin: 3em;
 }
@@ -529,7 +558,7 @@ textarea {
 }
 
 .login_form {
-    padding: 4em;
+    padding: 2em;
 }
 
 .button_login {
@@ -538,6 +567,15 @@ textarea {
 
     &:hover {
         color: @main_color;
+    }
+
+    a {
+        color: @main_color;
+        transition: all .5s linear;
+
+        &:hover {
+            color: #000;
+        }
     }
 }
 
@@ -808,12 +846,30 @@ footer {
         width: 85%;
         text-align: center;
         margin-top: 2rem;
+
+        li {
+            list-style-type: none;
+
+            a {
+                color: #000;
+                text-decoration: none;
+                transition: color .4s ease-in;
+    
+                &:hover {
+                    color: @main_color;
+                }
+            }
+        }
     }
 }
 
 /////////////////////// Media Q Tablet ///////////////////////////////////////////////////////////
 
 @media (min-width:750px) and (max-width: 960px) {
+
+    .center {
+        display: block;
+    }
 
     #recipe_of_the_day {
         margin-top: 3%;
@@ -875,6 +931,21 @@ footer {
 @media (min-width:961px) {
     form[action='/delete'] {
         margin: .4em;
+    }
+
+    .discounts .card-group .card {
+        width: 90%;
+        height: 100%;
+
+        img {
+            height: 180px;
+            width: 80%;
+            margin: 0 auto;
+        }
+    }
+
+    .center {
+        display: block;
     }
 
     .delete_button {
@@ -1228,19 +1299,8 @@ footer {
 
                     flex-direction: row;
                     justify-content: space-between;
-                    list-style-type: none;
                     margin-bottom: 15px;
                     margin: 0 auto;
-
-                    a {
-                        color: #000;
-                        text-decoration: none;
-                        transition: color .4s ease-in;
-
-                        &:hover {
-                            color: @main_color;
-                        }
-                    }
                 }
             }
         }

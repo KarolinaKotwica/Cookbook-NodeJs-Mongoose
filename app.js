@@ -706,6 +706,11 @@ app.post("/edit/:id", upload.single('image'), (req, res) => {
     })
 });
 
+// Rabaty
+app.get('/discounts', (req,res) => {
+    res.render('discounts', {files: files});
+})
+
 
 // NEWSLETTER
 app.get('/signup', (req,res)=> {

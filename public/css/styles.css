@@ -5,6 +5,13 @@
   font-display: swap;
   src: url(https://fonts.gstatic.com/s/raleway/v28/1Ptxg8zYS_SKggPN4iEgvnHyvveLxVuEooCP.ttf) format('truetype');
 }
+@font-face {
+  font-family: 'Itim';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/itim/v10/0nknC9ziJOYewAQ.ttf) format('truetype');
+}
 * {
   margin: 0;
   padding: 0;
@@ -12,7 +19,7 @@
 }
 body {
   background-color: #f0f0ef;
-  font-family: 'Raleway', sans-serif;
+  font-family: 'Itim', cursive;
 }
 .color {
   color: #c82145;
@@ -45,6 +52,19 @@ body {
 }
 .favourite {
   margin: 1em;
+}
+.center {
+  display: flex;
+  justify-content: center;
+}
+.discounts .card-group .card {
+  margin: 0 auto;
+}
+.discounts .card-group .card-body {
+  font-size: 1.3em !important;
+}
+.badge {
+  font-size: 1em;
 }
 .pagination {
   justify-content: center;
@@ -236,6 +256,9 @@ form[action='/search'] {
 .recipes_container nav {
   margin-top: 2em;
 }
+.recipes_container h2 {
+  margin: 0 15px 0 15px;
+}
 .recipes_container .recipes {
   display: flex;
   flex-wrap: wrap;
@@ -375,6 +398,12 @@ form h1 {
 #add_new_recipe h1 {
   margin: 1em;
 }
+#addIngredientsBtn {
+  color: #41B883;
+}
+#removeIngredientsBtn {
+  color: #c82145;
+}
 .alert-info {
   margin: 3em;
 }
@@ -396,7 +425,7 @@ textarea {
   border-color: #ccc;
 }
 .login_form {
-  padding: 4em;
+  padding: 2em;
 }
 .button_login {
   transition: all 0.3s linear;
@@ -404,6 +433,13 @@ textarea {
 }
 .button_login:hover {
   color: #c82145;
+}
+.button_login a {
+  color: #c82145;
+  transition: all 0.5s linear;
+}
+.button_login a:hover {
+  color: #000;
 }
 .button_login[aria-expanded="true"] {
   background-color: #c82145;
@@ -618,7 +654,21 @@ footer #footer-down {
   text-align: center;
   margin-top: 2rem;
 }
+footer #footer-down li {
+  list-style-type: none;
+}
+footer #footer-down li a {
+  color: #000;
+  text-decoration: none;
+  transition: color 0.4s ease-in;
+}
+footer #footer-down li a:hover {
+  color: #c82145;
+}
 @media (min-width: 750px) and (max-width: 960px) {
+  .center {
+    display: block;
+  }
   #recipe_of_the_day {
     margin-top: 3%;
   }
@@ -664,6 +714,18 @@ footer #footer-down {
 @media (min-width: 961px) {
   form[action='/delete'] {
     margin: 0.4em;
+  }
+  .discounts .card-group .card {
+    width: 90%;
+    height: 100%;
+  }
+  .discounts .card-group .card img {
+    height: 180px;
+    width: 80%;
+    margin: 0 auto;
+  }
+  .center {
+    display: block;
   }
   .delete_button {
     padding: 5px;
@@ -942,16 +1004,7 @@ footer #footer-down {
   footer #footer-down ul li {
     flex-direction: row;
     justify-content: space-between;
-    list-style-type: none;
     margin-bottom: 15px;
     margin: 0 auto;
-  }
-  footer #footer-down ul li a {
-    color: #000;
-    text-decoration: none;
-    transition: color 0.4s ease-in;
-  }
-  footer #footer-down ul li a:hover {
-    color: #c82145;
   }
 }
