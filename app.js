@@ -16,11 +16,62 @@ const AWS = require('aws-sdk');
 const fs = require('fs');
 const models = require("./models");
 const { User, Recipe, List } = models;
+const MemoryStore = require('memorystore')(session);
+const expressSitemapXml = require('express-sitemap-xml');
+const path = require("path");
+const mailchimp = require("@mailchimp/mailchimp_marketing");
+var md5 = require('md5');
+var xml = require('xml');
+
+const {verify} = require('hcaptcha');
+const secret = process.env.HCAPTCHA_SECRET;
+const token = 'token from widget';
+
+verify(secret, token)
+  .then((data) => {
+    if (data.success === true) {
+      console.log('success!', data);
+    } else {
+      console.log('verification failed');
+    }
+  })
+  .catch(console.error);
+
+// sitemap
+// app.use(expressSitemapXml(getUrls, 'https://cookbook.com.pl'));
+// async function getUrls () {
+//     return await getUrlsFromDatabase()
+// }
+//
+
+//mailchimp
+mailchimp.setConfig({
+    apiKey: process.env.MAILCHIMP_API,
+    server: "US21",
+});
+
+
+
+// pdf
+const dirPath = path.join(__dirname, "public/pdfs");
+
+const files = fs.readdirSync(dirPath).map(name => {
+    return {
+      name: path.basename(name, ".pdf"),
+      url: `/pdfs/${name}`
+    };
+});
+//
 
 
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({extended: false}));
+app.use(express.json());
 app.use(express.static("public"));
+
+// app.use(expressFileUpload());
+
+app.set('trust proxy', 1);
 
 
 // use the session package and set it up with some initial configuration
@@ -102,137 +153,7 @@ const multerStorage = multer.diskStorage({
 
 const upload = multer({
     storage: multerStorage
-  });
-
-
-
-
-
-
-// //////////////////////////////////////////////////////////
-// /////////////////// Schema for recipe ////////////////////
-// //////////////////////////////////////////////////////////
-
-// const recipeSchema = new mongoose.Schema({
-//     publisher: {
-//         type: String,
-//         minLength: 1,
-//         maxLength: 50,
-//         trim: true,
-//         required: true
-//     },
-//     title: {
-//         type: String,
-//         minLength: 1,
-//         maxLength: 60,
-//         trim: true,
-//         required: true
-//     },
-//     time: {
-//         type: String,
-//         min: 1,
-//         max: 4320,
-//         required: true
-//     },
-//     category: {
-//         type: String,
-//         required: true
-//     },
-//     image: {
-//         type: String
-//     },
-//     ingredients: {
-//         type: Array,
-//         required: true
-//     },
-//     describe: {
-//         type: String,
-//         minLength: 1,
-//         maxLength: 1000,
-//         trim: true,
-//         required: true
-//     },
-//     preparation: {
-//         type: String,
-//         minLength: 1,
-//         maxLength: 2000,
-//         trim: true,
-//         required: true
-//     },
-//     created: {
-//         type: Date,
-//         default: Date.now
-//     },
-//     idUser: {
-//         type: mongoose.Schema.Types.ObjectId,
-//         ref: 'User'
-//     }
-// });
-
-// recipeSchema.plugin(random);
-// recipeSchema.index({ "$**": "text" });
-
-
-
-// // model recipe //
-// const Recipe = mongoose.model("Recipe", recipeSchema);
-
-
-
-
-// //////////////////////////////////////////////////////////
-// /////////////////// Schema for List //////////////////////
-// //////////////////////////////////////////////////////////
-// const listSchema = new mongoose.Schema({
-//     item: String
-// })
-// //model list //
-// const List = mongoose.model("List", listSchema);
-
-
-// //////////////////////////////////////////////////////////
-// /////////////////// Schema for users //////////////////////
-// //////////////////////////////////////////////////////////
-// const userSchema = new mongoose.Schema({
-//     name: String,
-//     email: String,
-//     password: String,
-//     created: {
-//         type: Date,
-//         default: Date.now
-//     },
-//     recipes: [recipeSchema],
-//     favorite: [recipeSchema],
-//     planer: [recipeSchema],
-//     list: [listSchema]
-// })
-
-// // hash, salt and add user to db
-// userSchema.plugin(passportLocalMongoose);
-// userSchema.plugin(findOrCreate);
-
-// // model user //
-// const User = mongoose.model("User", userSchema);
-
-
-
-
-
-
-///////////////// Google ////////////
-// passport.use(new GoogleStrategy({
-//     clientID: process.env.CLIENT_ID,
-//     clientSecret: process.env.CLIENT_SECRET,
-//     callbackURL: "https://book-to-cook.herokuapp.com/auth/google/callback",
-//     userProfileURL: 'https://www.googleapis.com/oauth2/v3/userinfo'
-//   },
-//   function(accessToken, refreshToken, profile, cb) {
-//       console.log(profile);
-//     User.findOrCreate({ googleId: profile.id }, function (err, user) {
-//       return cb(err, user);
-//     });
-//   }
-// ));
+});
 
 
 
@@ -245,9 +166,14 @@ app.get('/', async (req,res) => {
         let random = Math.floor(Math.random()*count);
         let randomRecipe = await Recipe.findOne().skip(random);
         res.render('index', {
-            recipes: foundRecipe,random: randomRecipe});
+            recipes: foundRecipe,random: randomRecipe, files: files });
     }).sort({_id: -1}).limit(20);
 })
+
+app.get('/sitemap', function(req, res) {
+    res.set('Content-Type', 'text/xml');
+    res.send(xml('./public/sitemap.xml'));
+});
 
 // app.get('/auth/google',
 //   passport.authenticate('google', { scope: ["profile"] }));
@@ -257,7 +183,6 @@ app.get('/', async (req,res) => {
 //   function(req, res) {
 //     res.redirect('/user');
 // });
-
 
 app.get('/all/:page', async (req,res) => {
     var perPage = 20;
@@ -273,6 +198,7 @@ app.get('/all/:page', async (req,res) => {
         res.render('all', {
             recipes: foundRecipe,
             current: page,
+            files: files,
             pages: Math.ceil(count / perPage)});
     });
 })
@@ -284,7 +210,8 @@ app.get('/users-recipe/:id', (req,res)=> {
     User.findById(idUser, (err, user)=> {
         if (user) {
             res.render('users-recipe', {
-                recipes: user.recipes
+                recipes: user.recipes,
+                files: files
             })
         }
     })
@@ -293,7 +220,7 @@ app.get('/users-recipe/:id', (req,res)=> {
 app.get('/shopList', (req,res)=> {
     if(req.isAuthenticated()) {
         User.findById(req.user.id, (err, found)=> {
-            res.render('shopList', {newListItems: found.list});
+            res.render('shopList', {newListItems: found.list, files: files});
         })
 
     } else {
@@ -373,15 +300,21 @@ app.get('/planer', (req,res) => {
     }
 })
 
-app.get('/logout', (req, res) => {
-    req.logout();
-    req.session.loggedin = false;
-    res.redirect('/');
-});
+// app.get('/logout', (req, res) => {
+//     req.logout();
+//     req.session.loggedin = false;
+//     res.redirect('/');
+// });
+app.get("/logout", (req, res) => {
+    req.logout(req.user, err => {
+      if(err) return next(err);
+      res.redirect("/");
+    });
+  });
 
 
 app.get('/images/:key', (req, res) => {
-    console.log(req.params)
+    // console.log(req.params)
     const key = req.params.key
     const readStream = getFileStream(key)
   
@@ -401,7 +334,7 @@ app.get('/recipes/:postId', async (req, res) => {
 
         Recipe.findRandom({category: found.category}, {}, {limit: 4}, function(err, results) {
         if (!err) {
-            console.log(results); 
+            // console.log(results); ??
         }
             
       res.render('recipes', {
@@ -420,7 +353,8 @@ app.get('/recipes/:postId', async (req, res) => {
         planerFlash,
         planerFlashError,
         idUser: found.idUser,
-        recipes: results
+        recipes: results,
+        files: files
       });
     })
 });
@@ -612,7 +546,7 @@ app.post('/search', async (req, res) => {
     });
     await Recipe.find({ title: { $regex: req.body.search, $options: "i" } }, (err, docs) => {
         if (!err) {
-            res.render('search', { found: docs } );
+            res.render('search', { found: docs, files: files } );
         }
         });
 })
@@ -623,63 +557,63 @@ app.get("/lunch", (req,res) => {
 
     Recipe.find({category: "Obiad"}, (err, foundRecipe) => {
         res.render('lunch', {
-            recipes: foundRecipe});
+            recipes: foundRecipe, files: files});
     }).sort({_id: -1});
 })
 
 app.get("/desserts", (req,res) => {
     Recipe.find({category: "Desery"}, (err, foundRecipe) => {
         res.render('desserts', {
-            recipes: foundRecipe});
+            recipes: foundRecipe, files: files});
     }).sort({_id: -1});
 })
 
 app.get("/dodatki", (req,res) => {
     Recipe.find({category: "Dodatki"}, (err, foundRecipe) => {
         res.render('dodatki', {
-            recipes: foundRecipe});
+            recipes: foundRecipe, files: files});
     }).sort({_id: -1});
 })
 
 app.get("/salads", (req,res) => {
     Recipe.find({category: "Sałatki"}, (err, foundRecipe) => {
         res.render('salads', {
-            recipes: foundRecipe});
+            recipes: foundRecipe, files: files});
     }).sort({_id: -1});
 })
 
 app.get("/soups", (req,res) => {
     Recipe.find({category: "Zupy"}, (err, foundRecipe) => {
         res.render('soups', {
-            recipes: foundRecipe});
+            recipes: foundRecipe, files: files});
     }).sort({_id: -1});
 })
 
 app.get("/breakfast", (req,res) => {
     Recipe.find({category: "Śniadanie"}, (err, foundRecipe) => {
         res.render('breakfast', {
-            recipes: foundRecipe});
+            recipes: foundRecipe, files: files});
     }).sort({_id: -1});
 })
 
 app.get("/snacks", (req,res) => {
     Recipe.find({category: "Przekąski"}, (err, foundRecipe) => {
         res.render('snacks', {
-            recipes: foundRecipe});
+            recipes: foundRecipe, files: files});
     }).sort({_id: -1});
 })
 
 app.get("/for_kids", (req,res) => {
     Recipe.find({category: "Dla dzieci"}, (err, foundRecipe) => {
         res.render('for_kids', {
-            recipes: foundRecipe});
+            recipes: foundRecipe, files: files});
     }).sort({_id: -1});
 })
 
 app.get("/torty", (req,res) => {
     Recipe.find({category: "Torty"}, (err, foundRecipe) => {
         res.render('torty', {
-            recipes: foundRecipe});
+            recipes: foundRecipe, files: files});
     }).sort({_id: -1});
 })
 
@@ -778,6 +712,70 @@ app.post("/edit/:id", upload.single('image'), (req, res) => {
     })
 });
 
+// Rabaty
+app.get('/discounts', (req,res) => {
+    res.render('discounts', {files: files});
+})
+
+
+// NEWSLETTER
+app.get('/signup', (req,res)=> {
+    res.render('newsletter/signup')
+})
+
+app.post('/signup', (req,res) => {
+    const listId = "ba57f81267";
+    const subscribingUser = {
+        firstName: req.body.firstname,
+        email: req.body.email
+    };
+
+    async function run() {
+        const response = await mailchimp.lists.addListMember(listId, {
+          email_address: subscribingUser.email,
+          status: "subscribed",
+          merge_fields: {
+            FNAME: subscribingUser.firstName
+          }
+        })
+        .catch(err => console.error(err))
+
+        console.log(
+        `Successfully added contact as an audience member. The contact's id is ${response.id}.`
+        );
+      }
+
+    
+      
+    run();
+    res.render('newsletter/message');
+
+})
+
+app.get('/unsubscribe', (req,res) => {
+    res.render('newsletter/unsubscribe')
+})
+
+app.post('/unsub', (req,res) => {
+    const listId = process.env.LIST_ID;
+    const email = req.body.unsub;
+    const subscriberHash = md5(_.toLower(email));
+
+    async function run() {
+    const response = await mailchimp.lists.updateListMember(
+            listId,
+            subscriberHash,
+            {
+            status: "unsubscribed"
+            }
+        );
+
+        console.log(`This user is now ${response.status}.`);
+    }
+
+    run();
+    res.redirect('/')
+})
 
 // edit form
 app.get("/edit/:id", (req, res) => {
