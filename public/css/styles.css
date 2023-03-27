@@ -57,6 +57,15 @@ body {
   display: flex;
   justify-content: center;
 }
+.discounts .card-group .card {
+  margin: 0 auto;
+}
+.discounts .card-group .card-body {
+  font-size: 1.3em !important;
+}
+.badge {
+  font-size: 1em;
+}
 .pagination {
   justify-content: center;
 }
@@ -76,13 +85,6 @@ body {
 }
 .none {
   display: none;
-}
-.discounts_card {
-  margin: 0 auto !important;
-  margin-top: 1em !important;
-}
-.discounts_card p {
-  font-size: 1em !important;
 }
 .navbar {
   background-color: #fff;
@@ -389,6 +391,10 @@ form #add_submit {
 }
 form h1 {
   text-align: center;
+}
+.input_counter {
+  color: #34495E;
+  padding: 1px;
 }
 #add_new_recipe {
   padding-top: 25%;
@@ -713,14 +719,14 @@ footer #footer-down li a:hover {
   form[action='/delete'] {
     margin: 0.4em;
   }
-  .discounts_card {
-    margin-right: 0.8em !important;
+  .discounts .card-group .card {
+    width: 90%;
+    height: 100%;
   }
-  .discounts_card img {
-    width: 35%;
-    position: absolute;
-    top: 3em;
-    left: 0;
+  .discounts .card-group .card img {
+    height: 180px;
+    width: 80%;
+    margin: 0 auto;
   }
   .center {
     display: block;
@@ -1004,5 +1010,10 @@ footer #footer-down li a:hover {
     justify-content: space-between;
     margin-bottom: 15px;
     margin: 0 auto;
+  }
+}
+@media (min-width: 1500px) {
+  .wrapper .cookbook .recipes {
+    margin-left: 5em;
   }
 }

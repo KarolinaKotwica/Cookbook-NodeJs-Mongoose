@@ -66,6 +66,18 @@ body {
     justify-content: center;
 }
 
+.discounts .card-group .card {
+    margin: 0 auto;
+}
+
+.discounts .card-group .card-body {
+    font-size: 1.3em !important;
+}
+
+.badge {
+    font-size: 1em;
+}
+
 .pagination {
     justify-content: center;
 
@@ -90,15 +102,6 @@ body {
 
 .none {
     display: none;
-}
-
-.discounts_card {
-    margin: 0 auto !important;
-    margin-top: 1em !important;
-
-    p {
-        font-size: 1em !important;
-    }
 }
 
 /////// nav.ejs ////////////
@@ -508,6 +511,11 @@ form {
     h1 {
         text-align: center;
     }
+}
+
+.input_counter {
+    color: #34495E;
+    padding: 1px;
 }
 
 #add_new_recipe {
@@ -930,14 +938,14 @@ footer {
         margin: .4em;
     }
 
-    .discounts_card {
-        margin-right: .8em !important;
+    .discounts .card-group .card {
+        width: 90%;
+        height: 100%;
 
         img {
-            width: 35%;
-            position: absolute;
-            top: 3em;
-            left: 0;
+            height: 180px;
+            width: 80%;
+            margin: 0 auto;
         }
     }
 
@@ -1301,5 +1309,12 @@ footer {
                 }
             }
         }
+    }
+}
+
+
+@media (min-width: 1500px) {
+    .wrapper .cookbook .recipes {
+        margin-left: 5em;
     }
 }
