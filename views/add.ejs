@@ -74,13 +74,16 @@
 
             <h3>Opis przepisu:</h3>
             <div class="form-floating">
-                <textarea class="form-control textarea" id="describe" name="describe" data-bs-toggle="tooltip" data-bs-placement="top" title="1 do 1000 znaków" maxlength="1000" required></textarea>
-                <label for="textarea">Napisz kilka słów o przepisie, wskazówki itp..</label>
+                <input class="input_counter" onblur="textCounter(this.form.recipients,this,999);" disabled tabindex="999" maxlength="3" size="3" value="999" name="counter">
+
+                <textarea onblur="textCounter(this,this.form.counter,999);" onkeyup="textCounter(this,this.form.counter,999);" class="form-control textarea" id="describe" name="describe" data-bs-toggle="tooltip" data-bs-placement="top" maxlength="999" required></textarea>
+                <label for="textarea"></label>
             </div>
             <h3>Przygotowanie:</h3>
             <div class="form-floating">
-                <textarea class="form-control textarea" id="preparation" name="preparation" data-bs-toggle="tooltip" data-bs-placement="top" title="1 do 2000 znaków" maxlength="2000" required></textarea>
-                <label for="textarea">Opisz w punktach jak wykonać przepis..</label>
+                <input class="input_counter" onblur="textCounter(this.form.recipients,this.form.counter_2,1999);" disabled tabindex="999" maxlength="3" size="3" value="1999" name="counter_2">
+
+                <textarea onblur="textCounter(this,this,1999);" onkeyup="textCounter(this,this.form.counter_2,1999);" class="form-control textarea" id="preparation" name="preparation" data-bs-toggle="tooltip" data-bs-placement="top" maxlength="1999" required></textarea>
             </div>
         </div>
         
