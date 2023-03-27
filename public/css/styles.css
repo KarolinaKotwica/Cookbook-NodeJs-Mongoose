@@ -392,6 +392,10 @@ form #add_submit {
 form h1 {
   text-align: center;
 }
+.input_counter {
+  color: #34495E;
+  padding: 1px;
+}
 #add_new_recipe {
   padding-top: 25%;
 }
@@ -1006,5 +1010,10 @@ footer #footer-down li a:hover {
     justify-content: space-between;
     margin-bottom: 15px;
     margin: 0 auto;
+  }
+}
+@media (min-width: 1500px) {
+  .wrapper .cookbook .recipes {
+    margin-left: 5em;
   }
 }

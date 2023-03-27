@@ -21,6 +21,7 @@ const expressSitemapXml = require('express-sitemap-xml');
 const path = require("path");
 const mailchimp = require("@mailchimp/mailchimp_marketing");
 var md5 = require('md5');
+var xml = require('xml');
 
 const {verify} = require('hcaptcha');
 const secret = process.env.HCAPTCHA_SECRET;
@@ -37,10 +38,10 @@ verify(secret, token)
   .catch(console.error);
 
 // sitemap
-app.use(expressSitemapXml(getUrls, 'https://cookbook.com.pl'));
-async function getUrls () {
-    return await getUrlsFromDatabase()
-}
+// app.use(expressSitemapXml(getUrls, 'https://cookbook.com.pl'));
+// async function getUrls () {
+//     return await getUrlsFromDatabase()
+// }
 //
 
 //mailchimp
@@ -168,6 +169,11 @@ app.get('/', async (req,res) => {
             recipes: foundRecipe,random: randomRecipe, files: files });
     }).sort({_id: -1}).limit(20);
 })
+
+app.get('/sitemap', function(req, res) {
+    res.set('Content-Type', 'text/xml');
+    res.send(xml('./public/sitemap.xml'));
+});
 
 // app.get('/auth/google',
 //   passport.authenticate('google', { scope: ["profile"] }));
