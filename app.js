@@ -37,13 +37,6 @@ verify(secret, token)
   })
   .catch(console.error);
 
-// sitemap
-// app.use(expressSitemapXml(getUrls, 'https://cookbook.com.pl'));
-// async function getUrls () {
-//     return await getUrlsFromDatabase()
-// }
-//
-
 //mailchimp
 mailchimp.setConfig({
     apiKey: process.env.MAILCHIMP_API,
@@ -169,6 +162,7 @@ app.get('/', async (req,res) => {
             recipes: foundRecipe,random: randomRecipe, files: files });
     }).sort({_id: -1}).limit(20);
 })
+
 
 app.get('/sitemap', function(req, res) {
     res.set('Content-Type', 'text/xml');
