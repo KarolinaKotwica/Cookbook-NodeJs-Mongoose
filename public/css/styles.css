@@ -319,9 +319,6 @@ form[action='/search'] {
 .recipe_container {
   padding-top: 6em;
 }
-.recipe_container .line_height {
-  line-height: 38px;
-}
 .recipe_container p {
   font-size: 1.15em;
 }
@@ -855,7 +852,7 @@ footer #footer-down li a:hover {
     align-items: center;
   }
   .recipe_container p {
-    font-size: 1.1em;
+    font-size: 1.1rem;
   }
   .container {
     display: flex;
@@ -1015,5 +1012,11 @@ footer #footer-down li a:hover {
 @media (min-width: 1500px) {
   .wrapper .cookbook .recipes {
     margin-left: 5em;
+  }
+  .recipe_container .banner img {
+    width: 770px;
+  }
+  .container {
+    margin: 0;
   }
 }
