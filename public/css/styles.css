@@ -1,3 +1,17 @@
+@font-face {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/roboto/v30/KFOmCnqEu92Fr1Me5Q.ttf) format('truetype');
+}
+@font-face {
+  font-family: 'Itim';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url(https://fonts.gstatic.com/s/itim/v11/0nknC9ziJOYewAQ.ttf) format('truetype');
+}
 * {
   margin: 0;
   padding: 0;
@@ -32,6 +46,9 @@ body {
 .toast {
   width: 100%;
   box-shadow: none;
+}
+.toast-body .far {
+  font-family: 'Roboto', sans-serif;
 }
 .toast:not(.showing):not(.show) {
   opacity: 1;

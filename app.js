@@ -22,6 +22,7 @@ const path = require("path");
 const mailchimp = require("@mailchimp/mailchimp_marketing");
 var md5 = require('md5');
 var xml = require('xml');
+require('aws-sdk/lib/maintenance_mode_message').suppress = true;
 
 const {verify} = require('hcaptcha');
 const secret = process.env.HCAPTCHA_SECRET;
@@ -43,7 +44,7 @@ mailchimp.setConfig({
     server: "US21",
 });
 
-
+mongoose.set('strictQuery', false);
 
 // pdf
 const dirPath = path.join(__dirname, "public/pdfs");
