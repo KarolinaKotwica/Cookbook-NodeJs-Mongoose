@@ -1,7 +1,7 @@
 <div class="recipes">
     <% recipes.forEach(recipe => { %>
     <div class="card">
-        <a href="/recipes/<%= recipe._id %>">
+        <a href="/przepisy/<%= recipe._id %>">
             <img src="https://img-store223.s3.amazonaws.com/<%= recipe.image %>" class="card-img-top" alt="<%= recipe.title %>">
             <div class="card-body">
                     <h5><%= recipe.title %></h5>
