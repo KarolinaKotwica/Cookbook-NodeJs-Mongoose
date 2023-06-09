@@ -179,7 +179,7 @@ app.get('/sitemap', function(req, res) {
 //     res.redirect('/user');
 // });
 
-app.get('/all/:page', async (req,res) => {
+app.get('/wszystkie-przepisy/:page', async (req,res) => {
     var perPage = 20;
     const page = req.params.page;
 
@@ -190,7 +190,7 @@ app.get('/all/:page', async (req,res) => {
         .exec(function(err, foundRecipe) {
         Recipe.count().exec(function(err, count) {
                 if (err) return next(err)
-        res.render('all', {
+        res.render('wszystkie-przepisy', {
             recipes: foundRecipe,
             current: page,
             files: files,
@@ -316,7 +316,7 @@ app.get('/images/:key', (req, res) => {
     readStream.pipe(res)
 })
 
-app.get('/recipes/:postId', async (req, res) => {
+app.get('/przepisy/:postId', async (req, res) => {
 
     const paramId = (req.params.postId);
 
@@ -332,7 +332,7 @@ app.get('/recipes/:postId', async (req, res) => {
             // console.log(results); ??
         }
             
-      res.render('recipes', {
+      res.render('przepisy', {
         id: found._id,
         publisher: found.publisher,
         title: found.title,
@@ -369,11 +369,11 @@ app.post('/favorite/:id', (req,res)=> {
                             foundUser.favorite.push(found);
                             foundUser.save();
                             req.flash('favorite', "Dodano do ulubionych!");
-                            res.redirect("/recipes/"+req.params.id);
+                            res.redirect("/przepisy/"+req.params.id);
                         }
                         else {
                             req.flash('favorite-error', "Masz już dodany ten przepis :)");
-                            res.redirect("/recipes/"+req.params.id);
+                            res.redirect("/przepisy/"+req.params.id);
                         }
                     });
                     
@@ -398,11 +398,11 @@ app.post('/planer/:id', (req,res)=> {
                              foundUser.planer.push(found);
                              foundUser.save();
                              req.flash('planer', "Dodano do planera!");
-                             res.redirect("/recipes/"+req.params.id);
+                             res.redirect("/przepisy/"+req.params.id);
                          }
                          else {
                              req.flash('planer-error', "Masz już dodany ten przepis :)");
-                             res.redirect("/recipes/"+req.params.id);
+                             res.redirect("/przepisy/"+req.params.id);
                          }
                      });
                      
@@ -539,26 +539,28 @@ app.post('/search', async (req, res) => {
         if (err) console.log(err);
         console.log(docs);
     });
-    await Recipe.find({ title: { $regex: req.body.search, $options: "i" } }, (err, docs) => {
+    Recipe.find({ title: { $regex: req.body.search, $options: "i" } }, (err, docs) => {
         if (!err) {
             res.render('search', { found: docs, files: files } );
+        } else {
+            console.log(err)
         }
         });
 })
 
 
 
-app.get("/lunch", (req,res) => {
+app.get("/obiad", (req,res) => {
 
     Recipe.find({category: "Obiad"}, (err, foundRecipe) => {
-        res.render('lunch', {
+        res.render('obiad', {
             recipes: foundRecipe, files: files});
     }).sort({_id: -1});
 })
 
-app.get("/desserts", (req,res) => {
+app.get("/desery", (req,res) => {
     Recipe.find({category: "Desery"}, (err, foundRecipe) => {
-        res.render('desserts', {
+        res.render('desery', {
             recipes: foundRecipe, files: files});
     }).sort({_id: -1});
 })
@@ -570,37 +572,37 @@ app.get("/dodatki", (req,res) => {
     }).sort({_id: -1});
 })
 
-app.get("/salads", (req,res) => {
+app.get("/salatki", (req,res) => {
     Recipe.find({category: "Sałatki"}, (err, foundRecipe) => {
-        res.render('salads', {
+        res.render('salatki', {
             recipes: foundRecipe, files: files});
     }).sort({_id: -1});
 })
 
-app.get("/soups", (req,res) => {
+app.get("/zupy", (req,res) => {
     Recipe.find({category: "Zupy"}, (err, foundRecipe) => {
-        res.render('soups', {
+        res.render('zupy', {
             recipes: foundRecipe, files: files});
     }).sort({_id: -1});
 })
 
-app.get("/breakfast", (req,res) => {
+app.get("/sniadanie", (req,res) => {
     Recipe.find({category: "Śniadanie"}, (err, foundRecipe) => {
-        res.render('breakfast', {
+        res.render('sniadanie', {
             recipes: foundRecipe, files: files});
     }).sort({_id: -1});
 })
 
-app.get("/snacks", (req,res) => {
+app.get("/przekaski", (req,res) => {
     Recipe.find({category: "Przekąski"}, (err, foundRecipe) => {
-        res.render('snacks', {
+        res.render('przekaski', {
             recipes: foundRecipe, files: files});
     }).sort({_id: -1});
 })
 
-app.get("/for_kids", (req,res) => {
+app.get("/dla-dzieci", (req,res) => {
     Recipe.find({category: "Dla dzieci"}, (err, foundRecipe) => {
-        res.render('for_kids', {
+        res.render('dla-dzieci', {
             recipes: foundRecipe, files: files});
     }).sort({_id: -1});
 })
@@ -708,8 +710,8 @@ app.post("/edit/:id", upload.single('image'), (req, res) => {
 });
 
 // Rabaty
-app.get('/discounts', (req,res) => {
-    res.render('discounts', {files: files});
+app.get('/rabaty', (req,res) => {
+    res.render('rabaty', {files: files});
 })
 
 
