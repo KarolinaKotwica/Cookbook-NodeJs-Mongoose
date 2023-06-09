@@ -1,0 +1,52 @@
+<%- include('partials/header'); -%>
+<title>Wszystkie przepisy - Cookbook</title>
+<meta name="description" content="Odkryj naszą bogatą kolekcję przepisów na różnorodne dania - od tradycyjnych potraw po nowoczesne przepisy. U nas znajdziesz wszystko, czego potrzebujesz, aby przygotować pyszny posiłek dla siebie i swoich bliskich.">
+</head>
+<body id="google_translate_element">
+<%- include('partials/nav'); -%>
+
+<div class="recipes_container container-fluid-mobile">
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/">Główna</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Wszystkie</li>
+        </ol> 
+    </nav>
+
+    <%- include('partials/recipe'); -%>
+
+    
+    <% if (pages > 0) { %>
+        <ul class="pagination text-center">
+            <% if (current == 1) { %>
+                <li class="none"><a>Pierwsza</a></li>
+            <% } else { %>
+                <li><a href="/all/1">Pierwsza</a></li>
+            <% } %>
+            <% var i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
+            <% if (i !== 1) { %>
+                <li class="disabled"><a>...</a></li>
+            <% } %>
+            <% for (; i <= (Number(current) + 1) && i <= pages; i++) { %>
+                <% if (i == current) { %>
+                    <li class="active"><a><%= i %></a></li>
+                <% } else { %>
+                    <li><a href="/all/<%= i %>"><%= i %></a></li>
+                <% } %>
+                <% if (i == Number(current) + 1 && i < pages) { %>
+                    <li class="disabled"><a>...</a></li>
+                <% } %>
+            <% } %>
+            <% if (current == pages) { %>
+                <li class="none"><a>Ostatnia</a></li>
+            <% } else { %>
+                <li><a href="/all/<%= pages %>">Ostatnia</a></li>
+            <% } %>
+        </ul>
+    <% } %>
+</div>
+
+
+<%- include('partials/footer_newsletter'); -%>
+<%- include('partials/footer'); -%>

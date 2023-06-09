@@ -1,0 +1,21 @@
+<%- include('partials/header'); -%>
+<title>Przepisy na obiad - Cookbook</title>
+<meta name="description" content="Szukasz inspiracji na obiad? Znajdziesz u nas wiele pysznych przepisów na obiad, które przygotujesz w szybki i łatwy sposób. Odkryj naszą kolekcję i zaskocz swoich bliskich pysznym obiadem!">
+</head>
+<body id="google_translate_element">
+<%- include('partials/nav'); -%>
+
+<div class="recipes_container container-fluid-mobile">
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/">Główna</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Obiad</li>
+        </ol>
+    </nav>
+
+    <%- include('partials/recipe'); -%>
+</div>
+
+<%- include('partials/footer_newsletter'); -%>
+<%- include('partials/footer'); -%>

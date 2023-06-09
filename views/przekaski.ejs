@@ -1,0 +1,22 @@
+<%- include('partials/header'); -%>
+<title>Przepisy na przekąski - Cookbook</title>
+<meta name="description" content="Nie wiesz, co podać na przekąskę? Odkryj nasze przepisy na przekąski, które zachwycą Twoich gości. Znajdziesz u nas przepisy na przekąski słodkie i słone, szybkie i łatwe do przygotowania. Wypróbuj nasze przepisy i ciesz się pysznymi przekąskami na każdą okazję!">
+</head>
+<body id="google_translate_element">
+<%- include('partials/nav'); -%>
+
+<div class="recipes_container container-fluid-mobile">
+    
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/">Główna</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Przekąski</li>
+        </ol>
+    </nav>
+
+    <%- include('partials/recipe'); -%>
+
+</div>
+
+<%- include('partials/footer_newsletter'); -%>
+<%- include('partials/footer'); -%>

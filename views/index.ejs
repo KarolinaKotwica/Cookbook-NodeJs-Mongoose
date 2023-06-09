@@ -28,7 +28,7 @@
             <h2>Losowy przepis</h2>
             <br>
             <div class="card card_random">
-                <a href="/recipes/<%= random._id %>">
+                <a href="/przepisy/<%= random._id %>">
                     <img src="https://img-store223.s3.amazonaws.com/<%= random.image %>" class="card-img-top" alt="<%= random.title %>">
                     <div class="card-body">
                             <h4><%= random.title %></h4>
@@ -49,12 +49,12 @@
         <h2>Ostatnio dodane 20 przepisów</h2> 
         <div class='all'>
             <p>Nie zapomnij odwiedzać naszej strony regularnie, aby pozostać na bieżąco z naszymi nowymi przepisami i cieszyć się pysznymi posiłkami, które możesz przygotować w domu!<br>
-            Wszystkie przepisy -> kliknij <a href="/all/1">tutaj.</a></p>
+            Wszystkie przepisy -> kliknij <a href="/wszystkie-przepisy/1">tutaj.</a></p>
         </div>
         <%- include('partials/recipe'); -%>
         <div class='all'>
             <p>
-                Jeśli jednak nie udało Ci się znaleźć dokładnie tego, czego szukasz, nie martw się - mamy dla Ciebie rozwiązanie! <a href="/all/1">Kliknij na link do wszystkich przepisów</a>, aby zobaczyć pełną listę naszych propozycji. Znajdziesz tam wiele różnych potraw, od szybkich i łatwych do przygotowania dań po wykwintne specjały, które zrobią wrażenie na Twoich gościach.
+                Jeśli jednak nie udało Ci się znaleźć dokładnie tego, czego szukasz, nie martw się - mamy dla Ciebie rozwiązanie! <a href="/wszystkie-przepisy/1">Kliknij na link do wszystkich przepisów</a>, aby zobaczyć pełną listę naszych propozycji. Znajdziesz tam wiele różnych potraw, od szybkich i łatwych do przygotowania dań po wykwintne specjały, które zrobią wrażenie na Twoich gościach.
                 <br /><br />
                 Nie wahaj się eksperymentować z różnymi przepisami i dostosować je do swojego gustu i preferencji. Z nami gotowanie stanie się prawdziwą przyjemnością, a Twoje posiłki będą smakować jeszcze lepiej!
             </p>

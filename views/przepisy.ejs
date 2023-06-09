@@ -1,0 +1,92 @@
+<%- include('partials/header'); -%>
+<title><%= title %> - Cookbook</title>
+<meta name="description" content="<%= title %> - <%= describe %>">
+</head>
+<body id="google_translate_element">
+<%- include('partials/nav'); -%>
+
+<div class="recipe_container container-fluid-mobile">
+    <div class="overall_recipe_margin">
+        <div class="banner">
+            <img src="https://img-store223.s3.amazonaws.com/<%= image %>" alt="<%= title %>">
+            <div class="photo_description">
+                <h2><%= title %></h2>
+                <p class="info_of_recipe">
+                    <span><%= category %></span>
+                    <span><%= time %> min</span>
+                </p>
+            </div>
+        </div>
+
+        <div id="notes">
+            <p class="enter line_height"><%= describe %></p>
+        </div>
+    </div>
+
+    
+
+    <div id="recipe_container_description">
+        <div class="when_added">
+            <span>
+                <p>Dodany przez: <a href="../users-recipe/<%= idUser %> "><b><%= publisher %></b></a> - dnia: <b><%= created.getDate() %> / <%= created.getMonth()+1 %> / <%= created.getFullYear() %></b></p>
+            </span>
+            <% if (favoriteFlash.length > 0) { %>
+                <div class="alert alert-success" role="alert">
+                    <p><%= favoriteFlash %> </p>
+                </div>
+            <% } %>
+            <% if (favoriteFlashError.length > 0) { %>
+                <div class="alert alert-danger" role="alert">
+                    <p><%= favoriteFlashError %> </p>
+                </div>
+            <% } %>
+            <%if (locals.session.loggedin) { %>
+            <form class="favourite" action="/favorite/<%=id%>" method="post">
+                <button type="submit" class="btn btn_favorite" name="checkbox" value="<%=id%>"><i class="fas fa-heart"></i> Dodaj do ulubionych</button>
+            </form>
+            <% if (planerFlash.length > 0) { %>
+                <div class="alert alert-success" role="alert">
+                    <p><%= planerFlash %> </p>
+                </div>
+            <% } %>
+            <% if (planerFlashError.length > 0) { %>
+                <div class="alert alert-danger" role="alert">
+                    <p><%= planerFlashError %> </p>
+                </div>
+            <% } %>
+            <form class="favourite" action="/planer/<%=id%>" method="post">
+                <button type="submit" class="btn btn_favorite" name="checkbox" value="<%=id%>"><i class="fas fa-calendar-check"></i> Dodaj do planera</button>
+            </form>
+            <% } %>
+            <div class="sharethis-inline-share-buttons"></div>
+            
+        </div>
+        <br />
+        <div class="container">
+            <div id="ingredients">
+                <h2>Składniki:</h2>
+                <div>
+                    <% ingredients.forEach(element => {%>
+                        <p class="ingredient_style"><input type="checkbox"><span><%= element %></span></p>
+                    <% }); %> 
+                </div>
+            </div>
+            <br />
+            <div id="preparation">
+                <h2>Przygotowanie:</h2>
+                    <p class="enter"><%= preparation %></p>
+            </div>
+        </div>
+    </div>
+    
+     
+</div>
+<div class="recipes_container latest_container">
+    <h2>Inne przepisy z kategorii: <%= category %></h2>
+    <%- include('partials/recipe'); -%>
+
+</div>
+</div>
+</div>
+<%- include('partials/footer_newsletter'); -%>
+<%- include('partials/footer'); -%>

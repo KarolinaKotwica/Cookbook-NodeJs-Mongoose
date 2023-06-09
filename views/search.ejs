@@ -18,7 +18,7 @@
     <% if(found != "") { %>
     <% found.forEach(recipe => { %>
         <div class="card">
-            <a href="/recipes/<%= recipe._id %>">
+            <a href="/przepisy/<%= recipe._id %>">
                 <img src="https://img-store223.s3.amazonaws.com/<%= recipe.image %>" class="card-img-top" alt="<%= recipe.image %>">
                 <div class="card-body">
                         <h4><%= recipe.title %></h4>

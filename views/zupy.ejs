@@ -1,0 +1,22 @@
+<%- include('partials/header'); -%>
+<title>Przepisy na zupy - Cookbook</title>
+<meta name="description" content="Przepisy na aromatyczne i sycące zupy. Odkryj nasze propozycje klasycznych i nowoczesnych przepisów, w tym na zupy mięsne, jarzynowe i kremy.">
+</head>
+<body id="google_translate_element">
+<%- include('partials/nav'); -%>
+
+<div class="recipes_container container-fluid-mobile">
+    
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/">Główna</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Zupy</li>
+        </ol>
+    </nav>
+
+    <%- include('partials/recipe'); -%>
+
+</div>
+
+<%- include('partials/footer_newsletter'); -%>
+<%- include('partials/footer'); -%>

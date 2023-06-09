@@ -1,0 +1,22 @@
+<%- include('partials/header'); -%>
+<title>Przepisy dla dzieci - Cookbook</title>
+<meta name="description" content="Kreatywne i łatwe przepisy, które zachwycą Twoje dziecko. Zaskocz swoją rodzinę pysznymi daniami już dziś!">
+</head>
+<body id="google_translate_element">
+<%- include('partials/nav'); -%>
+
+<div class="recipes_container container-fluid-mobile">
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/">Główna</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Dla dzieci</li>
+        </ol>
+    </nav>
+
+    <%- include('partials/recipe'); -%>
+
+</div>
+
+<%- include('partials/footer_newsletter'); -%>
+<%- include('partials/footer'); -%>

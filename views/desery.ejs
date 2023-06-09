@@ -1,0 +1,22 @@
+<%- include('partials/header'); -%>
+<title>Przepisy na desery - Cookbook</title>
+<meta name="description" content="Znajdź pyszne przepisy na deser w naszej kolekcji - ciasta, lody, ciasteczka i wiele więcej! Spróbuj naszych łatwych i smacznych przepisów już dziś.">
+</head>
+<body id="google_translate_element">
+<%- include('partials/nav'); -%>
+
+<div class="recipes_container container-fluid-mobile">
+    
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/">Główna</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Desery</li>
+        </ol>
+    </nav>
+
+    <%- include('partials/recipe'); -%>
+
+</div>
+
+<%- include('partials/footer_newsletter'); -%>
+<%- include('partials/footer'); -%>

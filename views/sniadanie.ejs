@@ -1,0 +1,22 @@
+<%- include('partials/header'); -%>
+<title>Przepisy na śniadanie - Cookbook</title>
+<meta name="description" content="Rozpocznij dzień z naszymi pysznymi przepisami na śniadanie. Znajdziesz u nas wiele pomysłów na zdrowe i smaczne śniadania - od jajecznicy po smoothie. Odkryj nasze przepisy na śniadanie i zjedz coś pysznego!">
+</head>
+<body id="google_translate_element">
+<%- include('partials/nav'); -%>
+
+<div class="recipes_container container-fluid-mobile">
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+          <li class="breadcrumb-item"><a href="/">Główna</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Śniadanie</li>
+        </ol>
+    </nav>
+
+    <%- include('partials/recipe'); -%>
+
+</div>
+
+<%- include('partials/footer_newsletter'); -%>
+<%- include('partials/footer'); -%>
