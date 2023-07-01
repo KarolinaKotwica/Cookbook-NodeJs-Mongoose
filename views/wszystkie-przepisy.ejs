@@ -22,7 +22,7 @@
             <% if (current == 1) { %>
                 <li class="none"><a>Pierwsza</a></li>
             <% } else { %>
-                <li><a href="/all/1">Pierwsza</a></li>
+                <li><a href="/wszystkie-przepisy/1">Pierwsza</a></li>
             <% } %>
             <% var i = (Number(current) > 5 ? Number(current) - 4 : 1) %>
             <% if (i !== 1) { %>
@@ -32,7 +32,7 @@
                 <% if (i == current) { %>
                     <li class="active"><a><%= i %></a></li>
                 <% } else { %>
-                    <li><a href="/all/<%= i %>"><%= i %></a></li>
+                    <li><a href="/wszystkie-przepisy/<%= i %>"><%= i %></a></li>
                 <% } %>
                 <% if (i == Number(current) + 1 && i < pages) { %>
                     <li class="disabled"><a>...</a></li>
@@ -41,7 +41,7 @@
             <% if (current == pages) { %>
                 <li class="none"><a>Ostatnia</a></li>
             <% } else { %>
-                <li><a href="/all/<%= pages %>">Ostatnia</a></li>
+                <li><a href="/wszystkie-przepisy/<%= pages %>">Ostatnia</a></li>
             <% } %>
         </ul>
     <% } %>
