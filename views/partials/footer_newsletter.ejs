@@ -1,13 +1,4 @@
 <footer>
-    <!-- <form action="/signup" method="post" enctype="multipart/form-data">
-        <h3>Chcesz być na bieżąco z najnowszymi przepisami?<br> Zapisz się do <span class="color">NEWSLETTERA</span></h3><br>
-        <div class="newsletter">
-            <div class="mb-3">
-                <input type="email" name="newsletter" id="newsletter" class="form-control" placeholder="Wpisz swój adres email.." required>
-            </div>
-            <button type="submit" class="btn btn-light button_login button-newsletter">Zapisz się</button>
-        </div>
-    </form> -->
     <div class="footer_text_on_the_top">
         Dalej nie możesz nic znaleźć? 🙂<br />
         Spróbuj nasze pyszne, popularne przepisy lub szybkie przepisy do 30 minut!  
@@ -39,6 +30,7 @@
                 <a href="/przepisy/623a153775c57244915bb730"><li>Gofry</li></a>
                 <a href="/przepisy/63d411d268dd6c5d3683410a"><li>Makaron z szynką i groszkiem</li></a>
                 <a href="/przepisy/6210e2d8e49429b610c4fae7"><li>Owocowe jeżyki</li></a>
+                <a href="/przepisy/6485b4b7b95a89d3a2859c44"><li>Pasta z tuńczyka do kanapek</li></a>
             </ul>
         </div>
     </div>
@@ -49,7 +41,7 @@
         <ul>
             <% files.map(file => { %>
                 <li>
-                  <a href="<%= file.url %>"><%= file.name %></a>
+                  <a rel="nofollow" href="<%= file.url %>"><%= file.name %></a>
                 </li>
               <% }) %>
               <li>
