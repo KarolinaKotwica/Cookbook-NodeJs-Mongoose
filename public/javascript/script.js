@@ -116,3 +116,8 @@ window.onload = load;
 // function googleTranslateElementInit() {
 //   new google.translate.TranslateElement({pageLanguage: 'pl', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
 // }
+
+// czyszczenie cache
+if (performance.navigation.type === 1) {
+    window.location.reload(true);
+}
