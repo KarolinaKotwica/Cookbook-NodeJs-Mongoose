@@ -1,435 +1,325 @@
-//jshint esversion:6
-require('dotenv').config()
-const express = require("express");
-const ejs = require("ejs");
-var _ = require('lodash');
+require('dotenv').config();
+const express = require('express');
+const _ = require('lodash');
 const app = express();
 const mongoose = require('mongoose');
-const multer  = require('multer');
+const multer = require('multer');
 const flash = require('connect-flash');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
-var S3 = require('aws-sdk/clients/s3');
 const AWS = require('aws-sdk');
 const fs = require('fs');
-const models = require("./models");
+const models = require('./models');
 const { User, Recipe, List } = models;
 const MemoryStore = require('memorystore')(session);
-const expressSitemapXml = require('express-sitemap-xml');
-const path = require("path");
-const mailchimp = require("@mailchimp/mailchimp_marketing");
-var md5 = require('md5');
-var xml = require('xml');
+const path = require('path');
+const mailchimp = require('@mailchimp/mailchimp_marketing');
+const md5 = require('md5');
 
-const {verify} = require('hcaptcha');
-const secret = process.env.HCAPTCHA_SECRET;
-const token = 'token from widget';
-
-verify(secret, token)
-  .then((data) => {
-    if (data.success === true) {
-      console.log('success!', data);
-    } else {
-      console.log('verification failed');
-    }
-  })
-  .catch(console.error);
-
-// sitemap
-// app.use(expressSitemapXml(getUrls, 'https://cookbook.com.pl'));
-// async function getUrls () {
-//     return await getUrlsFromDatabase()
-// }
-//
-
-//mailchimp
+// Mailchimp
 mailchimp.setConfig({
     apiKey: process.env.MAILCHIMP_API,
-    server: "US21",
+    server: 'US21',
 });
 
+mongoose.set('strictQuery', false);
 
-
-// pdf
-const dirPath = path.join(__dirname, "public/pdfs");
-
-const files = fs.readdirSync(dirPath).map(name => {
-    return {
-      name: path.basename(name, ".pdf"),
-      url: `/pdfs/${name}`
-    };
-});
-//
-
+// PDF files list — bezpieczny odczyt katalogu
+const dirPath = path.join(__dirname, 'public/pdfs');
+let files = [];
+try {
+    files = fs.readdirSync(dirPath).map(name => ({
+        name: path.basename(name, '.pdf'),
+        url: `/pdfs/${name}`
+    }));
+} catch (err) {
+    console.error('Nie można odczytać katalogu pdfs:', err.message);
+}
 
 app.set('view engine', 'ejs');
-app.use(express.urlencoded({extended: false}));
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-app.use(express.static("public"));
-
-// app.use(expressFileUpload());
-
+app.use(express.static('public'));
 app.set('trust proxy', 1);
 
-
-// use the session package and set it up with some initial configuration
+// Sesja z MemoryStore i sekretem z .env
 app.use(session({
-    secret: 'keyboard cat',
-    resave: true,
-    saveUninitialized: true
-}))
+    secret: process.env.SESSION_SECRET || 'fallback-secret-zmien-w-env',
+    resave: false,
+    saveUninitialized: false,
+    store: new MemoryStore({
+        checkPeriod: 86400000 // czyszczenie co 24h
+    })
+}));
 
-
-/// s3 /////
-const accessKey = process.env.S3_BUCKET_ACCESS_KEY;
-const secretKey = process.env.S3_SECRET_ACCESS_KEY;
-const region = process.env.S3_BUCKET_LOCATION;
+// AWS S3
 const S3_BUCKET_NAME = process.env.S3_BUCKET_NAME;
 
 AWS.config.update({
-    region: region,
-    accessKeyId: accessKey,
-    secretAccessKey: secretKey
+    region: process.env.S3_BUCKET_LOCATION,
+    accessKeyId: process.env.S3_BUCKET_ACCESS_KEY,
+    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY
 });
 
-const s3 = new S3({
-    region,
-    secretKey,
-    accessKey
-})
-
-//upload to s3
+const s3 = new AWS.S3();
 
 function uploadFile(file) {
-    const fileStream = fs.createReadStream(file.path)
-  
-    const uploadParams = {
-      Bucket: S3_BUCKET_NAME,
-      Body: fileStream,
-      Key: file.filename
-    }
-  
-    return s3.upload(uploadParams).promise()
+    const fileStream = fs.createReadStream(file.path);
+    return s3.upload({
+        Bucket: S3_BUCKET_NAME,
+        Body: fileStream,
+        Key: file.filename
+    }).promise();
 }
 
-//download from s3
+// BUGFIX: było `file.filename` zamiast `fileKey`
 function getFileStream(fileKey) {
-    const downloadParams = {
-      Key: file.filename,
-      Bucket: S3_BUCKET_NAME
-    }
-  
-    return s3.getObject(downloadParams).createReadStream()
-  }
-
-//////// end s3 //
-
+    return s3.getObject({
+        Key: fileKey,
+        Bucket: S3_BUCKET_NAME
+    }).createReadStream();
+}
 
 app.use(cookieParser('secret'));
 app.use(flash());
-
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(function (req, res, next) {
+app.use((req, res, next) => {
     res.locals.session = req.session;
     next();
 });
 
-/////////////connect and create DB ///////////////
 mongoose.connect(process.env.DB_MONGOOSE);
 
-
-//Configuration for Multer //
+// Multer — sanityzacja nazwy pliku (ochrona przed path traversal)
 const multerStorage = multer.diskStorage({
     destination: (req, file, cb) => {
-      cb(null, "public/imgs");
+        cb(null, 'public/imgs');
     },
-    filename: function (req, file, cb) {
-        cb(null, file.originalname);
+    filename: (req, file, cb) => {
+        const ext = path.extname(file.originalname).replace(/[^a-zA-Z0-9.]/g, '');
+        const safeName = Date.now() + '-' + Math.round(Math.random() * 1e9) + ext;
+        cb(null, safeName);
     }
 });
 
-const upload = multer({
-    storage: multerStorage
-});
+const upload = multer({ storage: multerStorage });
 
-
+// Middleware autoryzacji — używany na chronionych trasach
+function isAuthenticated(req, res, next) {
+    if (req.isAuthenticated()) return next();
+    res.redirect('/login');
+}
 
 /////////////////// Routes ///////////////////////////////////
 
-
-app.get('/', async (req,res) => {
-    Recipe.find({},async (err, foundRecipe) => {
-        let count = await Recipe.find().countDocuments();
-        let random = Math.floor(Math.random()*count);
-        let randomRecipe = await Recipe.findOne().skip(random);
-        res.render('index', {
-            recipes: foundRecipe,random: randomRecipe, files: files });
-    }).sort({_id: -1}).limit(20);
-})
-
-app.get('/sitemap', function(req, res) {
-    res.set('Content-Type', 'text/xml');
-    res.send(xml('./public/sitemap.xml'));
+app.get('/', async (req, res) => {
+    try {
+        const recipes = await Recipe.find({}).sort({ _id: -1 }).limit(20);
+        const count = await Recipe.countDocuments();
+        const randomRecipe = await Recipe.findOne().skip(Math.floor(Math.random() * count));
+        res.render('index', { recipes, random: randomRecipe, files });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Błąd serwera');
+    }
 });
 
-// app.get('/auth/google',
-//   passport.authenticate('google', { scope: ["profile"] }));
+app.get('/sitemap', (req, res) => {
+    res.set('Content-Type', 'text/xml');
+    res.sendFile(path.join(__dirname, 'public/sitemap.xml'));
+});
 
-//   app.get('/auth/google/callback',
-//   passport.authenticate('google', { failureRedirect: '/login' }),
-//   function(req, res) {
-//     res.redirect('/user');
-// });
-
-app.get('/all/:page', async (req,res) => {
-    var perPage = 20;
-    const page = req.params.page;
-
-    await Recipe.find({})
-        .skip((perPage * page) - perPage)
-        .limit(perPage)
-        .sort({_id: -1})
-        .exec(function(err, foundRecipe) {
-        Recipe.count().exec(function(err, count) {
-                if (err) return next(err)
-        res.render('all', {
-            recipes: foundRecipe,
+app.get('/wszystkie-przepisy/:page', async (req, res) => {
+    const perPage = 20;
+    const page = parseInt(req.params.page) || 1;
+    try {
+        const [recipes, count] = await Promise.all([
+            Recipe.find({}).skip((perPage * page) - perPage).limit(perPage).sort({ _id: -1 }),
+            Recipe.countDocuments()
+        ]);
+        res.render('wszystkie-przepisy', {
+            recipes,
             current: page,
-            files: files,
-            pages: Math.ceil(count / perPage)});
-    });
-})
-})
+            files,
+            pages: Math.ceil(count / perPage)
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Błąd serwera');
+    }
+});
 
-app.get('/users-recipe/:id', (req,res)=> {
-    const idUser = req.params.id;
-
-    User.findById(idUser, (err, user)=> {
+app.get('/users-recipe/:id', async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id);
         if (user) {
-            res.render('users-recipe', {
-                recipes: user.recipes,
-                files: files
-            })
+            res.render('users-recipe', { recipes: user.recipes, files });
         }
-    })
-})
-
-app.get('/shopList', (req,res)=> {
-    if(req.isAuthenticated()) {
-        User.findById(req.user.id, (err, found)=> {
-            res.render('shopList', {newListItems: found.list, files: files});
-        })
-
-    } else {
-        res.redirect('/login');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Błąd serwera');
     }
-})
+});
 
-app.post('/shopList', (req,res)=> {
+app.get('/shopList', isAuthenticated, async (req, res) => {
+    try {
+        const found = await User.findById(req.user.id);
+        res.render('shopList', { newListItems: found.list, files });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Błąd serwera');
+    }
+});
 
-    User.findById(req.user.id, (err, foundUser) => {
-        if(err) {console.log(err);}
-        else {
+app.post('/shopList', isAuthenticated, async (req, res) => {
+    try {
+        const foundUser = await User.findById(req.user.id);
+        foundUser.list.push(new List({ item: req.body.newItem }));
+        await foundUser.save();
+        res.redirect('/shopList');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Błąd serwera');
+    }
+});
 
-            let list = new List({
-                item: req.body.newItem
-            })
-
-            foundUser.list.push(list);
-
-            foundUser.save();
-            res.redirect("/shopList");
+app.get('/user', isAuthenticated, async (req, res) => {
+    try {
+        req.session.loggedin = true;
+        const foundUser = await User.findById(req.user.id);
+        if (foundUser) {
+            res.render('user', { userRecipe: foundUser.recipes, user: foundUser, favorite: foundUser.favorite });
         }
-    })
-})
-
-
-
-app.get('/user', (req,res) => {
-    if(req.isAuthenticated()) {
-        req.session.loggedin = true;
-        User.findById(req.user.id, (err, foundUsers) => {
-            if(err) {console.log(err);}
-            else {
-                if(foundUsers) {
-                    res.render('user', {userRecipe: foundUsers.recipes, user: foundUsers, favorite: foundUsers.favorite});
-                }
-            }
-        })
-    } else {
-        req.session.loggedin = false;
-        res.redirect('/login');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Błąd serwera');
     }
-})
+});
 
-
-app.get('/favoriteUser', (req,res) => {
-    if(req.isAuthenticated()) {
+app.get('/favoriteUser', isAuthenticated, async (req, res) => {
+    try {
         req.session.loggedin = true;
-        User.findById(req.user.id, (err, foundUsers) => {
-            if(err) {console.log(err);}
-            else {
-                if(foundUsers) {
-                    res.render('favoriteUser', {user: foundUsers, favorite: foundUsers.favorite});
-                }
-            }
-        })
-    } else {
-        req.session.loggedin = false;
-        res.redirect('/login');
+        const foundUser = await User.findById(req.user.id);
+        if (foundUser) {
+            res.render('favoriteUser', { user: foundUser, favorite: foundUser.favorite });
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Błąd serwera');
     }
-})
+});
 
-app.get('/planer', (req,res) => {
-    if(req.isAuthenticated()) {
+app.get('/planer', isAuthenticated, async (req, res) => {
+    try {
         req.session.loggedin = true;
-        User.findById(req.user.id, (err, foundUsers) => {
-            if(err) {console.log(err);}
-            else {
-                if(foundUsers) {
-                    res.render('planer', {user: foundUsers, planer: foundUsers.planer});
-                }
-            }
-        })
-    } else {
-        req.session.loggedin = false;
-        res.redirect('/login');
+        const foundUser = await User.findById(req.user.id);
+        if (foundUser) {
+            res.render('planer', { user: foundUser, planer: foundUser.planer });
+        }
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Błąd serwera');
     }
-})
+});
 
-// app.get('/logout', (req, res) => {
-//     req.logout();
-//     req.session.loggedin = false;
-//     res.redirect('/');
-// });
-app.get("/logout", (req, res) => {
+app.get('/logout', (req, res, next) => {
     req.logout(req.user, err => {
-      if(err) return next(err);
-      res.redirect("/");
+        if (err) return next(err);
+        res.redirect('/');
     });
-  });
-
+});
 
 app.get('/images/:key', (req, res) => {
-    // console.log(req.params)
-    const key = req.params.key
-    const readStream = getFileStream(key)
-  
-    readStream.pipe(res)
-})
-
-app.get('/recipes/:postId', async (req, res) => {
-
-    const paramId = (req.params.postId);
-
-    const favoriteFlash = req.flash('favorite');
-    const favoriteFlashError = req.flash('favorite-error');
-    const planerFlash = req.flash('planer');
-    const planerFlashError = req.flash('planer-error');
-
-    Recipe.findOne({_id: paramId}, (err, found) => {
-
-        Recipe.findRandom({category: found.category}, {}, {limit: 4}, function(err, results) {
-        if (!err) {
-            // console.log(results); ??
-        }
-            
-      res.render('recipes', {
-        id: found._id,
-        publisher: found.publisher,
-        title: found.title,
-        time: found.time,
-        category: found.category,
-        image: found.image,
-        ingredients: found.ingredients,
-        describe: found.describe,
-        preparation: found.preparation,
-        created: found.created,
-        favoriteFlash,
-        favoriteFlashError,
-        planerFlash,
-        planerFlashError,
-        idUser: found.idUser,
-        recipes: results,
-        files: files
-      });
-    })
+    const readStream = getFileStream(req.params.key);
+    readStream.pipe(res);
 });
-})
 
-app.post('/favorite/:id', (req,res)=> {
-   Recipe.findById(req.params.id, (err, found) => {
-        if(err) {console.log(err);}
-        else {
-            User.findById(req.user.id, (err, foundUser) => {
-                if(err) {console.log(err);}
-                else {
-                    User.countDocuments({_id: req.user.id,'favorite._id':req.params.id}, function (err, count){
-                        console.log(count); 
-                        if(count===0){
-                            //document  ! exists
-                            foundUser.favorite.push(found);
-                            foundUser.save();
-                            req.flash('favorite', "Dodano do ulubionych!");
-                            res.redirect("/recipes/"+req.params.id);
-                        }
-                        else {
-                            req.flash('favorite-error', "Masz już dodany ten przepis :)");
-                            res.redirect("/recipes/"+req.params.id);
-                        }
-                    });
-                    
-                    
-                }
-            })
-        }
-    })
-})
+app.get('/przepisy/:postId', async (req, res) => {
+    try {
+        const found = await Recipe.findById(req.params.postId);
+        if (!found) return res.status(404).send('Nie znaleziono przepisu');
 
-app.post('/planer/:id', (req,res)=> {
-    Recipe.findById(req.params.id, (err, found) => {
-         if(err) {console.log(err);}
-         else {
-             User.findById(req.user.id, (err, foundUser) => {
-                 if(err) {console.log(err);}
-                 else {
-                     User.countDocuments({_id: req.user.id,'planer._id':req.params.id}, function (err, count){
-                         console.log(count); 
-                         if(count===0){
-                             //document  ! exists
-                             foundUser.planer.push(found);
-                             foundUser.save();
-                             req.flash('planer', "Dodano do planera!");
-                             res.redirect("/recipes/"+req.params.id);
-                         }
-                         else {
-                             req.flash('planer-error', "Masz już dodany ten przepis :)");
-                             res.redirect("/recipes/"+req.params.id);
-                         }
-                     });
-                     
-                     
-                 }
-             })
-         }
-     })
- })
+        const results = await new Promise((resolve, reject) => {
+            Recipe.findRandom({ category: found.category }, {}, { limit: 4 }, (err, r) => {
+                if (err) reject(err);
+                else resolve(r);
+            });
+        });
 
-app.get('/add', (req,res) => {
-    const add = req.flash('newRecipe');
-    if(req.isAuthenticated()) {
-        res.render('add', {add});
-    } else {
-        res.redirect('/login');
+        res.render('przepisy', {
+            id: found._id,
+            publisher: found.publisher,
+            title: found.title,
+            time: found.time,
+            category: found.category,
+            image: found.image,
+            ingredients: found.ingredients,
+            describe: found.describe,
+            preparation: found.preparation,
+            created: found.created,
+            favoriteFlash: req.flash('favorite'),
+            favoriteFlashError: req.flash('favorite-error'),
+            planerFlash: req.flash('planer'),
+            planerFlashError: req.flash('planer-error'),
+            idUser: found.idUser,
+            recipes: results,
+            files
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Błąd serwera');
     }
-})
+});
 
+app.post('/favorite/:id', isAuthenticated, async (req, res) => {
+    try {
+        const count = await User.countDocuments({ _id: req.user.id, 'favorite._id': req.params.id });
+        if (count === 0) {
+            const [found, foundUser] = await Promise.all([
+                Recipe.findById(req.params.id),
+                User.findById(req.user.id)
+            ]);
+            foundUser.favorite.push(found);
+            await foundUser.save();
+            req.flash('favorite', 'Dodano do ulubionych!');
+        } else {
+            req.flash('favorite-error', 'Masz już dodany ten przepis :)');
+        }
+        res.redirect('/przepisy/' + req.params.id);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Błąd serwera');
+    }
+});
 
-app.post('/', upload.single('image'), (req,res) => {
+app.post('/planer/:id', isAuthenticated, async (req, res) => {
+    try {
+        const count = await User.countDocuments({ _id: req.user.id, 'planer._id': req.params.id });
+        if (count === 0) {
+            const [found, foundUser] = await Promise.all([
+                Recipe.findById(req.params.id),
+                User.findById(req.user.id)
+            ]);
+            foundUser.planer.push(found);
+            await foundUser.save();
+            req.flash('planer', 'Dodano do planera!');
+        } else {
+            req.flash('planer-error', 'Masz już dodany ten przepis :)');
+        }
+        res.redirect('/przepisy/' + req.params.id);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Błąd serwera');
+    }
+});
 
+app.get('/add', isAuthenticated, (req, res) => {
+    res.render('add', { add: req.flash('newRecipe') });
+});
+
+app.post('/', isAuthenticated, upload.single('image'), async (req, res) => {
     try {
         const recipe = new Recipe({
             publisher: req.body.publisher,
@@ -443,352 +333,240 @@ app.post('/', upload.single('image'), (req,res) => {
             idUser: req.user.id
         });
 
-        const img = req.file;
+        await uploadFile(req.file);
+        await recipe.save();
 
-        const result = uploadFile(img);
-        console.log(result);
+        const foundUser = await User.findById(req.user.id);
+        foundUser.recipes.push(recipe);
+        await foundUser.save();
+        res.redirect('/user');
+    } catch (err) {
+        console.error(err);
+        req.flash('newRecipe', 'Sprawdź czy dobrze wypełniłeś/aś pola oraz nie zapomnij dodać obrazka.');
+        res.redirect('/add');
+    }
+});
 
-        recipe.save((err) => {
-            if (err) {
-                req.flash('newRecipe', 'Sprawdź czy dobrze wypełniłeś/aś pola oraz nie zapomnij dodać obrazka.');
-                res.redirect("/add");
-            }
-            else {
-                User.findById(req.user.id, (err, foundUser) => {
-                    if(err) {console.log(err);}
-                    else {
-                        foundUser.recipes.push(recipe);
-        
-                        foundUser.save();
-                        res.redirect("/user");
-                    }
-                })
-            }
+// BUGFIX: findOne zamiast find, poprawne sprawdzenie duplikatu
+app.post('/register', async (req, res) => {
+    try {
+        const existingUser = await User.findOne({ username: req.body.username });
+        if (existingUser) {
+            req.flash('registrations_error_username', 'Istnieje już taka nazwa użytkownika w bazie!');
+            return res.redirect('/login');
+        }
+
+        const newUser = new User({
+            username: _.trim(req.body.username),
+            email: _.trim(req.body.email),
+            recipes: [],
+            favorite: [],
+            planer: []
         });
 
-    } catch(err) {
-        console.log(err);
-        req.flash('newRecipe', 'Sprawdź czy dobrze wypełniłeś/aś pola oraz nie zapomnij dodać obrazka.');
-        res.redirect("/add");
+        await User.register(newUser, req.body.password);
+        passport.authenticate('local', { failureRedirect: '/login' })(req, res, () => {
+            res.redirect('/user');
+        });
+    } catch (err) {
+        console.error(err);
+        req.flash('registrations', 'Wystąpił błąd.');
+        res.redirect('/login');
     }
-})
+});
 
-app.post('/register', (req,res) => {
-    req.flash('registrations_error_username', "Istnieje już taka nazwa użytkownika w bazie!");
+app.get('/login', (req, res) => {
+    res.render('login', {
+        userName: req.flash('user'),
+        registrations: req.flash('registrations'),
+        registrations_error_username: req.flash('registrations_error_username')
+    });
+});
 
-    const newUser = new User({
-        username: _.trim(req.body.username),
-        email: _.trim(req.body.email),
-        recipes: [],
-        favorite: [],
-        planer: []
-    })
-
-    User.find({}, (err)=> {
-        if(err) {
-            req.flash('registrations', "Wystąpił błąd.");
-            res.redirect('/login');
-        } else {
-            User.find({username: req.body.username}, (err, foundUser) => {
-                if(foundUser.username === req.body.username) {
-                    
-                    res.redirect('/login');
-                } else {
-                    User.register(newUser, req.body.password, (err, user) => {
-
-                        passport.authenticate("local", { failureRedirect: '/login' })(req,res,function(){
-                            res.redirect("/user");
-                        })
-                    })
-                }
-            })
-            
-        }
-    })
-
-    
-})
-
-app.get('/login', (req,res) => {
-    const userName = req.flash('user');
-    const registrations = req.flash('registrations');
-    const registrations_error_username = req.flash('registrations_error_username');
-    res.render('login', {userName, registrations, registrations_error_username});
-})
-
-app.post('/login', (req,res) => {
-
-    req.flash('user', "Niepoprawny login lub hasło");
+app.post('/login', (req, res) => {
+    req.flash('user', 'Niepoprawny login lub hasło');
 
     const user = new User({
-        username: (req.body.username).trim(),
-        password: (req.body.password).trim()
-    })
-
-    req.login(user, (err) => {
-        if (err) {
-            res.redirect('/login');
-        }
-        else {
-            passport.authenticate("local", { failureRedirect: '/login' })(req,res,function(){
-            res.redirect("/user");
-            })
-        }
+        username: req.body.username.trim(),
+        password: req.body.password.trim()
     });
 
-})
-
-app.post('/search', async (req, res) => {
-
-    const allRecipes = Recipe.find({}, "title describe", (err, docs) => {
-        if (err) console.log(err);
-        console.log(docs);
-    });
-    await Recipe.find({ title: { $regex: req.body.search, $options: "i" } }, (err, docs) => {
-        if (!err) {
-            res.render('search', { found: docs, files: files } );
-        }
+    req.login(user, err => {
+        if (err) return res.redirect('/login');
+        passport.authenticate('local', { failureRedirect: '/login' })(req, res, () => {
+            res.redirect('/user');
         });
-})
-
-
-
-app.get("/lunch", (req,res) => {
-
-    Recipe.find({category: "Obiad"}, (err, foundRecipe) => {
-        res.render('lunch', {
-            recipes: foundRecipe, files: files});
-    }).sort({_id: -1});
-})
-
-app.get("/desserts", (req,res) => {
-    Recipe.find({category: "Desery"}, (err, foundRecipe) => {
-        res.render('desserts', {
-            recipes: foundRecipe, files: files});
-    }).sort({_id: -1});
-})
-
-app.get("/dodatki", (req,res) => {
-    Recipe.find({category: "Dodatki"}, (err, foundRecipe) => {
-        res.render('dodatki', {
-            recipes: foundRecipe, files: files});
-    }).sort({_id: -1});
-})
-
-app.get("/salads", (req,res) => {
-    Recipe.find({category: "Sałatki"}, (err, foundRecipe) => {
-        res.render('salads', {
-            recipes: foundRecipe, files: files});
-    }).sort({_id: -1});
-})
-
-app.get("/soups", (req,res) => {
-    Recipe.find({category: "Zupy"}, (err, foundRecipe) => {
-        res.render('soups', {
-            recipes: foundRecipe, files: files});
-    }).sort({_id: -1});
-})
-
-app.get("/breakfast", (req,res) => {
-    Recipe.find({category: "Śniadanie"}, (err, foundRecipe) => {
-        res.render('breakfast', {
-            recipes: foundRecipe, files: files});
-    }).sort({_id: -1});
-})
-
-app.get("/snacks", (req,res) => {
-    Recipe.find({category: "Przekąski"}, (err, foundRecipe) => {
-        res.render('snacks', {
-            recipes: foundRecipe, files: files});
-    }).sort({_id: -1});
-})
-
-app.get("/for_kids", (req,res) => {
-    Recipe.find({category: "Dla dzieci"}, (err, foundRecipe) => {
-        res.render('for_kids', {
-            recipes: foundRecipe, files: files});
-    }).sort({_id: -1});
-})
-
-app.get("/torty", (req,res) => {
-    Recipe.find({category: "Torty"}, (err, foundRecipe) => {
-        res.render('torty', {
-            recipes: foundRecipe, files: files});
-    }).sort({_id: -1});
-})
-
-// app.post("/delete", (req,res) => {
-//     const checkItemId = req.body.checkbox;
-
-//     Recipe.findByIdAndDelete(checkItemId, (err) => {
-//         if (err) {console.log(err);}
-//         else {
-//             console.log("Successfully removed");
-//             res.redirect("/user");
-//         }
-//     })
-
-//     User.findOneAndUpdate({_id: req.user.id}, { "$pull": { "recipes": { "_id": checkItemId } }}, { safe: true, multi:true }, function(err, obj) {
-//         if(!err) {console.log("Successfully removed");}
-//     })
-// })
-
-app.post('/delete_item_list', (req,res)=> {
-    const checkbox = req.body.checkbox;
-
-    User.findOneAndUpdate({_id: req.user.id}, { "$pull": { "list": { "_id": checkbox } }}, { safe: true, multi:true }, function(err, obj) {
-        if(!err) {
-            console.log("Successfully removed");
-            res.redirect("/shopList");
-        }
-    })
-
-})
-
-app.post('/delete_favorite', (req,res)=> {
-    const checkItemId = req.body.checkbox;
-
-    User.findOneAndUpdate({_id: req.user.id}, { "$pull": { "favorite": { "_id": checkItemId } }}, { safe: true, multi:true }, function(err, obj) {
-        if(!err) {
-            console.log("Successfully removed");
-            res.redirect("/favoriteUser");
-        }
-    })
-})
-
-app.post('/delete_planer', (req,res)=> {
-    const checkItemId = req.body.checkbox;
-
-    User.findOneAndUpdate({_id: req.user.id}, { "$pull": { "planer": { "_id": checkItemId } }}, { safe: true, multi:true }, function(err, obj) {
-        if(!err) {
-            console.log("Successfully removed");
-            res.redirect("/planer");
-        }
-    })
-})
-
-
-// post edit
-app.post("/edit/:id", upload.single('image'), (req, res) => {
-    User.findOneAndUpdate({_id: req.user.id, 'recipes._id': req.params.id}, 
-        {"$set" : {
-        'recipes.$.publisher': req.body.publisher,
-        'recipes.$.title': req.body.title,
-        'recipes.$.time': req.body.time,
-        'recipes.$.ingredients': req.body.ingredients,
-        'recipes.$.describe': req.body.describe,
-        'recipes.$.preparation': req.body.preparation }},
-        {new: true},
-        function(err, obj) {
-        if(!err) {console.log("Successfully updated");}
     });
-    User.updateMany({'favorite._id': req.params.id}, 
-    {"$set" : {
-    'favorite.$.publisher': req.body.publisher,
-    'favorite.$.title': req.body.title,
-    'favorite.$.time': req.body.time,
-    'favorite.$.ingredients': req.body.ingredients,
-    'favorite.$.describe': req.body.describe,
-    'favorite.$.preparation': req.body.preparation }},
-    {new: true},
-    function(err, obj) {
-    if(!err) {console.log("Successfully updated");}
-});
-    Recipe.findByIdAndUpdate(req.params.id, {
-        publisher: req.body.publisher,
-        title: req.body.title,
-        time: req.body.time,
-        ingredients: req.body.ingredients,
-        describe: req.body.describe,
-        preparation: req.body.preparation,
-        idUser: req.user.id
-    },
-    {new: true},
-    (err, update) => {
-        if(err) {console.log(err);}
-        else {
-            res.redirect('/user' )
-        }
-    })
 });
 
-// Rabaty
-app.get('/discounts', (req,res) => {
-    res.render('discounts', {files: files});
-})
-
-
-// NEWSLETTER
-app.get('/signup', (req,res)=> {
-    res.render('newsletter/signup')
-})
-
-app.post('/signup', (req,res) => {
-    const listId = "ba57f81267";
-    const subscribingUser = {
-        firstName: req.body.firstname,
-        email: req.body.email
-    };
-
-    async function run() {
-        const response = await mailchimp.lists.addListMember(listId, {
-          email_address: subscribingUser.email,
-          status: "subscribed",
-          merge_fields: {
-            FNAME: subscribingUser.firstName
-          }
-        })
-        .catch(err => console.error(err))
-
-        console.log(
-        `Successfully added contact as an audience member. The contact's id is ${response.id}.`
-        );
-      }
-
-    
-      
-    run();
-    res.render('newsletter/message');
-
-})
-
-app.get('/unsubscribe', (req,res) => {
-    res.render('newsletter/unsubscribe')
-})
-
-app.post('/unsub', (req,res) => {
-    const listId = process.env.LIST_ID;
-    const email = req.body.unsub;
-    const subscriberHash = md5(_.toLower(email));
-
-    async function run() {
-    const response = await mailchimp.lists.updateListMember(
-            listId,
-            subscriberHash,
-            {
-            status: "unsubscribed"
-            }
-        );
-
-        console.log(`This user is now ${response.status}.`);
+// BUGFIX: escapowanie inputu użytkownika przed użyciem w regex (ochrona przed ReDoS)
+app.post('/search', async (req, res) => {
+    try {
+        const escaped = req.body.search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const docs = await Recipe.find({ title: { $regex: escaped, $options: 'i' } });
+        res.render('search', { found: docs, files });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Błąd serwera');
     }
-
-    run();
-    res.redirect('/')
-})
-
-// edit form
-app.get("/edit/:id", (req, res) => {
-    Recipe.findById(req.params.id, (err, found) => {
-        if(err) {console.log(err);}
-        else {
-            res.render('edit', {edit: found})
-        }
-    })
 });
 
-let port = process.env.PORT;
-if (port == null || port == "") {
-  port = 3000;
-}
+// Trasy kategorii — skondensowane z 9 identycznych tras do jednej pętli
+const categoryMap = {
+    'obiad': 'Obiad',
+    'desery': 'Desery',
+    'dodatki': 'Dodatki',
+    'salatki': 'Sałatki',
+    'zupy': 'Zupy',
+    'sniadanie': 'Śniadanie',
+    'przekaski': 'Przekąski',
+    'dla-dzieci': 'Dla dzieci',
+    'torty': 'Torty'
+};
+
+Object.entries(categoryMap).forEach(([route, category]) => {
+    app.get(`/${route}`, async (req, res) => {
+        try {
+            const recipes = await Recipe.find({ category }).sort({ _id: -1 });
+            res.render(route, { recipes, files });
+        } catch (err) {
+            console.error(err);
+            res.status(500).send('Błąd serwera');
+        }
+    });
+});
+
+// DELETE — dodano isAuthenticated
+app.post('/delete_item_list', isAuthenticated, async (req, res) => {
+    try {
+        await User.findOneAndUpdate(
+            { _id: req.user.id },
+            { $pull: { list: { _id: req.body.checkbox } } }
+        );
+        res.redirect('/shopList');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Błąd serwera');
+    }
+});
+
+app.post('/delete_favorite', isAuthenticated, async (req, res) => {
+    try {
+        await User.findOneAndUpdate(
+            { _id: req.user.id },
+            { $pull: { favorite: { _id: req.body.checkbox } } }
+        );
+        res.redirect('/favoriteUser');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Błąd serwera');
+    }
+});
+
+app.post('/delete_planer', isAuthenticated, async (req, res) => {
+    try {
+        await User.findOneAndUpdate(
+            { _id: req.user.id },
+            { $pull: { planer: { _id: req.body.checkbox } } }
+        );
+        res.redirect('/planer');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Błąd serwera');
+    }
+});
+
+// EDIT — dodano isAuthenticated + sprawdzenie właściciela przepisu
+app.get('/edit/:id', isAuthenticated, async (req, res) => {
+    try {
+        const found = await Recipe.findById(req.params.id);
+        if (!found || found.idUser.toString() !== req.user.id) {
+            return res.redirect('/user');
+        }
+        res.render('edit', { edit: found });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Błąd serwera');
+    }
+});
+
+app.post('/edit/:id', isAuthenticated, upload.single('image'), async (req, res) => {
+    try {
+        const recipe = await Recipe.findById(req.params.id);
+        if (!recipe || recipe.idUser.toString() !== req.user.id) {
+            return res.redirect('/user');
+        }
+
+        const update = {
+            publisher: req.body.publisher,
+            title: req.body.title,
+            time: req.body.time,
+            ingredients: req.body.ingredients,
+            describe: req.body.describe,
+            preparation: req.body.preparation
+        };
+
+        const embeddedSet = (prefix) => ({
+            $set: {
+                [`${prefix}.$.publisher`]: update.publisher,
+                [`${prefix}.$.title`]: update.title,
+                [`${prefix}.$.time`]: update.time,
+                [`${prefix}.$.ingredients`]: update.ingredients,
+                [`${prefix}.$.describe`]: update.describe,
+                [`${prefix}.$.preparation`]: update.preparation
+            }
+        });
+
+        await Promise.all([
+            Recipe.findByIdAndUpdate(req.params.id, update),
+            User.findOneAndUpdate({ _id: req.user.id, 'recipes._id': req.params.id }, embeddedSet('recipes')),
+            User.updateMany({ 'favorite._id': req.params.id }, embeddedSet('favorite')),
+            User.updateMany({ 'planer._id': req.params.id }, embeddedSet('planer'))
+        ]);
+
+        res.redirect('/user');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Błąd serwera');
+    }
+});
+
+app.get('/rabaty', (req, res) => {
+    res.render('rabaty', { files });
+});
+
+// Newsletter — BUGFIX: await na mailchimp, listId z .env
+app.get('/signup', (req, res) => {
+    res.render('newsletter/signup');
+});
+
+app.post('/signup', async (req, res) => {
+    try {
+        await mailchimp.lists.addListMember(process.env.LIST_ID, {
+            email_address: req.body.email,
+            status: 'subscribed',
+            merge_fields: { FNAME: req.body.firstname }
+        });
+        res.render('newsletter/message');
+    } catch (err) {
+        console.error(err);
+        res.redirect('/');
+    }
+});
+
+app.get('/unsubscribe', (req, res) => {
+    res.render('newsletter/unsubscribe');
+});
+
+app.post('/unsub', async (req, res) => {
+    const subscriberHash = md5(_.toLower(req.body.unsub));
+    try {
+        await mailchimp.lists.updateListMember(process.env.LIST_ID, subscriberHash, { status: 'unsubscribed' });
+    } catch (err) {
+        console.error(err);
+    }
+    res.redirect('/');
+});
+
+const port = process.env.PORT || 3000;
 app.listen(port);
