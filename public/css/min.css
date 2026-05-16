@@ -1599,6 +1599,7 @@ footer #footer-down li a:hover { color: var(--primary); }
     width: 90%;
     max-width: 1050px;
     margin: 0 auto;
+    padding-top: 4.5rem;
     background: var(--bg-white) !important;
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-sm);
@@ -1608,13 +1609,14 @@ footer #footer-down li a:hover { color: var(--primary); }
     width: 100%;
     display: flex;
     align-items: flex-start;
-    padding: 1.5rem;
+    padding: 1.5rem 1.5rem 0;
     gap: 2rem;
   }
   .recipe_container .banner {
     width: 44%;
     flex-shrink: 0;
     position: relative;
+    margin: 0;
   }
   .recipe_container .banner img {
     width: 100%;
@@ -1622,16 +1624,18 @@ footer #footer-down li a:hover { color: var(--primary); }
     object-fit: cover;
     border-radius: var(--radius);
     box-shadow: var(--shadow-md);
+    display: block;
   }
   .recipe_container #notes {
     flex: 1;
     font-size: 0.95rem;
-    padding: 0.5rem 0;
+    margin: 0;
+    padding: 0;
     line-height: 1.75;
   }
   .recipe_container p { font-size: 0.95rem; }
   .recipe_container #recipe_container_description {
-    padding: 1rem 2rem;
+    padding: 1rem 1.5rem 1.5rem;
   }
 
   .container {
