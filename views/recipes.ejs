@@ -27,9 +27,11 @@
 
     <div id="recipe_container_description">
         <div class="when_added">
-            <span>
-                <p>Dodany przez: <a href="../users-recipe/<%= idUser %> "><b><%= publisher %></b></a> - dnia: <b><%= created.getDate() %> / <%= created.getMonth()+1 %> / <%= created.getFullYear() %></b></p>
-            </span>
+            <p class="recipe-meta-line">
+                Dodany przez: <a href="../users-recipe/<%= idUser %>"><%= publisher %></a>
+                &nbsp;·&nbsp;
+                <%= created.getDate() %> / <%= created.getMonth()+1 %> / <%= created.getFullYear() %>
+            </p>
             <% if (favoriteFlash.length > 0) { %>
                 <div class="alert alert-success" role="alert">
                     <p><%= favoriteFlash %> </p>
