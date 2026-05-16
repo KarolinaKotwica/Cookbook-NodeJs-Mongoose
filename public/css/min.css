@@ -1094,33 +1094,45 @@ footer #footer-down li a:hover { color: var(--primary); }
     padding: 5px;
   }
 
-  /* Hero */
+  /* Hero — full-bleed z gradientem */
   #main_background {
+    position: relative;
+    min-height: 82vh;
     display: flex;
-    flex-direction: row;
-    min-height: 70vh;
-    align-items: stretch;
+    align-items: center;
+    background-image: url('/imgs/schabowy z ziemniakami.jpg');
+    background-size: cover;
+    background-position: center 55%;
+    padding-top: 4.5rem;
   }
-  .main_img {
-    width: 55%;
-    display: block;
-    object-fit: cover;
-    border-radius: 0 0 var(--radius-lg) 0;
-    max-height: 80vh;
+  #main_background::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      100deg,
+      rgba(250, 248, 245, 0.98) 0%,
+      rgba(250, 248, 245, 0.92) 38%,
+      rgba(250, 248, 245, 0.55) 60%,
+      rgba(250, 248, 245, 0.0) 100%
+    );
+    pointer-events: none;
   }
+  .main_img { display: none; }
+
   #main_banner {
-    width: 45%;
-    padding: 4rem 3rem;
+    position: relative;
+    z-index: 1;
+    width: 52%;
+    padding: 4rem 4rem 4rem 6rem;
     margin-top: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     text-align: left;
-    background: linear-gradient(160deg, #fff9f9 0%, var(--bg) 100%);
+    background: none;
   }
   #main_banner h2#welcome {
-    font-size: 2em;
-    padding-bottom: 0.5em;
+    font-size: 2.6em;
+    padding-bottom: 0.4em;
+    line-height: 1.2;
   }
   #main_banner h1 {
     font-size: 1.05em;
