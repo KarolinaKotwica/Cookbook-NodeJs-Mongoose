@@ -25,19 +25,19 @@
           <li class="nav-item">
             <a class="nav-link" aria-current="page" href="/shopList">Lista zakupów</a>
           </li>
-
+          <li class="nav-item">
+            <a class="nav-link nav-add-btn" href="/add">+ Dodaj przepis</a>
+          </li>
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="/user">Moje konto</a>
+            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">Moje konto</a>
             <ul class="dropdown-menu">
                 <li><a class="dropdown-item" href="/user">Moje przepisy</a></li>
                 <li><a class="dropdown-item" href="/favoriteUser">Ulubione przepisy</a></li>
                 <li><a class="dropdown-item" href="/planer">Planer</a></li>
-                <br>
-                <li><a class="dropdown-item" href="/add">Dodaj nowy przepis</a></li>
-                <br>
+                <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" href="/logout">Wyloguj</a></li>
             </ul>
-        </li>
+          </li>
           <% } %>
           <%if (!locals.session.loggedin) { %>
         <li class="nav-item">
