@@ -160,7 +160,7 @@ img[alt="logo"] {
 .navbar .nav-link {
   color: var(--text);
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 500;
   font-family: 'Raleway', sans-serif;
   padding: 0.5rem 0.8rem;
   position: relative;
