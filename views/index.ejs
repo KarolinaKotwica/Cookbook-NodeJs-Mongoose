@@ -56,20 +56,21 @@
 <div class="home-sections">
     <div class="daily-recipe-section">
         <h2>Przepis dnia</h2>
-        <div class="card card_random">
-            <a href="/przepisy/<%= random._id %>">
+        <a href="/przepisy/<%= random._id %>" class="daily-recipe-card">
+            <div class="daily-recipe-img">
                 <img src="https://img-store223.s3.amazonaws.com/<%= random.image %>"
-                     class="card-img-top" alt="<%= random.title %>" loading="lazy">
-                <div class="card-body">
-                    <h4><%= random.title %></h4>
-                    <p class="card-text">
-                        <span><%= random.category %></span>
-                        <span><%= random.time %> min</span>
-                        <span><i class="fas fa-user"></i> <%= random.publisher %></span>
-                    </p>
+                     alt="<%= random.title %>" loading="lazy">
+            </div>
+            <div class="daily-recipe-info">
+                <span class="recipe-category-badge"><%= random.category %></span>
+                <h3 class="daily-recipe-title"><%= random.title %></h3>
+                <div class="daily-recipe-meta">
+                    <span>⏱ <%= random.time %> min</span>
+                    <span><i class="fas fa-user"></i> <%= random.publisher %></span>
                 </div>
-            </a>
-        </div>
+                <span class="daily-recipe-cta">Zobacz przepis →</span>
+            </div>
+        </a>
     </div>
 </div>
 
