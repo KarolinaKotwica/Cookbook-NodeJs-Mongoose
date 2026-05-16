@@ -1,3 +1,8 @@
+// ==========================================
+// COOKBOOK — Frontend Scripts 2026
+// ==========================================
+
+// --- Text counter for textarea fields ---
 function textCounter(field, countField, maxlimit) {
   if (field.value.length > maxlimit) {
     field.value = field.value.substring(0, maxlimit);
@@ -5,129 +10,190 @@ function textCounter(field, countField, maxlimit) {
   countField.value = maxlimit - field.value.length;
 }
 
-////// add ingredients /////
-let addIngredientsBtn = document.getElementById('addIngredientsBtn');
-let ingredientList = document.querySelector('.ingredientList');
-let ingredientDiv = document.querySelectorAll('.ingredientDiv')[0];
+// ==========================================
+// ADD RECIPE — Ingredient builder
+// ==========================================
 
-let removeButton = document.getElementById('removeIngredientsBtn');
+(function () {
+  var addIngredientsBtn = document.getElementById('addIngredientsBtn');
+  var ingredientList = document.querySelector('.ingredientList');
+  var removeButton = document.getElementById('removeIngredientsBtn');
 
-addIngredientsBtn.addEventListener('click', function(){
-  let newIngredients = ingredientDiv.cloneNode(true);
-  let input = newIngredients.getElementsByTagName('input')[0];
-  input.value = '';
-  ingredientList.appendChild(newIngredients);
-});
+  if (!addIngredientsBtn || !ingredientList) return;
 
-// remove ingredients
-removeButton.addEventListener('click', () => {
-  ingredientList.lastChild.remove();
-})
+  var ingredientDiv = document.querySelectorAll('.ingredientDiv')[0];
 
-//sessionStorage
-if(window.sessionStorage) {
-  let publisher = document.getElementById('publisher');
+  addIngredientsBtn.addEventListener('click', function () {
+    var newIngredients = ingredientDiv.cloneNode(true);
+    var input = newIngredients.getElementsByTagName('input')[0];
+    input.value = '';
+    ingredientList.appendChild(newIngredients);
+  });
 
-  publisher.value = sessionStorage.getItem('publisher');
+  if (removeButton) {
+    removeButton.addEventListener('click', function () {
+      var items = ingredientList.querySelectorAll('.ingredientDiv');
+      if (items.length > 1) {
+        ingredientList.lastElementChild.remove();
+      }
+    });
+  }
+})();
 
-  publisher.addEventListener('input', ()=> {
+// ==========================================
+// SESSION STORAGE — Publisher name
+// ==========================================
+
+(function () {
+  var publisher = document.getElementById('publisher');
+  if (!publisher) return;
+
+  var saved = sessionStorage.getItem('publisher');
+  if (saved) publisher.value = saved;
+
+  publisher.addEventListener('input', function () {
     sessionStorage.setItem('publisher', publisher.value);
-  })
+  });
+})();
+
+// ==========================================
+// BOOTSTRAP TOOLTIPS
+// ==========================================
+
+(function () {
+  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+  tooltipTriggerList.forEach(function (el) {
+    new bootstrap.Tooltip(el);
+  });
+})();
+
+// ==========================================
+// NAVBAR — Shadow on scroll
+// ==========================================
+
+(function () {
+  var navbar = document.querySelector('.navbar');
+  if (!navbar) return;
+
+  function onScroll() {
+    navbar.classList.toggle('scrolled', window.scrollY > 10);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+})();
+
+// ==========================================
+// SCROLL ANIMATIONS — Cards fade-in
+// ==========================================
+
+function initScrollAnimations() {
+  if (!('IntersectionObserver' in window)) return;
+
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.05, rootMargin: '0px 0px -20px 0px' });
+
+  document.querySelectorAll('.card').forEach(function (card) {
+    card.classList.add('animate');
+    observer.observe(card);
+  });
 }
 
-// Tooltips
-var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-  return new bootstrap.Tooltip(tooltipTriggerEl)
-})
+// ==========================================
+// CATEGORY FILTER — User profile recipes
+// ==========================================
 
-// clear input
-// const newsletter_input = document.getElementById(newsletter);
-// const newsletter_button = document.querySelector('.button-newsletter');
+function initCategoryFilter() {
+  var btns = document.querySelectorAll('.category-filter-btn');
+  var cards = document.querySelectorAll('.recipe-card-item');
+  if (!btns.length || !cards.length) return;
 
-// newsletter_button.addEventListener('click', () => {
-//   newsletter_input = '';
-// })
+  btns.forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      btns.forEach(function (b) { b.classList.remove('active'); });
+      btn.classList.add('active');
 
-//////   pages //////
-var list = new Array();
-var pageList = new Array();
+      var filter = btn.dataset.filter;
+      cards.forEach(function (card) {
+        var show = filter === 'all' || card.dataset.category === filter;
+        card.style.display = show ? '' : 'none';
+        if (show) card.classList.add('visible'); // ensure visible after filter
+      });
+    });
+  });
+}
+
+// ==========================================
+// PAGINATION (all-recipes page)
+// ==========================================
+
+var list = [];
+var pageList = [];
 var currentPage = 1;
 var numberPerPage = 10;
 var numberOfPages = 0;
 
 function makeList() {
-for (x = 0; x < 200; x++)
-    list.push(x);
-
-numberOfPages = getNumberOfPages();
+  for (var x = 0; x < 200; x++) list.push(x);
+  numberOfPages = getNumberOfPages();
 }
-
 function getNumberOfPages() {
-return Math.ceil(list.length / numberPerPage);
+  return Math.ceil(list.length / numberPerPage);
 }
-
-function nextPage() {
-currentPage += 1;
-loadList();
-}
-
-function previousPage() {
-currentPage -= 1;
-loadList();
-}
-
-function firstPage() {
-currentPage = 1;
-loadList();
-}
-
-function lastPage() {
-currentPage = numberOfPages;
-loadList();
-}
+function nextPage() { currentPage += 1; loadList(); }
+function previousPage() { currentPage -= 1; loadList(); }
+function firstPage() { currentPage = 1; loadList(); }
+function lastPage() { currentPage = numberOfPages; loadList(); }
 
 function loadList() {
-var begin = ((currentPage - 1) * numberPerPage);
-var end = begin + numberPerPage;
-
-pageList = list.slice(begin, end);
-drawList();
-check();
+  var begin = (currentPage - 1) * numberPerPage;
+  var end = begin + numberPerPage;
+  pageList = list.slice(begin, end);
+  drawList();
+  checkPagination();
 }
 
 function drawList() {
-var listEl = document.getElementById("list");
-listEl.textContent = "";
-for (r = 0; r < pageList.length; r++) {
-    var p = document.createElement("p");
-    p.textContent = pageList[r];
+  var listEl = document.getElementById('list');
+  if (!listEl) return;
+  listEl.textContent = '';
+  pageList.forEach(function (item) {
+    var p = document.createElement('p');
+    p.textContent = item;
     listEl.appendChild(p);
-}
+  });
 }
 
-function check() {
-document.getElementById("next").disabled = currentPage == numberOfPages ? true : false;
-document.getElementById("previous").disabled = currentPage == 1 ? true : false;
-document.getElementById("first").disabled = currentPage == 1 ? true : false;
-document.getElementById("last").disabled = currentPage == numberOfPages ? true : false;
+function checkPagination() {
+  var next = document.getElementById('next');
+  var prev = document.getElementById('previous');
+  var first = document.getElementById('first');
+  var last = document.getElementById('last');
+  if (next) next.disabled = currentPage === numberOfPages;
+  if (prev) prev.disabled = currentPage === 1;
+  if (first) first.disabled = currentPage === 1;
+  if (last) last.disabled = currentPage === numberOfPages;
 }
 
 function load() {
-makeList();
-loadList();
+  makeList();
+  loadList();
 }
 
-window.onload = load;
-////// end pages //////
+// ==========================================
+// INIT
+// ==========================================
 
+document.addEventListener('DOMContentLoaded', function () {
+  initScrollAnimations();
+  initCategoryFilter();
+});
 
-// google translate
-// function googleTranslateElementInit() {
-//   new google.translate.TranslateElement({pageLanguage: 'pl', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
-// }
-
-// czyszczenie cache
-if (performance.navigation.type === 1) {
-    window.location.reload(true);
+// Cache busting on back-navigation
+if (performance.navigation && performance.navigation.type === 1) {
+  window.location.reload(true);
 }
