@@ -61,10 +61,12 @@ function textCounter(field, countField, maxlimit) {
 // ==========================================
 
 (function () {
-  var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-  tooltipTriggerList.forEach(function (el) {
-    new bootstrap.Tooltip(el);
-  });
+  try {
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+    tooltipTriggerList.forEach(function (el) {
+      new bootstrap.Tooltip(el);
+    });
+  } catch (e) {}
 })();
 
 // ==========================================
@@ -109,19 +111,23 @@ function initScrollAnimations() {
 
 function initCategoryFilter() {
   var btns = document.querySelectorAll('.category-filter-btn');
-  var cards = document.querySelectorAll('.recipe-card-item');
-  if (!btns.length || !cards.length) return;
+  if (!btns.length) return;
 
   btns.forEach(function (btn) {
     btn.addEventListener('click', function () {
       btns.forEach(function (b) { b.classList.remove('active'); });
-      btn.classList.add('active');
+      this.classList.add('active');
 
-      var filter = btn.dataset.filter;
-      cards.forEach(function (card) {
-        var show = filter === 'all' || card.dataset.category === filter;
-        card.style.display = show ? '' : 'none';
-        if (show) card.classList.add('visible'); // ensure visible after filter
+      var filter = this.getAttribute('data-filter');
+      document.querySelectorAll('.recipe-card-item').forEach(function (card) {
+        var cat = (card.getAttribute('data-category') || '').trim();
+        var show = filter === 'all' || cat === filter.trim();
+        card.classList.toggle('filter-hidden', !show);
+        if (show) {
+          card.classList.add('visible');
+          card.style.opacity = '1';
+          card.style.transform = 'none';
+        }
       });
     });
   });
