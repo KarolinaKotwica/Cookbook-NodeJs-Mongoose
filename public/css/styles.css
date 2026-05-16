@@ -160,11 +160,13 @@ img[alt="logo"] {
   color: var(--text);
   font-size: 15px;
   font-weight: 600;
+  font-family: 'Raleway', sans-serif;
   padding: 0.5rem 0.8rem;
   position: relative;
   transition: color var(--transition);
 }
-.navbar .nav-link::after {
+/* Underline animation only for non-dropdown links */
+.navbar .nav-link:not(.dropdown-toggle)::after {
   content: '';
   position: absolute;
   bottom: -1px;
@@ -176,10 +178,27 @@ img[alt="logo"] {
   transform-origin: left;
   transition: transform var(--transition);
 }
+/* Restore Bootstrap dropdown caret */
+.navbar .nav-link.dropdown-toggle::after {
+  display: inline-block;
+  margin-left: 0.4em;
+  vertical-align: 0.15em;
+  content: '';
+  border-top: 0.3em solid;
+  border-right: 0.3em solid transparent;
+  border-bottom: 0;
+  border-left: 0.3em solid transparent;
+  position: static;
+  transform: none;
+  background: none;
+  height: auto;
+  width: auto;
+  transition: none;
+}
 .navbar .nav-link:hover {
   color: var(--primary) !important;
 }
-.navbar .nav-link:hover::after {
+.navbar .nav-link:not(.dropdown-toggle):hover::after {
   transform: scaleX(1);
 }
 
@@ -641,6 +660,106 @@ textarea {
    LOGIN / REGISTER FORM
    ========================================== */
 
+/* ==========================================
+   AUTOFILL OVERRIDE — remove yellow browser tint
+   ========================================== */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 30px #fff inset !important;
+  -webkit-text-fill-color: var(--text) !important;
+  caret-color: var(--text);
+}
+
+/* ==========================================
+   LOGIN / REGISTER REDESIGN
+   ========================================== */
+
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding: 6rem 1rem 3rem;
+}
+
+.login-wrapper {
+  display: flex;
+  gap: 0;
+  align-items: stretch;
+  max-width: 860px;
+  width: 100%;
+  margin: 0 auto;
+  background: var(--bg-white);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+.auth-card {
+  flex: 1;
+  padding: 3rem 2.5rem;
+}
+
+.auth-card:first-child {
+  border-right: 1px solid var(--border);
+}
+
+.auth-card h2 {
+  font-size: 1.6em;
+  margin-bottom: 0.2em;
+  color: var(--text);
+}
+
+.auth-subtitle {
+  color: var(--text-muted);
+  margin-bottom: 1.8rem;
+  font-size: 0.9em;
+}
+
+.auth-card .form-control {
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  padding: 0.65rem 1rem;
+  font-family: 'Raleway', sans-serif;
+  font-size: 0.95em;
+  transition: border-color var(--transition), box-shadow var(--transition);
+  background: #fff;
+}
+
+.auth-card .form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(200,33,69,0.10);
+  outline: none;
+}
+
+.auth-btn {
+  width: 100%;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 0.75rem;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 600;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background var(--transition), transform var(--transition);
+  margin-top: 0.5rem;
+}
+
+.auth-btn:hover {
+  background: var(--primary-dark);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.auth-divider-vertical {
+  width: 1px;
+  background: var(--border);
+  flex-shrink: 0;
+}
+
+/* Legacy — keep for pages still using .login_form */
 .login_form { padding: 2em; }
 
 .redirect { text-align: center; }
@@ -1420,4 +1539,22 @@ footer #footer-down li a:hover { color: var(--primary); }
   }
 
   .container { margin: 0; }
+}
+
+/* ==========================================
+   LOGIN — Mobile responsive
+   ========================================== */
+
+@media (max-width: 700px) {
+  .login-wrapper {
+    flex-direction: column;
+    border-radius: var(--radius);
+  }
+  .auth-card:first-child {
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .auth-card {
+    padding: 2rem 1.5rem;
+  }
 }
