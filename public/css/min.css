@@ -1583,7 +1583,7 @@ footer #footer-down li a:hover { color: var(--primary); }
     align-items: center;
   }
   .daily-recipe-section h2 {
-    align-self: flex-start;
+    align-self: center;
     margin-bottom: 1.25rem;
   }
   .daily-recipe-card {
@@ -1627,7 +1627,7 @@ footer #footer-down li a:hover { color: var(--primary); }
   .overall_recipe_margin {
     width: 100%;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     padding: 1.5rem 1.5rem 0;
     gap: 2rem;
   }
