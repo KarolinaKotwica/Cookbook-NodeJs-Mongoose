@@ -11,7 +11,7 @@ echo "📥 Pobieranie zmian z GitHub..."
 git pull origin master
 
 echo "📦 Instalowanie pakietów..."
-npm install --omit=dev
+npm install --omit=dev --ignore-scripts
 
 echo "🔄 Restart aplikacji..."
 touch tmp/restart.txt
