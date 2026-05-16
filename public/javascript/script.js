@@ -193,7 +193,3 @@ document.addEventListener('DOMContentLoaded', function () {
   initCategoryFilter();
 });
 
-// Cache busting on back-navigation
-if (performance.navigation && performance.navigation.type === 1) {
-  window.location.reload(true);
-}
