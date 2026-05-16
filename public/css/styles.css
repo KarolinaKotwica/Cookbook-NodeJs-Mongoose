@@ -252,43 +252,208 @@ form[action='/search'] .form-control:focus {
    HERO SECTION
    ========================================== */
 
+/* ==========================================
+   HERO — split layout (text left, image right)
+   ========================================== */
+
 #main_background {
   display: flex;
-  flex-direction: column-reverse;
-  padding-top: 10vh;
+  flex-direction: column;
+  padding-top: 5rem;
+  background: var(--bg);
 }
 
 #main_banner {
   width: 100%;
-  padding: 8%;
+  padding: 2rem 1.5rem 1rem;
   text-align: center;
 }
 #main_banner a { text-decoration: none; }
 #main_banner h2#welcome {
   color: var(--primary);
-  font-size: 1.6em;
-  padding: 12px 0;
+  font-size: 1.8em;
+  padding: 0.5rem 0 0.3rem;
   font-family: 'Playfair Display', serif;
-}
-#main_banner h1 {
-  font-family: 'Raleway', sans-serif;
-  font-size: 1.25em;
-  font-weight: 400;
-  padding-bottom: 12px;
-  color: var(--text-muted);
-  line-height: 1.7;
+  line-height: 1.2;
 }
 #main_banner p {
-  font-size: 1.05em;
+  font-size: 1em;
   color: var(--text-muted);
   line-height: 1.7;
+  margin-bottom: 0.6em;
 }
 #main_banner p a {
   color: var(--primary);
   font-weight: 600;
 }
 
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  background: var(--primary-light);
+  color: var(--primary);
+  border-radius: 50px;
+  padding: 0.3em 0.9em;
+  font-size: 0.85em;
+  font-weight: 600;
+  margin-bottom: 1em;
+}
+
+.hero-cta {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 1.4rem;
+}
+
+.hero-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  background: var(--primary);
+  color: #fff;
+  border-radius: 50px;
+  padding: 0.75rem 1.75rem;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 700;
+  font-size: 1em;
+  text-decoration: none;
+  transition: background var(--transition), transform var(--transition);
+}
+.hero-btn-primary:hover {
+  background: var(--primary-dark);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.hero-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  background: transparent;
+  color: var(--text);
+  border: 2px solid var(--border);
+  border-radius: 50px;
+  padding: 0.75rem 1.75rem;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 600;
+  font-size: 1em;
+  text-decoration: none;
+  transition: border-color var(--transition), color var(--transition);
+}
+.hero-btn-secondary:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.hero-image-col { display: none; }
+
+.hero-image-wrap { position: relative; }
+.hero-image-wrap img {
+  width: 100%;
+  object-fit: cover;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  display: block;
+}
+
+.hero-badge {
+  position: absolute;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  width: 86px;
+  height: 86px;
+  background: var(--primary);
+  border-radius: 50%;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 0.65em;
+  font-weight: 700;
+  line-height: 1.3;
+  box-shadow: var(--shadow-md);
+  padding: 0.5rem;
+}
+
 .main_img { display: none; }
+
+/* ==========================================
+   CATEGORIES CHIPS ROW
+   ========================================== */
+
+.categories-section {
+  padding: 2rem 1.5rem 1rem;
+}
+
+.categories-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.categories-header h2 {
+  font-size: 1.3em;
+  color: var(--text);
+  margin: 0;
+}
+
+.view-all-link {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.9em;
+  transition: color var(--transition);
+  white-space: nowrap;
+}
+.view-all-link:hover { color: var(--primary-dark); }
+
+.category-chips-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.category-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3em;
+  background: var(--bg-white);
+  color: var(--text);
+  border: 1.5px solid var(--border);
+  border-radius: 50px;
+  padding: 0.45rem 1rem;
+  font-family: 'Raleway', sans-serif;
+  font-weight: 600;
+  font-size: 0.88em;
+  text-decoration: none;
+  transition: all var(--transition);
+  box-shadow: var(--shadow-sm);
+}
+.category-chip:hover {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* ==========================================
+   HOME SECTIONS — daily recipe
+   ========================================== */
+
+.home-sections {
+  padding: 1rem 1.5rem 2rem;
+}
+
+.daily-recipe-section h2 {
+  margin-bottom: 0.8em;
+  font-size: 1.3em;
+}
 
 /* ==========================================
    CATEGORY GRID
@@ -1213,53 +1378,51 @@ footer #footer-down li a:hover { color: var(--primary); }
     padding: 5px;
   }
 
-  /* Hero — full-bleed z gradientem */
+  /* Hero — split layout (text left, image right) */
   #main_background {
-    position: relative;
-    min-height: 82vh;
-    display: flex;
+    flex-direction: row;
     align-items: center;
-    background-image: url('/imgs/schabowy z ziemniakami.jpg');
-    background-size: cover;
-    background-position: center 55%;
-    padding-top: 4.5rem;
+    min-height: 88vh;
+    padding: 4.5rem 5rem 3rem 5rem;
+    gap: 3rem;
+    max-width: 1400px;
+    margin: 0 auto;
   }
-  #main_background::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      100deg,
-      rgba(250, 248, 245, 0.98) 0%,
-      rgba(250, 248, 245, 0.92) 38%,
-      rgba(250, 248, 245, 0.55) 60%,
-      rgba(250, 248, 245, 0.0) 100%
-    );
-    pointer-events: none;
-  }
-  .main_img { display: none; }
 
   #main_banner {
-    position: relative;
-    z-index: 1;
-    width: 52%;
-    padding: 4rem 4rem 4rem 6rem;
-    margin-top: 0;
+    flex: 0 0 52%;
+    padding: 0;
     text-align: left;
-    background: none;
   }
   #main_banner h2#welcome {
-    font-size: 2.6em;
+    font-size: 2.5em;
     padding-bottom: 0.4em;
     line-height: 1.2;
   }
-  #main_banner h1 {
-    font-size: 1.05em;
-    padding-bottom: 1em;
+  #main_banner p { font-size: 1em; margin-bottom: 0.75em; }
+
+  .hero-cta { justify-content: flex-start; }
+
+  .hero-image-col {
+    display: block;
+    flex: 1;
+    position: relative;
   }
-  #main_banner p {
-    font-size: 1em;
-    margin-bottom: 0.75em;
+  .hero-image-wrap img {
+    max-height: 72vh;
+  }
+
+  .categories-section {
+    padding: 2.5rem 5rem 1.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+  .categories-header h2 { font-size: 1.5em; }
+
+  .home-sections {
+    padding: 1rem 5rem 2.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
   }
 
   /* Navbar height */
@@ -1274,35 +1437,24 @@ footer #footer-down li a:hover { color: var(--primary); }
     padding-top: 1em;
   }
 
-  /* Category + random layout */
-  .overall {
-    display: flex;
-    width: 90%;
+  /* Categories chips on desktop */
+  .categories-section {
+    padding: 2.5rem 5rem 1.5rem;
+    max-width: 1400px;
     margin: 0 auto;
-    gap: 2em;
   }
-  .overall h1 { padding-top: 0; }
-  .overall #category,
-  .overall #recipe_of_the_day {
-    margin-top: 5%;
+  .categories-header h2 { font-size: 1.6em; }
+  .category-chip { font-size: 0.92em; padding: 0.5rem 1.2rem; }
+
+  /* Przepis dnia */
+  .home-sections {
+    padding: 1rem 5rem 2.5rem;
+    max-width: 1400px;
+    margin: 0 auto;
   }
-  #category {
-    padding: 2em;
-    background: var(--bg-white);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
-    margin-top: 5%;
-  }
-  #category ul li {
-    width: 130px;
-    height: 130px;
-  }
-  #recipe_of_the_day {
-    padding: 2em 3em;
-    background: var(--bg-white);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
-  }
+  .daily-recipe-section { display: flex; align-items: flex-start; gap: 2rem; }
+  .daily-recipe-section h2 { min-width: 160px; margin-top: 0.3em; }
+  .daily-recipe-section .card_random { width: 280px; }
 
   /* Recipe list */
   .recipes_container {
@@ -1526,8 +1678,7 @@ footer #footer-down li a:hover { color: var(--primary); }
 
   .wrapper .cookbook .recipes { gap: 16px; }
 
-  #main_banner h2#welcome { font-size: 2.4em; }
-  #main_banner h1 { font-size: 1.1em; }
+  #main_banner h2#welcome { font-size: 2.6em; }
 
   .recipe_container .banner img {
     max-height: 600px;
