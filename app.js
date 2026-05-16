@@ -1,5 +1,9 @@
 require('dotenv').config();
 const express = require('express');
+const helmet = require('helmet');
+const morgan = require('morgan');
+const rateLimit = require('express-rate-limit');
+const { body, validationResult } = require('express-validator');
 const _ = require('lodash');
 const app = express();
 const mongoose = require('mongoose');
@@ -38,10 +42,24 @@ try {
 }
 
 app.set('view engine', 'ejs');
+app.use(helmet({ contentSecurityPolicy: false }));
+app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(express.static('public'));
 app.set('trust proxy', 1);
+
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000,
+    max: 20,
+    message: 'Zbyt wiele prób. Spróbuj ponownie za 15 minut.'
+});
+
+const searchLimiter = rateLimit({
+    windowMs: 60 * 1000,
+    max: 30,
+    message: 'Zbyt wiele zapytań wyszukiwania.'
+});
 
 // Sesja z MemoryStore i sekretem z .env
 app.use(session({
@@ -49,8 +67,13 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     store: new MemoryStore({
-        checkPeriod: 86400000 // czyszczenie co 24h
-    })
+        checkPeriod: 86400000
+    }),
+    cookie: {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict'
+    }
 }));
 
 // AWS S3
@@ -151,11 +174,13 @@ app.get('/wszystkie-przepisy/:page', async (req, res) => {
     }
 });
 
-app.get('/users-recipe/:id', async (req, res) => {
+app.get('/users-recipe/:id', isAuthenticated, async (req, res) => {
     try {
         const user = await User.findById(req.params.id);
         if (user) {
             res.render('users-recipe', { recipes: user.recipes, files });
+        } else {
+            res.status(404).send('Użytkownik nie znaleziony');
         }
     } catch (err) {
         console.error(err);
@@ -232,6 +257,9 @@ app.get('/logout', (req, res, next) => {
 });
 
 app.get('/images/:key', (req, res) => {
+    if (!/^[\w\-.]+$/.test(req.params.key)) {
+        return res.status(400).send('Nieprawidłowy klucz pliku');
+    }
     const readStream = getFileStream(req.params.key);
     readStream.pipe(res);
 });
@@ -319,17 +347,39 @@ app.get('/add', isAuthenticated, (req, res) => {
     res.render('add', { add: req.flash('newRecipe') });
 });
 
-app.post('/', isAuthenticated, upload.single('image'), async (req, res) => {
+const VALID_CATEGORIES = ['Śniadanie', 'Desery', 'Torty', 'Obiad', 'Dla dzieci', 'Dodatki', 'Sałatki', 'Zupy', 'Przekąski'];
+
+const recipeValidators = [
+    body('publisher').trim().isLength({ min: 1, max: 50 }),
+    body('title').trim().isLength({ min: 1, max: 60 }),
+    body('time').isInt({ min: 1, max: 1440 }),
+    body('category').isIn(VALID_CATEGORIES),
+    body('describe').trim().isLength({ min: 1, max: 999 }),
+    body('preparation').trim().isLength({ min: 1, max: 1999 }),
+    body('ingredients').custom(val => {
+        const arr = Array.isArray(val) ? val : [val];
+        return arr.every(i => typeof i === 'string' && i.trim().length > 0 && i.length <= 200);
+    })
+];
+
+app.post('/', isAuthenticated, upload.single('image'), recipeValidators, async (req, res) => {
+    const errors = validationResult(req);
+    if (errors.isEmpty() === false || !req.file) {
+        req.flash('newRecipe', 'Sprawdź czy dobrze wypełniłeś/aś pola oraz nie zapomnij dodać obrazka.');
+        return res.redirect('/add');
+    }
     try {
         const recipe = new Recipe({
-            publisher: req.body.publisher,
-            title: req.body.title,
+            publisher: req.body.publisher.trim(),
+            title: req.body.title.trim(),
             time: req.body.time,
             image: req.file.filename,
             category: req.body.category,
-            ingredients: req.body.ingredients,
-            describe: req.body.describe,
-            preparation: req.body.preparation,
+            ingredients: Array.isArray(req.body.ingredients)
+                ? req.body.ingredients.map(i => i.trim())
+                : [req.body.ingredients.trim()],
+            describe: req.body.describe.trim(),
+            preparation: req.body.preparation.trim(),
             idUser: req.user.id
         });
 
@@ -348,7 +398,7 @@ app.post('/', isAuthenticated, upload.single('image'), async (req, res) => {
 });
 
 // BUGFIX: findOne zamiast find, poprawne sprawdzenie duplikatu
-app.post('/register', async (req, res) => {
+app.post('/register', authLimiter, async (req, res) => {
     try {
         const existingUser = await User.findOne({ username: req.body.username });
         if (existingUser) {
@@ -383,24 +433,22 @@ app.get('/login', (req, res) => {
     });
 });
 
-app.post('/login', (req, res) => {
-    req.flash('user', 'Niepoprawny login lub hasło');
-
-    const user = new User({
-        username: req.body.username.trim(),
-        password: req.body.password.trim()
-    });
-
-    req.login(user, err => {
-        if (err) return res.redirect('/login');
-        passport.authenticate('local', { failureRedirect: '/login' })(req, res, () => {
+app.post('/login', authLimiter, (req, res, next) => {
+    passport.authenticate('local', (err, user) => {
+        if (err) return next(err);
+        if (!user) {
+            req.flash('user', 'Niepoprawny login lub hasło');
+            return res.redirect('/login');
+        }
+        req.login(user, err => {
+            if (err) return next(err);
             res.redirect('/user');
         });
-    });
+    })(req, res, next);
 });
 
 // BUGFIX: escapowanie inputu użytkownika przed użyciem w regex (ochrona przed ReDoS)
-app.post('/search', async (req, res) => {
+app.post('/search', searchLimiter, async (req, res) => {
     try {
         const escaped = req.body.search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
         const docs = await Recipe.find({ title: { $regex: escaped, $options: 'i' } });
@@ -540,7 +588,7 @@ app.get('/signup', (req, res) => {
     res.render('newsletter/signup');
 });
 
-app.post('/signup', async (req, res) => {
+app.post('/signup', authLimiter, async (req, res) => {
     try {
         await mailchimp.lists.addListMember(process.env.LIST_ID, {
             email_address: req.body.email,

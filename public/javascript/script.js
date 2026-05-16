@@ -1,3 +1,10 @@
+function textCounter(field, countField, maxlimit) {
+  if (field.value.length > maxlimit) {
+    field.value = field.value.substring(0, maxlimit);
+  }
+  countField.value = maxlimit - field.value.length;
+}
+
 ////// add ingredients /////
 let addIngredientsBtn = document.getElementById('addIngredientsBtn');
 let ingredientList = document.querySelector('.ingredientList');
@@ -11,17 +18,6 @@ addIngredientsBtn.addEventListener('click', function(){
   input.value = '';
   ingredientList.appendChild(newIngredients);
 });
-
-// counter letters add recipes
-function textCounter( field, countfield, maxlimit ) {
-  if ( field.value.length > maxlimit ) {
-   field.value = field.value.substring( 0, maxlimit );
-   field.focus();
-   return false;
-  } else {
-   countfield.value = maxlimit - field.value.length;
-  }
- }
 
 // remove ingredients
 removeButton.addEventListener('click', () => {
@@ -101,9 +97,12 @@ check();
 }
 
 function drawList() {
-document.getElementById("list").innerHTML = "";
+var listEl = document.getElementById("list");
+listEl.textContent = "";
 for (r = 0; r < pageList.length; r++) {
-    document.getElementById("list").innerHTML += pageList[r] + "<br/>";
+    var p = document.createElement("p");
+    p.textContent = pageList[r];
+    listEl.appendChild(p);
 }
 }
 
@@ -124,6 +123,11 @@ window.onload = load;
 
 
 // google translate
-function googleTranslateElementInit() {
-  new google.translate.TranslateElement({pageLanguage: 'pl', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+// function googleTranslateElementInit() {
+//   new google.translate.TranslateElement({pageLanguage: 'pl', layout: google.translate.TranslateElement.InlineLayout.SIMPLE}, 'google_translate_element');
+// }
+
+// czyszczenie cache
+if (performance.navigation.type === 1) {
+    window.location.reload(true);
 }

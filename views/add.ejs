@@ -35,7 +35,7 @@
                     <option value="Śniadanie">Śniadanie</option>
                     <option value="Desery">Desery</option>
                     <option value="Torty">Torty</option>
-                    <option selected="Obiad">Obiad</option>
+                    <option value="Obiad" selected>Obiad</option>
                     <option value="Dla dzieci">Dla dzieci</option>
                     <option value="Dodatki">Dodatki</option>
                     <option value="Sałatki">Sałatki</option>
@@ -79,16 +79,16 @@
 
             <h3>Opis przepisu:</h3>
             <div class="form-floating">
-                <input class="input_counter" onblur="textCounter(this.form.recipients,this,999);" disabled tabindex="999" maxlength="3" size="3" value="999" name="counter">
+                <input class="input_counter" disabled tabindex="999" maxlength="3" size="3" value="999" name="counter">
 
-                <textarea onblur="textCounter(this,this.form.counter,999);" onkeyup="textCounter(this,this.form.counter,999);" class="form-control textarea" id="describe" name="describe" data-bs-toggle="tooltip" data-bs-placement="top" maxlength="999" required></textarea>
+                <textarea oninput="textCounter(this,this.form.counter,999);" class="form-control textarea" id="describe" name="describe" data-bs-toggle="tooltip" data-bs-placement="top" maxlength="999" required></textarea>
                 <label for="textarea"></label>
             </div>
             <h3>Przygotowanie:</h3>
             <div class="form-floating">
-                <input class="input_counter" onblur="textCounter(this.form.recipients,this,1999);" disabled tabindex="999" maxlength="3" size="3" value="1999" name="counter_2">
+                <input class="input_counter" disabled tabindex="999" maxlength="3" size="3" value="1999" name="counter_2">
 
-                <textarea onblur="textCounter(this,this.form.counter_2,1999);" onkeyup="textCounter(this,this.form.counter_2,1999);" class="form-control textarea" id="preparation" name="preparation" data-bs-toggle="tooltip" data-bs-placement="top" maxlength="1999" required></textarea>
+                <textarea oninput="textCounter(this,this.form.counter_2,1999);" class="form-control textarea" id="preparation" name="preparation" data-bs-toggle="tooltip" data-bs-placement="top" maxlength="1999" required></textarea>
             </div>
         </div>
         
